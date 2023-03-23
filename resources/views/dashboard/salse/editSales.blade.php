@@ -1,0 +1,371 @@
+@extends('layoute.latoute')
+@section('content')
+{{--  card-content  --}}
+@include('dashboard.part-lain.popUp-SJ')
+<div class="card-content-display">
+    <div class="header-display">
+        <p class="text-tittle">
+         Edit Data Sales
+        </p>
+    </div>
+    <div class="head">
+        <div class="part-head-left">
+            <div class="vendor-selection customer">
+                <label for="vendor">Customer</label>
+                <div class="select-c">
+                    <select class="input-f customer @error('fid_customer') is-invalid @enderror " name="fid_customer" id="customer" >
+                        <option class="old-customer" value="" selected>
+                            Pilih Name Customer
+                        </option>
+                        @foreach( $customer  as $cs)
+                            @if (old('fid_customer') == $cs->id)
+                            <option value="{{$cs->id }}" selected>
+                                {{ $cs->nama_customer }}
+                            </option>
+                            @else
+                            <option value="{{ $cs->id }}">
+                                {{$cs->nama_customer}}
+                            </option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @error('fid_customer')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                    <div class="btn-customer">...</div>
+                </div>
+            </div>
+            <div class="alamat">
+                <label for="alamat">Alamat</label>
+                <textarea name="alamat" id="" cols="25" rows="7"></textarea>
+            </div>
+        </div>
+        <div class="part-head-right">
+
+                <div class="Purchase-date tanggal">
+                    <label for="date-purchase">Sales Date</label>
+                    <input type="date" name="tanggal" id="sales_date">
+                </div>
+
+                <div class="Purchase-date pengiriman">
+                    <label for="date-purchase">Tanggal Kirim</label>
+                    <input type="date" name="tanggal_kirim" id="sales_date">
+                </div>
+
+            <div class="i-form-sales noFaktur">
+                <label for="nofaktur">No Faktur</label>
+                <input type="text" name="no_faktur" class="i-form nofaktur" value="{{   $getInvoice  }}">
+            </div>
+            <div class="i-form-sales seles">
+                <label for="nofaktur">Sales</label>
+                <input type="text"  class="i-form sales" value="{{ Auth()->user()->nama }}">
+                <input type="hidden" name="fid_user" class="i-form admin_id" value="{{ Auth()->user()->id }}">
+            </div>
+        </div>
+    </div>
+    <div class="form-table">
+        <table class="table-form">
+            <tr class="header-table">
+                <th class="header-row" style="width:151px">Product</th>
+                <th class="header-row" style="width:101px">Warna/Jenis</th>
+                <th class="header-row" style="width:185px">Description</th>
+                <th class="header-row" style="width:35px">Qty</th>
+                <th class="header-row" style="width:127px">Unit Price</th>
+                <th class="header-row" style="width:128px">Amount</th>
+                <th class="header-row" style="display:none"></th>
+           </tr>
+
+           <tr class="body-table" itemid="0">
+               <td class="body-row input-row" data-row="0">
+                   <div class="part-input alias">
+                       <input type="text" class="input-tbl product" data-id="0">
+                       <img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="" class="input-icon" data-id="0">
+                   </div>
+                </td>
+                <td class="body-row input-row variasi" data-row="0">
+                   <select name= "productSales[0][variasi]" data-id="0" class="warna">
+
+                   </select>
+               </td>
+                <td class="body-row input-row desc" data-row="0">
+                   <input type="text" name="productSales[0][keterangan]"  class="input-tbl dsc" data-id="0">
+                </td>
+                <td class="body-row input-row qty" data-row="0">
+                   <input type="text" name="productSales[0][jumlah]" class="input-tbl qty" data-id="0">
+                </td>
+                <td class="body-row input-row harga_satuan" data-row="0">
+                   <input type="text" name="productSales[0][harga_satuan]" class="input-tbl unit_price" data-id="0">
+                </td>
+
+                <td class="body-row input-row amount" data-row="0">
+                   <input type="text" name="productSales[0][total]" class="input-tbl amount" data-id="0">
+                </td>
+                <td class="body-row action-btn" data-id="0">
+                   <div class="icon-plus">
+                       <img src="{{ asset('Assets/icon/🦆 icon _plus_.png') }}" alt="" srcset="">
+                   </div>
+                   <div class="icon-delete" data-id="0">
+                       <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="" srcset="">
+                   </div>
+                </td>
+           </tr>
+         </table>
+         <div class="border-line"></div>
+         <div class="border-line"></div>
+
+         <div class="footer-form">
+            <div class="f-from-l">
+                <div class="catatan">
+                    <label for="catatan">Catatan</label>
+                    <div class="catatan-pembayaran">
+                        <textarea class="keterangan-pembelian" name="keterangan" id="" cols="50" rows="10" value="" ></textarea>
+                        <div class="icon-pembayaran">
+                            <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
+                        </div>
+                    </div>
+
+                 </div>
+                 <div class="jenis-pengiriman">
+                    <div class="pengiriman">
+                        <input type="radio" name="jenis_pengiriman" id="" value="Ambil Sendiri">
+                        <label for="">Ambil Sendiri</label>
+
+                    </div>
+                    <div class="pengiriman">
+                        <input type="radio" name="jenis_pengiriman" id="" value="Kirim Dari Pabrik">
+                        <label for="">Kirim Dari pabrik</label>
+
+                    </div>
+                    <div class="pengiriman">
+                        <input type="radio" name="jenis_pengiriman" id="" value="Kirim dari toko">
+                        <label for="">Kirim dari Toko</label>
+
+                    </div>
+                 </div>
+                 <div class="action-form-btn">
+                    <div class="p-fak-form">
+                        Print Faktur
+                    </div>
+                    <div class="p-sj-form">
+                        Print Sj
+                    </div>
+                    <div class="p-kw-form">
+                        Kwitansi
+                    </div>
+                 </div>
+            </div>
+            <div class="f-form-r">
+                <div class="colum-total" style="margin-left: 137px;">
+                    <p>SubTotal</p>
+                    <p>=</p>
+                    <input type="text" name="subtotal" value="" class="f-hasil subtotal" placeholder="0">
+                </div>
+                <div class="colum-total" style="margin-left: 122px;">
+                    <p>Discount%</p>
+                    <p>=</p>
+                    <input type="text" name="diskon_nominal" value="" class="f-input disc" placeholder="0">
+                </div>
+                <div class="colum-total" style="margin-left: 172px;">
+                    <p>PPN</p>
+                    <p>=</p>
+                    <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
+                </div>
+                <div class="colum-total" style="margin-left: 92px;">
+                    <p>Biaya Lain-lain</p>
+                    <p>=</p>
+                    <input type="text" name="biaya_lain_lain" value="" class="f-hasil lain-lain" placeholder="0">
+                </div>
+                <div class="colum-total" style="margin-left: 117px;">
+                    <p>Grand Total</p>
+                    <p>=</p>
+                    <input type="text" name="grand_total" value="" class="f-hasil grand_total" placeholder="0">
+                </div>
+            </div>
+         </div>
+
+         <div class="button-action-form">
+            <div class="btn-save-form">Save</div>
+            <div class="btn-cencel-form">Cencel</div>
+         </div>
+    </div>
+
+</div>
+
+
+<div class="container-popup-card-product close-hide">
+    <div class="card-position ">
+        <div class="card-create-customer alias-Product close-hide" style="width: 885px;">
+            <div class="header-card-create">
+                <p class="text-tittle">
+                  Alias Product
+                </p>
+                <p class="close close-pop"> X </p>
+            </div>
+           <div class="action">
+                <div class="box-search">
+                    <div class="icon-search">
+                        <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
+                    </div>
+                    <p>Search</p>
+                </div>
+
+           </div>
+           <div class="tbl-product">
+                <div class="table-data">
+                    @php $no=1; @endphp
+                    <table>
+                        <tr class="header-table">
+                            <th class="header-row" >No</th>
+                            <th class="header-row" style="width:200px">Kode Barang/Jasa</th>
+                            <th class="header-row" style="width:302px">Nama Barang/Jasa</th>
+                            <th class="header-row" style="width:177px">Alias</th>
+                            <th class="header-row" style="width:234px">Group</th>
+                            <th class="header-row" style="width:200px">Action</th>
+                        </tr>
+                        @foreach ( $aliasProduct as $product )
+                            <tr class="body-table" itemid="1">
+                                <td class="body-row">{{ $no++ }}</td>
+                                <td class="body-row" ><a href="">{{ $product->barang->kode }}</a></td>
+                                <td class="body-row">{{ $product->barang->nama_barang }}</td>
+                                <td class="body-row">{{ $product->alias }} </td>
+                                <td class="body-row">{{ $product->group->nama_toko }}</td>
+                                <td class="body-row"><input type="checkbox" class="selection-check" id="checkbox" data-item="{{ $product->id }}" data-barang="{{ $product->fid_barang }}"></td>
+                            </tr>
+                        @endforeach
+
+                    </table>
+                </div>
+            </div>
+            <div class="btn-footer">
+                <div class="btn-ok" data-item="">
+                    Ok
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="submit-form">
+    <form class="hidden" action="{{route('postDataSales')}}" method="POST"  enctype="multipart/form-data">
+        @csrf
+
+        {{--  //tb penjualan  --}}
+        <input type="hidden" name="no_faktur" class="input-hide no_faktur"/>
+        <input type="hidden" name="fid_customer" class="input-hide customer"/>
+        <input type="hidden" name="tanggal" class="input-hide tanggal"/>
+        <input type="hidden" name="tanggal_kirim" class="input-hide tanggal_kirim"/>
+        <input type="hidden" name="jenis_pengiriman" class="input-hide jenis_pengiriman"/>
+        <input type="hidden" name="keterangan" class="input-hide keterangan"/>
+        <input type="hidden" name="sub_total" class="input-hide sub_total"/>
+        <input type="hidden" name="diskon_nominal" class="input-hide diskon_nominal"/>
+        <input type="hidden" name="biaya_lain_lain" class="input-hide biaya_lain_lain"/>
+        <input type="hidden" name="ppn" class="input-hide ppn"/>
+        <input type="hidden" name="grand_total" class="input-hide grand_total"/>
+
+
+        {{--  //product  --}}
+        <input type="hidden" name="productSales[0][alias]" class="input-hide product"/>
+        <input type="hidden" name="productSales[0][variasi]" class="input-hide variasi"/>
+        <input type="hidden" name="productSales[0][keterangan]" class="input-hide keterangan"/>
+        <input type="hidden" name="productSales[0][jumlah]" class="input-hide jumlah"/>
+        <input type="hidden" name="productSales[0][harga_satuan]" class="input-hide harga_satuan"/>
+        <input type="hidden" name="productSales[0][total]" class="input-hide total"/>
+
+
+        {{--  pembayaran  --}}
+        <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
+        <input type="hidden" name="pembayaran" class="input-hide pembayaran"/>
+        <input type="hidden" name="total" class="input-hide total"/>
+        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>
+
+        {{--  //tb detail pengiriman  --}}
+        <input type="hidden" name="tanggal_sj" class="input-hide tanggal_sj"/>
+        <input type="hidden" name="tanggal_kirim" class="input-hide tanggal_kirim"/>
+        <input type="hidden" name="tipe" class="input-hide tipe"/>
+        <input type="hidden" name="alamat" class="input-hide alamat"/>
+        <input type="hidden" name="keterangan" class="input-hide keterangan"/>
+
+    </form>
+</div>
+@stop
+@section('script')
+<script>
+    dycalendar.draw({
+        target:'#dycalendar-cp',
+        type:'month',
+        dayformat: 'full',
+        monthformat: 'full',
+        highlighttargetdate: true,
+        prevnextbutton: 'show'
+    });
+    dycalendar.draw({
+        target:'#dycalendar-co',
+        type:'month',
+        dayformat: 'full',
+        monthformat: 'full',
+        highlighttargetdate: true,
+        prevnextbutton: 'show'
+    });
+
+    const calendar_cp =   document.getElementById('calender_cp');
+    const calendar_co =   document.getElementById('calender_co');
+    const show_calendar_p = document.getElementsByClassName('calender-purchase')[0];
+    const show_calendar_o = document.getElementsByClassName('calender-pO')[0];
+
+    calendar_cp.addEventListener('click', function(){
+        show_calendar_p.classList.toggle('off');
+    });
+    calendar_co.addEventListener('click', function(){
+        show_calendar_o.classList.toggle('off');
+    });
+
+    $(()=>{
+        $('.icon-plus').on('click', function(){
+            var $content_ = $('.table-form');
+
+			$content_.append(`<tr class="body-table">` +
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row input-row">'+'</td>'+
+                '<td class="body-row action-btn">'+
+                    '<div class="icon-plus">'+
+                        '<img src="{{ asset('Assets/icon/🦆 icon _plus_.png') }}" alt="" srcset="">'+
+                    '</div>'+
+                    '<div class="icon-delete">'+
+                        '<img src="{{ asset('Assets/icon/🦆 icon _trash_.png') }}" alt="" srcset="">'+
+                    '</div>'+
+
+                '</td>'+
+                '</tr>' );
+        })
+
+        $('.icon-delete').on('click', function(){
+            var $elm = $('.body-table');
+            var konfirmasi = confirm('yakin menghapus colume?');
+			if(konfirmasi){
+				$elm.remove();
+			}
+        })
+
+        $('.p-sj-form').on('click', function(){
+            $('.container-popup').addClass('show').removeClass('close-hide');
+            e.stopPropagation();
+            e.preventDefault();
+
+        })
+        $('.close-doc').on('click', function(){
+            $('.container-popup').removeClass('show').addClass('close-hide');
+        })
+    })
+
+
+</script>
+@stop
+
+
+
+
