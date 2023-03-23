@@ -159,12 +159,13 @@ class PembelianController extends Controller
     }
 
     public function postpembayaranPembelian(Request $request){
+
         $admin = Auth()->user()->id;
 
          // $sales = Penjualan::where('id', $request->id)->first();
 
         $pembayaran = new DetailPembayaranPembelian();
-        $pembayaran->fid_penjualan =  $request->fid_pembelian;
+        $pembayaran->fid_pembelian =  $request->fid_pembelian;
         $pembayaran->tanggal = $request->tanggal;
         $pembayaran->pembayaran = $request->pembayaran;
         $pembayaran->total = $request->total;
@@ -173,13 +174,14 @@ class PembelianController extends Controller
         $pembayaran-> created_by = $admin;
         $pembayaran-> updated_by = $admin;
 
+        // dd($pembayaran);
+        if($pembayaran->save()){
+            //
+            return redirect()->route('purchase')->with('Success', 'Berhasil menambahkan data baru');
 
-    if($pembayaran->save()){
-        //
-        return redirect()->route('purchase')->with('Success', 'Berhasil menambahkan data baru');
-
-    }else{
-        return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
+        }else{
+            return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
+        }
     }
 
 

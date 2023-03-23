@@ -98,7 +98,7 @@
             </div>
             <div class="form-card payment-sales">
 
-                <form action="{{ route('postPembayaran') }}" method="post">
+                <form action="{{ route('postpembayaranPembelian') }}" method="post">
                     @csrf
                     <div class="row-form">
                         {{--  <form action="">  --}}
@@ -115,6 +115,7 @@
                         <div class="vendor-selection">
                             <label for="vendor">Pembayaran</label>
                             <select name="pembayaran" id="" placeholder="Select pembayaran" class="pembayaran-methode">
+                                <option class="metode_pb" value="">--Metode Pembayaran--</option>
                                 <option class="metode_pb" value="Trasfer">Tarnsfer</option>
                                 <option class="metode_pb" value="Cash">Cash</option>
                                 <option class="metode_pb" value="Debit">Debit</option>
@@ -128,7 +129,7 @@
                         </div>
                         <div class="btn-tambah-pyment" data-id="">
                             <div class="btn-pyment" >
-                                <input type="hidden" name="fid_penjualan">
+                                <input type="hidden" name="fid_pembelian">
                                 Tambah Pembayaran
                             </div>
                         </div>
@@ -179,7 +180,7 @@
      $('.btn-tambah-pyment').on('click', function(){
          var idx = $(this).attr('data-id');
          console.log(idx);
-         $('.btn-pyment input[name="fid_penjualan"]').val(idx);
+         $('.btn-pyment input[name="fid_pembelian"]').val(idx);
          $('.form-card.payment-sales form').submit();
 
      });
@@ -215,40 +216,6 @@
              }
          }).fail(function(data){
              console.log(data);
-         });
-     }
-
-     function postData(idx){
-         var obj = {};
-         var $formSet = $('.form-card.payment-sales');
-         var id = $formSet.data('id');
-         var tanggal = $formSet.find('input[name="tanggal"]').val();
-         var jumlah =  $formSet.find('input[name="total"]').val();
-         var metodeBayar = $formSet.find('vendor-selection .pembayaran-methode option:selected').val();
-         var deskripsi = $formSet.find('textarea[name="deskripPembayaran"]').val();
-         var idx = $formSet.find('input[name="id"]').val(idx);
-
-         console.log(idx);
-         obj["_token"] = "{{ csrf_token() }}";
-         obj['fid_penjualan'] = idx;
-         obj['tanggal'] = tanggal;
-         obj['pembayaran'] = metodeBayar;
-         obj['total'] = jumlah;
-         obj['keterangan'] = deskripsi;
-         if(id){
-             obj['id'] = id;
-         }
-         $.ajax({
-             url: "{{route('postpembayaranPembelian')}}",
-             data: obj,
-             method : 'POST',
-             success : function(result){
-                 console.log('success', result);
-
-                 window.location.reload();
-             }
-         }).fail(function(data){
-            console.log(data);
          });
      }
 

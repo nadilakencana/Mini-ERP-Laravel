@@ -118,6 +118,7 @@
                         <div class="vendor-selection">
                             <label for="vendor">Pembayaran</label>
                             <select name="pembayaran" id="" placeholder="Select pembayaran" class="pembayaran-methode">
+                                <option class="metode_pb" value="">--Metode Pembayaran--</option>
                                 <option class="metode_pb" value="Trasfer">Tarnsfer</option>
                                 <option class="metode_pb" value="Cash">Cash</option>
                                 <option class="metode_pb" value="Debit">Debit</option>
