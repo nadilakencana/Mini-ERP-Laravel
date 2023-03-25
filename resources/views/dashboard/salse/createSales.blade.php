@@ -162,27 +162,28 @@
                  </div>
             </div>
             <div class="f-form-r">
-                <div class="colum-total" style="margin-left: 137px;">
+                <div class="colum-total" style="margin-left: 200px;">
                     <p>SubTotal</p>
                     <p>=</p>
                     <input type="text" name="subtotal" value="" class="f-hasil subtotal" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 122px;">
-                    <p>Discount%</p>
+                <div class="colum-total" style="margin-left: 134px;">
+                    <p>Discount%</p><input type="text" class="f-input dis" placeholder="0">
                     <p>=</p>
-                    <input type="text" name="diskon_nominal" value="" class="f-input disc" placeholder="0">
+                    <input type="text" name="diskon_nominal" value="" class="f-hasil disc" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 172px;">
-                    <p>PPN</p>
-                    <p>=</p>
-                    <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
-                </div>
-                <div class="colum-total" style="margin-left: 92px;">
+                <div class="colum-total" style="margin-left: 158px;">
                     <p>Biaya Lain-lain</p>
                     <p>=</p>
                     <input type="text" name="biaya_lain_lain" value="" class="f-hasil lain-lain" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 117px;">
+                <div class="colum-total" style="margin-left: 166px;">
+                    <p>PPN %</p><input type="text" class="f-input jumlah_ppn" placeholder="0">
+                    <p>=</p>
+                    <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
+                </div>
+
+                <div class="colum-total" style="margin-left: 183px;">
                     <p>Grand Total</p>
                     <p>=</p>
                     <input type="text" name="grand_total" value="" class="f-hasil grand_total" placeholder="0">
@@ -510,16 +511,29 @@
             });
         }
 
-        $('.disc, .ppn, .lain-lain').on('input', function(){
+        $('.disc, .dis, .jumlah_ppn, .ppn, .lain-lain').on('input', function(){
             var subtotal = $('.colum-total input.subtotal').val();
-            var dis = parseFloat($('.colum-total input.disc').val() / 100);
-            var ppn = parseInt($('.colum-total input.ppn').val() / 100);
+            var dis = parseFloat($('.colum-total input.dis').val() / 100);
+            var ppn = parseFloat($('.colum-total input.jumlah_ppn').val() / 100);
             var lainLain = parseInt($('.colum-total input.lain-lain').val());
 
+            var hasil_diskon = parseInt(subtotal) * dis;
+            $('.colum-total input.disc').val(hasil_diskon).text(hasil_diskon);
+            var subtotal1 = (parseInt(subtotal) - parseInt( hasil_diskon)) + lainLain;
 
-            var total = parseFloat(parseFloat(subtotal) -  dis) + ppn + lainLain;
-            $('.colum-total input.grand_total').val(total).text(total);
-            console.log('total', parseFloat(total), subtotal);
+            var hasil_ppn  = parseInt(subtotal1) * ppn;
+            $('.colum-total input.ppn').val(hasil_ppn).text(hasil_ppn);
+            var subtotal2 = parseInt(subtotal1) + parseInt( hasil_ppn);
+
+            var grand_total = parseInt(subtotal2);
+
+
+
+                {{--  var total = (parseFloat(parseInt(subtotal) - (parseInt(subtotal) * dis)) * ppn) + lainLain ;  --}}
+
+                $('.colum-total input.grand_total').val(grand_total).text(grand_total);
+
+            console.log('total', parseFloat(grand_total), subtotal);
         });
 
 

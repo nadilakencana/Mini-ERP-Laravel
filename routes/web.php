@@ -34,7 +34,9 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 Route::get('/',[AuthController::class,'viewLogin'])->name('login');
 Route::post('/login-admin', [AuthController::class, 'postLogin'])->name('loginadmin');
 Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
-
+// Route::get('/invoice', function(){
+//     return view('dashboard.part-lain.invoice');
+// });
 Route::group(['middleware' => ['logincek']], function(){
 
     Route::get('/Registrasi',[AuthController::class,'viewRegist'])->name('registrasi');
@@ -61,6 +63,8 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/post-data-create-sales',[salesController::class,'PostCreateData'])->name('postDataSales');
     Route::post('/post-pembayaran',[salesController::class,'postpembayaran'])->name('postPembayaran');
     Route::get('/get-data-pembayaran',[salesController::class,'getPembayaran'])->name('pembayaran');
+    Route::get('/invoice/{id}', [salesController::class, 'invoice'])->name('invoice');
+    Route::get('/Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
 
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');

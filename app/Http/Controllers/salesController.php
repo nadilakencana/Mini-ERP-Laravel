@@ -16,6 +16,7 @@ use App\Models\GroupToko;
 use App\Models\GroupMember;
 use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
+use PDF;
 
 class salesController extends Controller
 {
@@ -44,7 +45,7 @@ class salesController extends Controller
         $date = Carbon::now()->Format('y/m/d');
         $invoiceKode = $kode.'/'.$date.'/';
 
-        $lastFaktur = Penjualan::where('no_faktur', 'LIKE', '%'.$invoiceKode.'%')->OrderBy('no_faktur','ASC')->first();
+        $lastFaktur = Penjualan::where('no_faktur', 'LIKE', '%'. $kode.'%')->OrderBy('no_faktur','ASC')->first();
         // dd($lastFaktur);
         if($lastFaktur){
             $lastFakturs = $lastFaktur->no_faktur;
@@ -85,7 +86,7 @@ class salesController extends Controller
         $date = Carbon::now()->Format('y/m/d');
         $noSuratJalan = 'SJ/'.$kodeGroup.'/'.$date.'/';
 
-        $lastNoSj = DetailPengiriman::where('no_surat_jalan', 'LIKE', '%'.$noSuratJalan.'%')->OrderBy('no_surat_jalan', 'ASC')->first();
+        $lastNoSj = DetailPengiriman::where('no_surat_jalan', 'LIKE', '%'.$kodeGroup.'%')->OrderBy('no_surat_jalan', 'ASC')->first();
 
         if($lastNoSj){
             $lastSuratJalan = $lastNoSj->no_surat_jalan;
@@ -243,7 +244,7 @@ class salesController extends Controller
     }
 
     }
-     public function edit_sales($id){
+    public function edit_sales($id){
         $admin = Auth()->user()->id;
         $dec = decrypt($id);
         $sales = Penjualan::findOrFail($dec);
@@ -254,7 +255,32 @@ class salesController extends Controller
         $aliasProduct = Barang_Alias::where('fid_group',  $memberToko->fid_group)->get();
 
         return view('dashboard.salse.editSales', compact('sales','memberToko','customer','product','group','aliasProduct'));
-     }
+    }
+
+    public function invoice($id){
+        $dec = decrypt($id);
+        $sales = Penjualan::findOrFail($dec);
+        $admin = Auth()->user()->id;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $group = $memberToko->group()->first();
+        $kodeGroup = $group->kode_invoice;
+        $detail = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
+        $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
+        $pembayaran = DetailPembayaran::where('fid_penjualan', $sales->id)->first();
+        return view('dashboard.part-lain.invoice', compact('sales','kodeGroup','detail','barang','pembayaran'));
+    }
+    public function suratJalan($id){
+        $dec = decrypt($id);
+        $sales = Penjualan::findOrFail($dec);
+        $admin = Auth()->user()->id;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $group = $memberToko->group()->first();
+        $kodeGroup = $group->kode_invoice;
+        $detail = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
+        $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
+        $sj = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
+        return view('dashboard.part-lain.suratJalan', compact('sales','kodeGroup','detail','barang','sj'));
+    }
 
 
 }

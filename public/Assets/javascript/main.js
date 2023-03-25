@@ -17,8 +17,14 @@ if(btnRate){
     });
 }
 
-// const profile = document.getElementById('profile-navbar');
-// const profileDropdown = document.getElementsByClassName('dropdown-list-profile')[0];
-// profile.addEventListener('click', function(){
-//     profileDropdown.classList.toggle('off');
+// let print = document.querySelector('.btn-print');
+// let list_action = document.getElementsByClassName('dropdown-print-action')[0];
+
+// forEach(function(print){
+//     print.addEventListener('click', function(){
+//         list_action.classList.toggle('off');
+//     });
 // });
+
+
+

@@ -52,7 +52,7 @@
                     <th class="header-row" style="width:211px">Suplier</th>
                     <th class="header-row" style="width:234px">Total</th>
                     <th class="header-row">Date Purchase</th>
-                    <th class="header-row" style="width:100px">Action</th>
+                    <th class="header-row" style="width: 139px;">Action</th>
 
                </tr>
                @foreach ( $Pembelian as $purchase)
@@ -64,12 +64,20 @@
                             <td class="body-row">{{ $purchase->tanggal }}</td>
                             <td class="body-row">
                                 <div class="action-btn">
-
+                                    <div class="btn-print">
+                                        <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
+                                        <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
+                                    </div>
                                     <div class="btn-edit pembayaran" data-id="{{ $purchase->id }}">
                                         <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
                                     </div>
                                     <div class="btn-delete">
                                         <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
+                                    </div>
+                                    <div class="dropdown-print-action off">
+                                        <ul class="action-list">
+                                            <li class="action-btn">PO</li>
+                                        </ul>
                                     </div>
                                 </div>
 

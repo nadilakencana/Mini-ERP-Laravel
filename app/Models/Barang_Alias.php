@@ -24,4 +24,7 @@ class Barang_Alias extends Model
     public function group(){
         return $this->belongsTo(GroupToko::class,'fid_group','id');
     }
+    public function penjualan(){
+        return $this->hasMany(DetailPenjualan::class,'fid_barang','id');
+    }
 }

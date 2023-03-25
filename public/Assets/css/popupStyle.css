@@ -79,6 +79,11 @@ tr.body-tbl {
     border-spacing: 0px;
 
 }
+.ppn input[type="checkbox"] {
+    position: absolute;
+    margin-top: 4px;
+    margin-left: 41px;
+}
 td.data-detail-delivery {
     padding: 10px;
     text-align: center;
@@ -275,6 +280,7 @@ input#date_pembayaran {
     border-radius: 10px;
     height: 60px;
     display: flex;
+    width: 300px;
     align-items: center;
     cursor: pointer;
 }

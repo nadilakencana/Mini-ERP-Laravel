@@ -47,7 +47,7 @@ class PembelianController extends Controller
         $date = Carbon::now()->Format('y/m/d');
         $invoiceKode = 'PO/'.$kode.'/'.$date.'/';
 
-        $NoPO = Pembelian::where('no_faktur', 'LIKE', '%'.$invoiceKode.'%')->OrderBy('no_faktur','ASC')->first();
+        $NoPO = Pembelian::where('no_faktur', 'LIKE', '%'.$kode.'%')->OrderBy('no_faktur','ASC')->first();
         // dd($lastFaktur);
         if( $NoPO){
             $lastFakturs =  $NoPO ->no_faktur;

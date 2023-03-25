@@ -53,7 +53,7 @@
                     <th class="header-row" style="width:177px">Customer</th>
                     <th class="header-row" style="width:202px">Total</th>
                     <th class="header-row">Status</th>
-                    <th class="header-row" style="width: 100px;">Action</th>
+                    <th class="header-row" style="width: 139px;">Action</th>
                </tr>
                @foreach ($sales as $penjualan )
                <tr class="body-table">
@@ -65,7 +65,17 @@
                 <td class="body-row"></td>
                 <td class="body-row">
                     <div class="action-btn">
-
+                        <div class="btn-print">
+                            <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
+                            <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
+                            <div class="dropdown-print-action off">
+                                <ul class="action-list">
+                                    <li class="action-btn"><a href="{{ route('invoice', encrypt($penjualan->id) ) }}">Invoice</a></li>
+                                    <li class="action-btn"> <a href="{{ route('sj', encrypt($penjualan->id)) }}">Surat Jalan</a></li>
+                                    <li class="action-btn">Kwitansi</li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="btn-edit pembayaran" data-id="{{ $penjualan->id }}">
                             <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
                         </div>
@@ -73,6 +83,7 @@
                         <div class="btn-delete">
                             <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
                         </div>
+
                     </div>
 
                 </td>
@@ -92,7 +103,7 @@
 
 <div class="container-popup-cd-pembayaran close-hide">
     <div class="card-position">
-        <div class="card-create-customer " style="width: 653px;">
+        <div class="card-create-customer " style="width: 832px;">
             <div class="header-card-create">
                 <p class="text-tittle">
                    Pembayaran
@@ -114,6 +125,11 @@
                         <div class="i-form-sales">
                             <label for="nofaktur">RP</label>
                             <input type="text" name="total" class="i-form jumlah" placeholder="0">
+                        </div>
+                        <div class="i-form-sales ppn">
+                            <label for="nofaktur">PPN</label>
+                            <input type="checkbox" name="ppn" id="" value="11">
+                            <input type="text" name="total_ppn" class="i-form jumlah_ppn" placeholder="0">
                         </div>
                         <div class="vendor-selection">
                             <label for="vendor">Pembayaran</label>
@@ -168,6 +184,10 @@
 @section('script')
 <script>
    $(()=>{
+        $('.btn-print').on('click', function(){
+            $(this).find('.dropdown-print-action').slideToggle("fast");
+
+        });
 
 
     $('.pembayaran').on('click', function(e){

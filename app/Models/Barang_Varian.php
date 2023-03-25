@@ -20,4 +20,7 @@ class Barang_Varian extends Model
     public function barang(){
         return $this->belongsTo(Product::class, 'fid_barang','id');
     }
+    public function penjualan(){
+        return $this->hasMany(DetailPenjualan::class,'fid_varian','id');
+    }
 }

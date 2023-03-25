@@ -1095,8 +1095,53 @@ td.body-row.input-row {
     border: none;
     padding: 0;
 }
+.btn-print {
+    display: flex;
+    gap: 6px;
+    width: 40px;
+    box-sizing: border-box;
+    border-radius: 7px;
+    align-items: center;
+    cursor: pointer;
+}
+.btn-print img.print {
+    width: 20px;
+    height: 20px;
+}
+.btn-print img.dropdown {
+    width: 10px;
+    height: 10px;
+    object-fit: none;
+}
+.dropdown-print-action {
+    position: absolute;
+    z-index: 10000;
+    background: white;
+    padding: 20px 10px;
+    width: 100px;
+    box-shadow: 0px 7px 11px rgb(134 134 134 / 25%);
+    border-radius: 10px;
+    display: flex;
+    margin-top: 143px;
+}
+.dropdown-print-action.off {
+    display: none;
+}
+ul.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+li.action-btn {
+    display: flex;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+li.action-btn:hover {
+    border-bottom: 1px solid #0c9997;
+}
 input.input-tbl {
-    border: 1px solid #8080808f;
+    border: 2px solid #8080808f;
     border-radius: 10px;
     height: 43px;
     padding: 0px 10px;
