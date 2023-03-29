@@ -210,12 +210,15 @@ class salesController extends Controller
 
 
     public function getPembayaran(Request $request){
+        $admin = Auth()->user()->id;
         $sales = $request->sales;
        $pembayaran =  DetailPembayaran::where('fid_penjualan', $sales)->get();
+    //    $adminName =  DetailPembayaran::where('fid_penjualan', $sales)->get();
         return response()->json([
             'success' => 1,
             'message' => 'get data',
-            'data' => $pembayaran
+            'data' => $pembayaran,
+            'admin'=>$admin
         ]);
     }
 
@@ -229,6 +232,7 @@ class salesController extends Controller
         $pembayaran->tanggal = $request->tanggal;
         $pembayaran->pembayaran = $request->pembayaran;
         $pembayaran->total = $request->total;
+        $pembayaran->total_ppn = $request->total_ppn;
         $pembayaran->keterangan = $request->keterangan;
         $pembayaran->diperiksa = $admin;
         $pembayaran-> created_by = $admin;
@@ -269,6 +273,7 @@ class salesController extends Controller
         $pembayaran = DetailPembayaran::where('fid_penjualan', $sales->id)->first();
         return view('dashboard.part-lain.invoice', compact('sales','kodeGroup','detail','barang','pembayaran'));
     }
+
     public function suratJalan($id){
         $dec = decrypt($id);
         $sales = Penjualan::findOrFail($dec);
@@ -280,6 +285,17 @@ class salesController extends Controller
         $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
         $sj = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
         return view('dashboard.part-lain.suratJalan', compact('sales','kodeGroup','detail','barang','sj'));
+    }
+
+    public function Kwitansi($id){
+        // $dec = decrypt($id);
+        $pembayaran = DetailPembayaran::where('id', $id)->first();
+        $penjualan = Penjualan::where('id', $pembayaran->fid_penjualan)->first();
+
+        // dd($penjualan);
+        $customer = Customer::where('id', $penjualan->fid_customer)->first();
+        // dd($customer);
+        return view('dashboard.part-lain.kwitansi', compact('pembayaran', 'customer', 'penjualan'));
     }
 
 

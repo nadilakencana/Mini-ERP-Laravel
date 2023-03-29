@@ -861,10 +861,35 @@ img#icon-dw {
 .box-search p {
     line-height: 24px;
 }
+form.date_search {
+    display: flex;
+    gap: 10px;
+}
+.date_search button {
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    background: #89c3b1;
+    cursor: pointer;
+}
+#date {
+    border: 1px solid #6c6c6ca6;
+    height: 41px;
+    padding: 0px 10px;
+    width: 168px;
+    border-radius: 7px;
+}
 .header-display .button-section-display {
     display: flex;
     justify-content: space-between;
     gap: 20px;
+}
+.header-display .icon-search {
+    position: absolute;
+    z-index: 1000;
+    margin-top: -32px;
+    margin-left: 244px;
+    cursor: pointer;
 }
 .header-display .button-section-display .btn-import, .btn-export {
     display: flex;
@@ -1132,10 +1157,12 @@ ul.action-list {
     flex-direction: column;
     gap: 10px;
 }
-li.action-btn {
+li.action-btn a {
     display: flex;
     justify-content: flex-start;
     cursor: pointer;
+    color: #439a97;
+    text-decoration: none;
 }
 li.action-btn:hover {
     border-bottom: 1px solid #0c9997;

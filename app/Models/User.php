@@ -58,4 +58,8 @@ class User extends Authenticatable
     public function log(){
         return $this->hasMany(User_Log::class,'fid_user', 'id');
     }
+
+    public function pembayaran(){
+        return $this->hasMany(DetailPembayaran::class,'dipriksa','id');
+    }
 }

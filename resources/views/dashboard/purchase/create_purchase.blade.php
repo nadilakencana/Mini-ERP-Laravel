@@ -1,7 +1,7 @@
 @extends('layoute.latoute')
 @section('content')
 {{--  card-content  --}}
-@include('dashboard.part-lain.popUp_pembayaran')
+{{--  @include('dashboard.part-lain.popUp_pembayaran')  --}}
 
 <div class="card-content-display">
     <div class="header-display">
@@ -20,15 +20,19 @@
                     @endforeach
                 </select>
             </div>
+            <div class="alamat">
+                <label for="alamat">Alamat</label>
+                <textarea name="alamat" id="" cols="30" rows="7"></textarea>
+            </div>
         </div>
         <div class="part-head-right">
 
             <div class="Purchase-date tanggal">
-                <label for="date-purchase">Sales Date</label>
+                <label for="date-purchase">PO Date</label>
                 <input type="date" name="tanggal" id="sales_date">
             </div>
             <div class="Purchase-date pengiriman">
-                <label for="date-purchase">PO Date</label>
+                <label for="date-purchase">Tanggal Kirim</label>
                 <input type="date" name="tanggal_kirim" id="date_po">
             </div>
             <div class="i-form-sales noFaktur">
@@ -99,42 +103,43 @@
                     <label for="catatan">Catatan</label>
                     <div class="catatan-pembayaran">
                         <textarea name="keterangan" id="" cols="50" rows="10" class="keterangan-pembelian"></textarea>
-                        <div class="icon-pembayaran">
+                        {{--  <div class="icon-pembayaran">
                             <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
-                        </div>
+                        </div>  --}}
                     </div>
 
                  </div>
 
-                 <div class="action-form-btn">
+                 {{--  <div class="action-form-btn">
                     <div class="p-fak-form">
                         Print PO
                     </div>
 
-                 </div>
+                 </div>  --}}
             </div>
             <div class="f-form-r">
-                <div class="colum-total" style="margin-left: 137px;">
+                <div class="colum-total" style="margin-left: 200px;">
                     <p>SubTotal</p>
                     <p>=</p>
-                    <input type="text" name="sub_total" value="" class="f-hasil subtotal" placeholder="0">
+                    <input type="text" name="subtotal" value="" class="f-hasil subtotal" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 122px;">
-                    <p>Discount%</p>
+                <div class="colum-total" style="margin-left: 134px;">
+                    <p>Discount%</p><input type="text" class="f-input dis" placeholder="0">
                     <p>=</p>
-                    <input type="text" name="diskon_nominal" value="" class="f-input disc" placeholder="0">
+                    <input type="text" name="diskon_nominal" value="" class="f-hasil disc" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 172px;">
-                    <p>PPN</p>
-                    <p>=</p>
-                    <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
-                </div>
-                <div class="colum-total" style="margin-left: 92px;">
+                <div class="colum-total" style="margin-left: 158px;">
                     <p>Biaya Lain-lain</p>
                     <p>=</p>
                     <input type="text" name="biaya_lain_lain" value="" class="f-hasil lain-lain" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 117px;">
+                <div class="colum-total" style="margin-left: 166px;">
+                    <p>PPN %</p><input type="text" class="f-input jumlah_ppn" placeholder="0">
+                    <p>=</p>
+                    <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
+                </div>
+
+                <div class="colum-total" style="margin-left: 183px;">
                     <p>Grand Total</p>
                     <p>=</p>
                     <input type="text" name="grand_total" value="" class="f-hasil grand_total" placeholder="0">
@@ -214,6 +219,7 @@
         <input type="hidden" name="fid_supplier" class="input-hide customer"/>
         <input type="hidden" name="tanggal" class="input-hide tanggal"/>
         <input type="hidden" name="tanggal_kirim" class="input-hide tanggal_kirim"/>
+        <input type="hidden" name="alamat" class="input-hide alamat"/>
         <input type="hidden" name="keterangan" class="input-hide keterangan"/>
         <input type="hidden" name="sub_total" class="input-hide sub_total"/>
         <input type="hidden" name="diskon_nominal" class="input-hide diskon_nominal"/>
@@ -232,10 +238,10 @@
 
 
         {{--  pembayaran  --}}
-        <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
+        {{--  <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
         <input type="hidden" name="pembayaran" class="input-hide pembayaran"/>
         <input type="hidden" name="total" class="input-hide total"/>
-        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>
+        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>  --}}
 
 
 
@@ -447,16 +453,29 @@
             });
         }
 
-        $('.disc, .ppn, .lain-lain').on('input', function(){
+        $('.disc, .dis, .jumlah_ppn, .ppn, .lain-lain').on('input', function(){
             var subtotal = $('.colum-total input.subtotal').val();
-            var dis = parseFloat($('.colum-total input.disc').val() / 100);
-            var ppn = parseInt($('.colum-total input.ppn').val() / 100);
+            var dis = parseFloat($('.colum-total input.dis').val() / 100);
+            var ppn = parseFloat($('.colum-total input.jumlah_ppn').val() / 100);
             var lainLain = parseInt($('.colum-total input.lain-lain').val());
 
+            var hasil_diskon = parseInt(subtotal) * dis;
+            $('.colum-total input.disc').val(hasil_diskon).text(hasil_diskon);
+            var subtotal1 = (parseInt(subtotal) - parseInt( hasil_diskon)) + lainLain;
 
-            var total = parseFloat(parseFloat(subtotal) -  dis) + ppn + lainLain;
-            $('.colum-total input.grand_total').val(total).text(total);
-            console.log('total', parseFloat(total), subtotal);
+            var hasil_ppn  = parseInt(subtotal1) * ppn;
+            $('.colum-total input.ppn').val(hasil_ppn).text(hasil_ppn);
+            var subtotal2 = parseInt(subtotal1) + parseInt( hasil_ppn);
+
+            var grand_total = parseInt(subtotal2);
+
+
+
+                {{--  var total = (parseFloat(parseInt(subtotal) - (parseInt(subtotal) * dis)) * ppn) + lainLain ;  --}}
+
+                $('.colum-total input.grand_total').val(grand_total).text(grand_total);
+
+            console.log('total', parseFloat(grand_total), subtotal);
         });
 
 
@@ -493,6 +512,7 @@
         var Suplier = $formhead1.find('.vendor-selection .input-f.supplier option:selected').val();
         var tanggal = $formhead2.find('.Purchase-date.tanggal input').val();
         var tanggalKirim = $formhead2.find('.Purchase-date.pengiriman input').val();
+        var alamat = $formhead1.find('.alamat textarea').val();
         var faktur = $formhead2.find('.i-form-sales.noFaktur input').val();
         //var seles = $formhead2.find('.i-form-sales.seles input.admin_id').val();
 
@@ -517,6 +537,7 @@
         $form.find(`input.customer[name="fid_supplier"]`).val(Suplier);
         $form.find(`input.tanggal[name="tanggal"]`).val(tanggal);
         $form.find(`input.tanggal_kirim[name="tanggal_kirim"]`).val(tanggalKirim);
+        $form.find(`input.alamat[name="alamat"]`).val(alamat);
         $form.find(`input.keterangan[name="keterangan"]`).val(catatan);
         $form.find(`input.sub_total[name="sub_total"]`).val(subtotal);
         $form.find(`input.diskon_nominal[name="diskon_nominal"]`).val(discount);
@@ -527,10 +548,10 @@
 
 
         //pembayaran
-        $form.find(`input.tanggal_pembayaran[name="tanggal_pembayaran"]`).val(tanggal_pembayaran);
-        $form.find(`input.pembayaran[name="pembayaran"]`).val(pembayaran);
-        $form.find(`input.total[name="total"]`).val(jumlah);
-        $form.find(`input.deskripPembayaran[name="deskripPembayaran"]`).val(dsc);
+        //$form.find(`input.tanggal_pembayaran[name="tanggal_pembayaran"]`).val(tanggal_pembayaran);
+        //$form.find(`input.pembayaran[name="pembayaran"]`).val(pembayaran);
+        //$form.find(`input.total[name="total"]`).val(jumlah);
+        //$form.find(`input.deskripPembayaran[name="deskripPembayaran"]`).val(dsc);
 
         $row.each(function(){
             var $elm = $(this);

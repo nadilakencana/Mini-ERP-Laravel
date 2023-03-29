@@ -22,5 +22,12 @@ class Pembelian extends Model
 
     }
 
+    public function Group(){
+        return $this->belongsTo(GroupToko::class,'fid_group','id' );
+    }
+
+    public function admin(){
+        return $this->belongsTo(User::class, 'fid_user','id');
+    }
 
 }

@@ -221,7 +221,7 @@
                     @php $no=1; @endphp
                     @foreach ($barang as $product )
                     <tr>
-                        <td style="text-align: center;">{{ $no }}</td>
+                        <td style="text-align: center;">{{ $no++ }}</td>
                         <td>{{ $product->jenis->nama_jenis }}</td>
                         <td>
                             <div class="detail-barang">

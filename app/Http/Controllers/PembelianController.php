@@ -15,7 +15,7 @@ use App\Models\GroupToko;
 use App\Models\GroupMember;
 use App\Models\Supplier;
 use Illuminate\Support\Carbon;
-
+use App\Models\ContactPersonSupplier;
 
 class PembelianController extends Controller
 {
@@ -84,6 +84,7 @@ class PembelianController extends Controller
         $pembelian->fid_supplier = $request->fid_supplier;
         $pembelian->tanggal = $request->tanggal;
         $pembelian->tanggal_kirim = $request->tanggal_kirim;
+        $pembelian->alamat = $request->alamat;
         $pembelian->tunggu_konfirmasi_supplier = 0;
         $pembelian->keterangan = $request->keterangan;
         $pembelian->sub_total = $request->sub_total;
@@ -126,17 +127,17 @@ class PembelianController extends Controller
 
 
 
-            $pembayaran = new DetailPembayaranPembelian();
-            $pembayaran->fid_pembelian =  $pembelian->id;
-            $pembayaran->tanggal = $request->tanggal_pembayaran;
-            $pembayaran->pembayaran = $request->pembayaran;
-            $pembayaran->total = $request->total;
-            $pembayaran->keterangan = $request->deskripPembayaran;
-            $pembayaran->diperiksa = $admin;
-            $pembayaran-> created_by = $admin;
-            $pembayaran-> updated_by = $admin;
+            // $pembayaran = new DetailPembayaranPembelian();
+            // $pembayaran->fid_pembelian =  $pembelian->id;
+            // $pembayaran->tanggal = $request->tanggal_pembayaran;
+            // $pembayaran->pembayaran = $request->pembayaran;
+            // $pembayaran->total = $request->total;
+            // $pembayaran->keterangan = $request->deskripPembayaran;
+            // $pembayaran->diperiksa = $admin;
+            // $pembayaran-> created_by = $admin;
+            // $pembayaran-> updated_by = $admin;
 
-            $pembayaran->save();
+            // $pembayaran->save();
 
 
 
@@ -182,6 +183,25 @@ class PembelianController extends Controller
         }else{
             return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
         }
+    }
+
+    public function suratPO($id){
+        $admin = Auth()->user()->id;
+        $dec = decrypt($id);
+        $purchase = Pembelian:: findOrFail($dec);
+        $barang = DetailPembelian::where('fid_pembelian',$purchase->id)->get();
+        $detail_sup = ContactPersonSupplier::where('fid_supplier', $purchase->fid_supplier)->first();
+
+        return view('dashboard.part-lain.suratPO', compact('purchase','barang', 'detail_sup'));
+    }
+    public function suratPO_PT($id){
+        $admin = Auth()->user()->id;
+        $dec = decrypt($id);
+        $purchase = Pembelian:: findOrFail($dec);
+        $barang = DetailPembelian::where('fid_pembelian',$purchase->id)->get();
+        $detail_sup = ContactPersonSupplier::where('fid_supplier', $purchase->fid_supplier)->first();
+        $alamat_admin = GroupMember::where('fid_user', $admin)->first();
+        return view('dashboard.part-lain.Surat_po_PT', compact('purchase','barang', 'detail_sup', 'alamat_admin'));
     }
 
 

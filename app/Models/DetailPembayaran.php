@@ -14,6 +14,7 @@ class DetailPembayaran extends Model
         'tanggal',
         'pembayaran',
         'total',
+        'total_ppn',
         'keterangan',
         'dipriksa',
         'created_by',
@@ -22,4 +23,12 @@ class DetailPembayaran extends Model
     ];
 
     public $timestamp = true;
+
+    public function admin(){
+        return $this->belongsTo(User::class,'dipriksa','id');
+    }
+
+    public function penjualan(){
+        return $this->belongsTo(DetailPembayaran::class,'fid_penjualan', 'id');
+    }
 }

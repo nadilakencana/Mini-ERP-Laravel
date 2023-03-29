@@ -34,8 +34,8 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 Route::get('/',[AuthController::class,'viewLogin'])->name('login');
 Route::post('/login-admin', [AuthController::class, 'postLogin'])->name('loginadmin');
 Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
-// Route::get('/invoice', function(){
-//     return view('dashboard.part-lain.invoice');
+// Route::get('/surat-po', function(){
+//     return view('dashboard.part-lain.suratPO');
 // });
 Route::group(['middleware' => ['logincek']], function(){
 
@@ -51,8 +51,8 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/post-data-pembelian',[PembelianController::class ,'PostPemebelian'])->name('PostDataPembelian');
     Route::get('/get-data-pembayaran-pembelian',[PembelianController::class, 'getPembayaranPembelian'])->name('pembayaranPembelian');
     Route::post('/post-data-pembayaran-pembelian',[PembelianController::class, 'postpembayaranPembelian'])->name('postpembayaranPembelian');
-    // Route::get('/edit-data-purchase',[PembelianController::class,'edit_purchase'])->name('edit-data-purchase');
-    // Route::get('/get-ProductMaster',[PembelianController::class,'getProduct'])->name('get-master-product');
+    Route::get('/surat-po/{id}', [PembelianController::class,'suratPO'])->name('suratpo');
+    Route::get('/Surat-Po-PT/{id}', [PembelianController::class,'suratPO_PT'])->name('suratpo-PT');
 
     // sales
     Route::get('/sales',[salesController::class,'Sales'])->name('sales');
@@ -65,6 +65,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/get-data-pembayaran',[salesController::class,'getPembayaran'])->name('pembayaran');
     Route::get('/invoice/{id}', [salesController::class, 'invoice'])->name('invoice');
     Route::get('/Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
+    Route::get('/kwitansi/{id}', [salesController::class, 'Kwitansi'])->name('kwitansi');
 
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');

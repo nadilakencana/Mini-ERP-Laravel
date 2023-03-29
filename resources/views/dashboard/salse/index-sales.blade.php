@@ -17,35 +17,36 @@
     {{--  card-content  --}}
     <div class="card-content-display">
         <div class="header-display">
-            <div class="box-search">
+            <div class="search">
+                <div class="box-search" contenteditable>
+                    <p>Search</p>
+                </div>
                 <div class="icon-search">
                     <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
                 </div>
-                <p>Search</p>
             </div>
+
             <div class="button-section-display">
-                <div class="btn-import">
+                {{--  <div class="btn-import">
                     <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
                     <p>Import</p>
                 </div>
                 <div class="btn-export">
                     <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
                     <p>Export</p>
-                </div>
-                <div class="filter-date">
-                    <p>Filter Date</p>
-                    <img src="{{ asset('Assets/icon/🦆 icon _calendar_.png') }}" alt="" class="icon_calender" id="calender_id">
+                </div>  --}}
+                <form class="date_search">
+                    <div class="tanggal">
+                        <input type="date" name="tanggal" id="date">
+                    </div>
+                    <button type="submit">Cari</button>
+                </form>
 
-                </div>
-                <div class="calender off">
-                   <div id="dycalendar"></div>
-
-                </div>
             </div>
         </div>
         <div class="table-data">
             @php $no=1; @endphp
-            <table>
+            <table id="data-table">
                <tr class="header-table">
                     <th class="header-row" >No</th>
                     <th class="header-row" style="width:200px">No Fakture/Invoice</th>
@@ -70,9 +71,9 @@
                             <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
                             <div class="dropdown-print-action off">
                                 <ul class="action-list">
-                                    <li class="action-btn"><a href="{{ route('invoice', encrypt($penjualan->id) ) }}">Invoice</a></li>
+                                    <li class="action-btn"> <a href="{{ route('invoice', encrypt($penjualan->id)) }}"> Invoice</a></li>
                                     <li class="action-btn"> <a href="{{ route('sj', encrypt($penjualan->id)) }}">Surat Jalan</a></li>
-                                    <li class="action-btn">Kwitansi</li>
+
                                 </ul>
                             </div>
                         </div>
@@ -128,7 +129,7 @@
                         </div>
                         <div class="i-form-sales ppn">
                             <label for="nofaktur">PPN</label>
-                            <input type="checkbox" name="ppn" id="" value="11">
+                            <input type="checkbox" name="ppn" id="" value="0.11" class="ppn">
                             <input type="text" name="total_ppn" class="i-form jumlah_ppn" placeholder="0">
                         </div>
                         <div class="vendor-selection">
@@ -166,8 +167,10 @@
                             <th class="th-tbl-payment">Tanggal</th>
                             <th class="th-tbl-payment">Pembayaran</th>
                             <th class="th-tbl-payment">Total</th>
+                            <th class="th-tbl-payment">PPN</th>
                             <th class="th-tbl-payment" style="width: 157px;">Keterangan</th>
                             <th class="th-tbl-payment">Diperiksa</th>
+                            <th class="th-tbl-payment">Action</th>
                         </tr>
                     </thead>
                     <tbody class="tbl-body-payment">
@@ -201,6 +204,17 @@
 
     });
 
+    $('.i-form-sales input.ppn').on('click', function(){
+        var $elm = $(this);
+        if($elm.prop('checked', true)){
+            const ppn = $elm.val();
+            const Bayar = $('input[name="total"]').val();
+            const hasil = parseInt(Bayar) * parseFloat(ppn);
+            $('input[name="total_ppn"]').val(hasil).text(hasil);
+             console.log(Bayar, ppn, hasil);
+        }
+    })
+
     $('.btn-tambah-pyment').on('click', function(){
         var idx = $(this).attr('data-id');
         console.log(idx);
@@ -231,9 +245,11 @@
                         "<td class='tbl-td-body-payment'>"+item.tanggal+"</td>"+
                         "<td class='tbl-td-body-payment'>"+item.pembayaran+"</td>"+
                         "<td class='tbl-td-body-payment'>"+item.total+"</td>"+
+                        "<td class='tbl-td-body-payment'>"+item.total_ppn+"</td>"+
                         "<td class='tbl-td-body-payment'>"+item.keterangan+"</td>"+
-                        "<td class='tbl-td-body-payment'>"+"</td>"+
-                    "</tr>"
+                        "<td class='tbl-td-body-payment'>"+"<p>{{ Auth()->user()->nama }}</p>"+"</td>"+
+                        `<td class="tbl-td-body-payment"><div class="p-kw-form"><a href="{{route('kwitansi', '')}}/${item.id}">Kwitansi</a></div></td>`
+                        +"</tr>"
                     );
                     no++;
                  });
@@ -243,39 +259,9 @@
         });
     }
 
-    function postData(idx){
-        var obj = {};
-        var $formSet = $('.form-card.payment-sales');
-        var id = $formSet.data('id');
-        var tanggal = $formSet.find('input[name="tanggal"]').val();
-        var jumlah =  $formSet.find('input[name="total"]').val();
-        var metodeBayar = $formSet.find('vendor-selection .pembayaran-methode option:selected').val();
-        var deskripsi = $formSet.find('textarea[name="deskripPembayaran"]').val();
-        var idx = $formSet.find('input[name="id"]').val(idx);
+     function kwitansi(id){
 
-        console.log(idx);
-        obj["_token"] = "{{ csrf_token() }}";
-        obj['fid_penjualan'] = idx;
-        obj['tanggal'] = tanggal;
-        obj['pembayaran'] = metodeBayar;
-        obj['total'] = jumlah;
-        obj['keterangan'] = deskripsi;
-        if(id){
-            obj['id'] = id;
-        }
-        $.ajax({
-            url: "{{route('postPembayaran')}}",
-            data: obj,
-            method : 'POST',
-            success : function(result){
-                console.log('success', result);
-
-                window.location.reload();
-            }
-        }).fail(function(data){
-           console.log(data);
-        });
-    }
+     }
 
 
    });

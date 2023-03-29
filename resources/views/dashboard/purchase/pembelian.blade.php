@@ -17,41 +17,42 @@
     {{--  card-content  --}}
     <div class="card-content-display">
         <div class="header-display">
-            <div class="box-search">
+            <div class="search">
+                <div class="box-search" contenteditable>
+                    <p>Search</p>
+                </div>
                 <div class="icon-search">
                     <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
                 </div>
-                <p>Search</p>
             </div>
+
             <div class="button-section-display">
-                <div class="btn-import">
+                {{--  <div class="btn-import">
                     <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
                     <p>Import</p>
                 </div>
                 <div class="btn-export">
                     <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
                     <p>Export</p>
-                </div>
-                <div class="filter-date">
-                    <p>Filter Date</p>
-                    <img src="{{ asset('Assets/icon/🦆 icon _calendar_.png') }}" alt="" class="icon_calender" id="calender_id">
+                </div>  --}}
+                <form class="date_search">
+                    <div class="tanggal">
+                        <input type="date" name="tanggal" id="date">
+                    </div>
+                    <button type="submit">Cari</button>
+                </form>
 
-                </div>
-                <div class="calender off">
-                   <div id="dycalendar"></div>
-
-                </div>
             </div>
         </div>
         <div class="table-data">
             @php $no=1; @endphp
-            <table>
+            <table id="data-table">
                <tr class="header-table">
                     <th class="header-row" >No</th>
                     <th class="header-row" style="width:200px">Kode Purchase</th>
+                    <th class="header-row">Date Purchase</th>
                     <th class="header-row" style="width:211px">Suplier</th>
                     <th class="header-row" style="width:234px">Total</th>
-                    <th class="header-row">Date Purchase</th>
                     <th class="header-row" style="width: 139px;">Action</th>
 
                </tr>
@@ -59,14 +60,21 @@
                     <tr class="body-table">
                             <td class="body-row">{{ $no++ }}</td>
                             <td class="body-row">{{ $purchase->no_faktur }}</td>
+                            <td class="body-row">{{ $purchase->tanggal }}</td>
                             <td class="body-row">{{ $purchase->suplier->nama_supplier }}</td>
                             <td class="body-row">Rp. {{number_format( $purchase->grand_total, 2, ',','.')}}</td>
-                            <td class="body-row">{{ $purchase->tanggal }}</td>
+
                             <td class="body-row">
                                 <div class="action-btn">
                                     <div class="btn-print">
                                         <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
                                         <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
+                                        <div class="dropdown-print-action off" style="margin-top: 81px;">
+                                            <ul class="action-list">
+                                                <li class="action-btn"><a href="{{ route('suratpo',  encrypt($purchase->id)) }}">Surat PO</a></li>
+                                                <li class="action-btn"><a href="{{ route('suratpo-PT',  encrypt($purchase->id)) }}">Surat PO PT</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div class="btn-edit pembayaran" data-id="{{ $purchase->id }}">
                                         <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
@@ -74,11 +82,7 @@
                                     <div class="btn-delete">
                                         <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
                                     </div>
-                                    <div class="dropdown-print-action off">
-                                        <ul class="action-list">
-                                            <li class="action-btn">PO</li>
-                                        </ul>
-                                    </div>
+
                                 </div>
 
                             </td>
@@ -173,7 +177,10 @@
 <script>
     $(()=>{
 
+        $('.btn-print').on('click', function(){
+            $(this).find('.dropdown-print-action').slideToggle("fast");
 
+        });
      $('.pembayaran').on('click', function(e){
          e.stopPropagation();
          e.preventDefault();

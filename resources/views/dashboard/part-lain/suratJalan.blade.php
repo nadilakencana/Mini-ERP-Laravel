@@ -27,10 +27,7 @@
             margin-bottom: 4px;
         }
         .invoice {
-
-
             margin: 30px 20px;
-
         }
         .header-invoice {
             display: flex;
