@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Layoute</title>
+    <link rel="apple-touch-icon" href="{{ asset('Assets/image/logo_rounded.png') }}">
     <link rel="stylesheet" href="{{ asset('Assets/css/dycalendar.css') }}">
     <link rel="stylesheet" href="{{ asset('Assets/css/basedStayle.css') }}">
     <link rel="stylesheet" href="{{ asset('Assets/css/popupStyle.css') }}">

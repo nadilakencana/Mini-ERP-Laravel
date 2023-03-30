@@ -26,20 +26,13 @@
                     <div class="box-search" contenteditable>
                         <p>Search</p>
                     </div>
-                    <div class="icon-search">
+                    <div class="icon-search" id="first" onclick="search()">
                         <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
                     </div>
                 </div>
 
                 <div class="button-section-display">
-                    {{--  <div class="btn-import">
-                        <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
-                        <p>Import</p>
-                    </div>
-                    <div class="btn-export">
-                        <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
-                        <p>Export</p>
-                    </div>  --}}
+
                     <form class="date_search">
                         <div class="tanggal">
                             <input type="date" name="tanggal" id="date">
@@ -51,7 +44,7 @@
             </div>
             <div class="table-data">
                 @php $no=1; @endphp
-                <table id="data-table">
+                <table id="data-table" class="data">
                 <tr class="header-table">
                         <th class="header-row" >No</th>
                         <th class="header-row" style="width:200px">Nama Customer</th>
@@ -114,31 +107,28 @@
         {{--  card-content  --}}
         <div class="card-content-display">
             <div class="header-display">
-                <div class="box-search">
-                    <div class="icon-search">
+                <div class="search">
+                    <div class="box-search second" contenteditable>
+                        <p>Search</p>
+                    </div>
+                    <div class="icon-search" id="second" onclick="search2()">
                         <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
                     </div>
-                    <p>Search</p>
                 </div>
+
                 <div class="button-section-display">
-                    <div class="btn-import">
-                        <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
-                        <p>Import</p>
-                    </div>
-                    <div class="btn-export">
-                        <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
-                        <p>Export</p>
-                    </div>
-                    <form action="">
-                        <div class="Purchase-date">
-                            <input type="date" name="date" id="date_po">
+                    <form class="date_search">
+                        <div class="tanggal">
+                            <input type="date" name="tanggal" id="date">
                         </div>
+                        <button type="submit">Cari</button>
                     </form>
+
                 </div>
             </div>
             <div class="table-data">
                 @php $no=1; @endphp
-                <table>
+                <table class="data" id="data-table1">
                 <tr class="header-table">
                         <th class="header-row" >No</th>
                         <th class="header-row" style="width:200px">Customer</th>

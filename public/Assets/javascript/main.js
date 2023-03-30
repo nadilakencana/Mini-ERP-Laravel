@@ -65,14 +65,15 @@ function searchByDate() {
 
 function search(){
    // Mendapatkan nilai input pencarian
-  var input, filter, table, tr, td, i, txtValue;
+  var input, filter, table, tr, target, i, txtValue;
   input = document.querySelector(".box-search");
   filter = input.innerText.toUpperCase();
     console.log(filter);
   // Mendapatkan tabel dan baris dalam tabel
 
-   table = document.getElementById("data-table");
-    console.log(table);
+   table = document.querySelector(".data#data-table");
+    // target = table.getElementById('data-table');
+    // console.log(table);
     tr = table.getElementsByClassName("body-table");
 
   for (var i = 0; i < tr.length; i++) {
@@ -92,25 +93,16 @@ function search(){
 }
 
 
-// const Search2 = document.querySelector('#second');
-// if(Search2){
-//     Search2.addEventListener("click", function(event) {
-//         event.preventDefault();
-//         search2();
-//     });
-//     console.log(Search2, search2())
-// }
-
 
 function search2(){
        // Mendapatkan nilai input pencarian
   var input, filter, table, tr, td, i, txtValue;
-  input = document.querySelector(".box-search");
+  input = document.querySelector(".box-search.second");
   filter = input.innerText.toUpperCase();
     console.log(filter);
   // Mendapatkan tabel dan baris dalam tabel
 
-   table = document.getElementById("data-table1");
+   table = document.querySelector(".data#data-table1");
     tr = table.getElementsByClassName("body-table");
 
   for (var i = 0; i < tr.length; i++) {

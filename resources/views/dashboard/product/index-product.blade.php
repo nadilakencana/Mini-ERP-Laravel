@@ -33,14 +33,7 @@
                 </div>
 
                 <div class="button-section-display">
-                    {{--  <div class="btn-import">
-                        <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
-                        <p>Import</p>
-                    </div>
-                    <div class="btn-export">
-                        <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
-                        <p>Export</p>
-                    </div>  --}}
+
                     <form class="date_search">
                         <div class="tanggal">
                             <input type="date" name="tanggal" id="date">
@@ -52,7 +45,7 @@
             </div>
             <div class="table-data">
                 @php $no=1; @endphp
-                <table id="data-table">
+                <table id="data-table" class="data">
                    <tr class="header-table">
                         <th class="header-row" >No</th>
                         <th class="header-row" style="width:200px">Kode Barang/Jasa</th>
@@ -117,7 +110,7 @@
         <div class="card-content-display">
             <div class="header-display">
                 <div class="search">
-                    <div class="box-search" contenteditable>
+                    <div class="box-search second" contenteditable>
                         <p>Search</p>
                     </div>
                     <div class="icon-search" id="second" onclick="search2()">
@@ -126,14 +119,6 @@
                 </div>
 
                 <div class="button-section-display">
-                    {{--  <div class="btn-import">
-                        <img src="{{ asset('Assets/icon/🦆 icon _cloud download_.png') }}" alt="">
-                        <p>Import</p>
-                    </div>
-                    <div class="btn-export">
-                        <img src="{{ asset('Assets/icon/🦆 icon _account logout_.png') }}" alt="">
-                        <p>Export</p>
-                    </div>  --}}
                     <form class="date_search">
                         <div class="tanggal">
                             <input type="date" name="tanggal" id="date">
@@ -145,7 +130,7 @@
             </div>
             <div class="table-data">
                 @php $no=1; @endphp
-                <table id="data-table1">
+                <table class="data" id="data-table1" >
                    <tr class="header-table">
                         <th class="header-row" >No</th>
                         <th class="header-row" style="width:451px">Warna / Varian</th>
