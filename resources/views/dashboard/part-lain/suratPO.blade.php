@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Surat Purchase Order</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
 
     <style>
         .purchase-layoute {
@@ -149,7 +151,12 @@
         .img img {
             width: 183px;
         }
-        .button-save-pdf {
+        .seeting-print {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .seeting-print .button-save-pdf {
             cursor: pointer;
             background: #b32424;
             padding: 10px;
@@ -159,10 +166,23 @@
             color: white;
             border-radius: 10px;
         }
+        .seeting-print .set-harga {
+            font-size: 20px;
+            font-weight: 800;
+        }
     </style>
 </head>
 <body>
-    <div class="button-save-pdf">Save PDF</div>
+    <div class="seeting-print">
+        <div class="button-save-pdf">Save PDF</div>
+        <div class="set-harga">
+            <span class="text">
+                Hanya Item Barang
+            </span>
+            <input type="checkbox" name="" id="harga" class="harga-check">
+        </div>
+    </div>
+
     <div class="purchase-layoute">
         <div class="header-surat-po">
             <div class="image">
@@ -236,8 +256,8 @@
                         <th>Product</th>
                         <th>Varian</th>
                         <th>QTY</th>
-                        <th>Unit Price</th>
-                        <th>Total Amount</th>
+                        <th class="price">Unit Price</th>
+                        <th class="amount">Total Amount</th>
                     </thead>
                     <tbody>
                         @php $no=1; @endphp
@@ -247,8 +267,8 @@
                             <td>{{ $br->alias->alias }}</td>
                             <td>{{ $br->variasi->nama_varian }}</td>
                             <td>{{ $br->jumlah }}</td>
-                            <td style="text-align: end;">{{ number_format($br->harga_satuan , 0,',','.') }}</td>
-                            <td style="text-align: end;">{{ number_format($br->pembelian->sub_total, 0,',','.') }} </td>
+                            <td style="text-align: end;" class="price-unit">{{ number_format($br->harga_satuan , 0,',','.') }}</td>
+                            <td style="text-align: end;" class="amount-unit">{{ number_format($br->pembelian->sub_total, 0,',','.') }} </td>
                         </tr>
                         @endforeach
 
@@ -320,6 +340,21 @@
             html2pdf().set(opt).from(element).save();
         });
 
+        $(()=>{
+            $('.set-harga .harga-check').on('change', function(e){
+                var check = $(this).prop('checked');
+
+                if(check){
+                    var $tabel = $('.product table');
+                    var $footer = $('.footer-total-table').remove();
+
+                    $tabel.find('thead .price').remove();
+                    $tabel.find('thead .amount').remove();
+                    $tabel.find('tbody .price-unit').remove();
+                    $tabel.find('tbody .amount-unit').remove();
+                }
+            })
+        })
     </script>
 </body>
 </html>
