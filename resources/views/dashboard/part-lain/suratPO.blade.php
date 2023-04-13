@@ -354,7 +354,7 @@
                     $tabel.find('tbody .amount-unit').remove();
                 }
             })
-        })
+        });
     </script>
 </body>
 </html>
