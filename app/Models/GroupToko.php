@@ -14,6 +14,8 @@ class GroupToko extends Model
         'kode_invoice',
         'alamat',
         'no_telpon',
+        'rekening_no_ppn',
+        'rekening_ppn',
         'logo_toko',
         'shoppee_hook',
         'tokopedia_hook',
@@ -26,5 +28,8 @@ class GroupToko extends Model
 
     public function group_member(){
         return $this->hasMany(GroupMember::class,'fid_group', 'id');
+    }
+    public function penjualan(){
+        return $this->hasMany(penjualan::class,'fid_group', 'id');
     }
 }

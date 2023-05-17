@@ -16,6 +16,8 @@ use App\Models\GroupMember;
 use App\Models\Supplier;
 use Illuminate\Support\Carbon;
 use App\Models\ContactPersonSupplier;
+use App\Models\DetailPenjualan;
+use App\Models\Penjualan;
 
 class PembelianController extends Controller
 {
@@ -26,10 +28,41 @@ class PembelianController extends Controller
     }
 
 
-
     public function pembelian(){
-        $Pembelian = Pembelian::orderBy('updated_at', 'desc')->get();
+        $admin = Auth()->user()->id;
+         $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $Pembelian = Pembelian::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
         return view('dashboard.purchase.pembelian', compact('Pembelian'));
+    }
+
+    public function getLoadData(){
+        $admin = Auth()->user()->id;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $Pembelian = Pembelian::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
+
+        return view('dashboard.part-lain.data-pembelian', compact('Pembelian'));
+    }
+
+    public function getDetailPenjualan(Request $request){
+        $refSales = $request->refId;
+        // dd($refSales);
+        $Penjualan = Penjualan::where('id', $refSales)->first();
+        $DetailPenjualan = DetailPenjualan::where('fid_penjualan', $Penjualan->id)->get();
+        // dd(count($DetailPenjualan));
+
+        foreach($DetailPenjualan as $k => $DetailPenjualan){
+            $k < count($DetailPenjualan->toArray()) - 1;
+			// if(  $k < count($DetailPenjualan->toArray()) - 1){
+			// 	$varianString = $varianString.$varian->variasi.', ';
+			// }else{
+			// 	$varianString = $varianString.$varian->variasi;
+			// }
+
+		}
+
+
+        return view('dashboard.part-lain.detail_penjualan', compact('Penjualan', 'DetailPenjualan'));
+
     }
 
     public function create_purchase(){
@@ -41,24 +74,28 @@ class PembelianController extends Controller
         $supplier = Supplier::all();
         $product = Product::all();
         $group = GroupToko::all();
+        $sales = Penjualan::all();
         $aliasProduct = Barang_Alias::where('fid_group',  $memberToko->fid_group)->get();
         $getRelation = $memberToko->group()->first();
         $kode = $getRelation->kode_invoice;
-        $date = Carbon::now()->Format('y/m/d');
-        $invoiceKode = 'PO/'.$kode.'/'.$date.'/';
+        $date = Carbon::now(); //->Format('y/m/d');
+        $y = $date->format('y');
+        $m = $date->format('m');
+        $d = $date->format('d');
 
-        $NoPO = Pembelian::where('no_faktur', 'LIKE', '%'.$kode.'%')->OrderBy('no_faktur','ASC')->first();
+        $invoiceKode = 'PO/'.$kode.'/'.$y.'/'.$m.'/';
+
+        $NoPO = Pembelian::where('no_faktur', 'LIKE', '%'.$invoiceKode.'%')->OrderBy('no_faktur','DESC')->first();
         // dd($lastFaktur);
         if( $NoPO){
-            $lastFakturs =  $NoPO ->no_faktur;
-            $lastFakturs = explode($invoiceKode, $lastFakturs);
-
-            $lastFakturs = sprintf("%04d", intval($lastFakturs) + 1);
-            $PrefixFaktur = $invoiceKode.$lastFakturs;
+            $lastFakturs =  $NoPO->no_faktur;
+            $lastFakturs = explode('/', $lastFakturs);
+            $lastFakturs = sprintf("%04d", intval($lastFakturs[count($lastFakturs)-1]) + 1);
+            $PrefixFaktur = $invoiceKode.$d.'/'.$lastFakturs;
             // dd($PrefixFaktur);
 
         }else{
-            $PrefixFaktur = $invoiceKode.'0001';
+            $PrefixFaktur = $invoiceKode.$d.'/'.'0001';
         }
 
         $getInvoice = $PrefixFaktur;
@@ -69,6 +106,7 @@ class PembelianController extends Controller
         'group',
         'aliasProduct',
         'getInvoice',
+        'sales',
         ));
     }
 

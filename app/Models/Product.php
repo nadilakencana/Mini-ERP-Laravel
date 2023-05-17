@@ -9,7 +9,8 @@ class Product extends Model
 {
     use HasFactory;
     protected $table = 'barang';
-    protected $fillable = ['kode' ,'nama_barang','fid_jenis_barang'];
+    protected $fillable = ['kode' ,'nama_barang','fid_jenis_barang','harga', 'produk_sendiri',
+    'created_by','updated_by','approved','user_approved','tanggal_approved'];
 
 
     public $timestamp = true;
@@ -30,4 +31,8 @@ class Product extends Model
     public function alias(){
         return $this->hasMany(Barang_Alias::class, 'fid_barang','id');
     }
+    public function user(){
+        return $this->belongsTo(User::class, 'user_approved','id');
+    }
+
 }

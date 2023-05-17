@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\User_Role;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,7 @@ class AuthController extends Controller
         // dd($credentials);
         if(Auth::attempt($credentials)){
 
-            if(Auth::check() && Auth::user()->role == 3){
+            if(Auth::check() ){
             //     $user = Auth::user();
             //     $user = ['status'=> 1];
 
@@ -82,9 +83,10 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function updateAdmin(Request $request,$id){
-        $dec = decrypt($id);
-        $edit_user = User::findOrFail( $dec );
+    public function updateAdmin(Request $request){
+        if($request->id){
+            $edit_user = User::where('id', $request->id)->first();
+        }
 
         $edit_user->username = $request->username;
         $edit_user->nama = $request->nama;
@@ -94,7 +96,13 @@ class AuthController extends Controller
         $edit_user->role = $request->role;
         // dd( $edit_user);
         $edit_user->save();
-        return redirect()->route('dataUser');
+        return response()->json(['success' => 1, 'message' => 'Admin Berhasil Diupdate']);
     }
 
+    public function EditUser(Request $request){
+        $edit_user = User::where('id', $request->id)->first();
+        $role = User_Role::where('id', $edit_user->role)->first();
+        return response()->json(['success' => 1, 'message'=>'data user berhasil di ambil', 'data'=> $edit_user, 'role'=>$role]);
+
+    }
 }

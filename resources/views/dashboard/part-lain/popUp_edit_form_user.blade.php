@@ -9,51 +9,44 @@
                 <p class="close"> X </p>
             </div>
             <div class="form-card">
-                <form action="{{ route('admin-edit', encrypt($edit_user->id)) }}" method="post">
-                    @csrf
-                    <div class="col-form-p-input">
+                {{--  <form action="{{ route('admin-edit', encrypt($edit_user->id)) }}" method="post">
+                    @csrf  --}}
+                    <div class="col-form-p-input u-name">
                         <label for="kode-barang">Username</label>
-                        <input type="text" class="input-f @error('username') is-invalid @enderror" name="username" placeholder="username" value="{{  $edit_user->username }}">
+                        <input type="text" class="input-f @error('username') is-invalid @enderror" name="username" placeholder="username" >
                         @error('username')
                         <small class="text-danger">{{ $message }}</small>
                          @enderror
                     </div>
-                    <div class="col-form-p-input">
+                    <div class="col-form-p-input name">
                         <label for="kode-barang">Nama</label>
-                        <input type="text" class="input-f @error('nama') is-invalid @enderror" name="nama" placeholder="Nama Admin" value="{{  $edit_user->nama }}">
+                        <input type="text" class="input-f @error('nama') is-invalid @enderror" name="nama" placeholder="Nama Admin" >
                         @error('nama')
                         <small class="text-danger">{{ $message }}</small>
                          @enderror
                     </div>
-                    <div class="col-form-p-input">
+                    <div class="col-form-p-input email">
                         <label for="kode-barang">Email</label>
-                        <input type="email" class="input-f @error('email') is-invalid @enderror" name="email" placeholder="email user" value="{{  $edit_user->email }}">
+                        <input type="email" class="input-f @error('email') is-invalid @enderror" name="email" placeholder="email user">
                         @error('email')
                         <small class="text-danger">{{ $message }}</small>
                          @enderror
                     </div>
-                    <div class="col-form-p-input">
+                    <div class="col-form-p-input noHp">
                         <label for="kode-barang">No Telephone</label>
-                        <input type="number" class="input-f @error('no_hp') is-invalid @enderror" name="no_hp" placeholder="no handphone" value="{{  $edit_user->no_hp }}">
+                        <input type="number" class="input-f @error('no_hp') is-invalid @enderror" name="no_hp" placeholder="no handphone">
                         @error('no_hp')
                         <small class="text-danger">{{ $message }}</small>
                          @enderror
                     </div>
-                    {{--  <div class="col-form-p-input">
-                        <label for="kode-barang">Password</label>
-                        <input type="password" class="input-f @error('password') is-invalid @enderror" name="password" placeholder="no handphone" value="{{  $edit_user->password }}">
-                        @error('password')
-                        <small class="text-danger">{{ $message }}</small>
-                         @enderror
-                    </div>  --}}
 
-                    <div class="col-form-p-input">
+                    <div class="col-form-p-input " id="role">
                         <label for="nama-barang">Role</label>
                        <select name="role"  class="input-f" >
-                            @foreach ($user_role as $Ur)
-                            <option value="{{ $Ur->id }}" selected>
-                                {{ $Ur -> nama_role}}
+                            <option value="" class="old-role" selected>
+
                             </option>
+                            @foreach ($user_role as $Ur)
                                 @if(old('id') == $Ur->id)
                                     <option value="{{ $Ur->id }}" selected>
                                         {{ $Ur -> nama_role}}
@@ -67,10 +60,10 @@
                        </select>
                     </div>
                     <div class="button-action-form">
-                       <button type="submit"> <div class="btn-save-form">Save</div></button>
+                       <div class="btn-save-form user">Save</div>
                         <div class="btn-cencel-form">Cancel</div>
                     </div>
-                </form>
+                {{--  </form>  --}}
             </div>
         </div>
 

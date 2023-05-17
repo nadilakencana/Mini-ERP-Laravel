@@ -64,7 +64,7 @@
                     <td class="body-row">{{ $admin->role_admin->nama_role }}</td>
                     <td class="body-row">
                         <div class="action-btn">
-                            <div class="btn-edit">
+                            <div class="btn-edit" data-id="{{ $admin->id }}">
                                 <img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="">
                             </div>
                             <div class="btn-delete">
@@ -94,16 +94,92 @@
 <script>
     $(()=>{
         $('.btn-edit').on('click', function(e){
-            $('.container-popup-card-create').removeClass('close-hide').addClass('show');
-            $('.card-create-customer.user').removeClass('close-hide').addClass('show');
             e.stopPropagation();
             e.preventDefault();
+            var id = $(this).attr('data-id');
+            setForm(id);
         })
 
         $('.close').on('click', function(){
             $('.container-popup-card-create').removeClass('show').addClass('close-hide');
             $('.card-create-customer.user').removeClass('show').addClass('close-hide');
         });
+        $('.btn-save-form.user').on('click', function(){
+            postData();
+        });
+
+
+        function setForm(id){
+            var obj ={};
+            obj["_token"] = "{{ csrf_token() }}";
+            obj['id'] = id;
+            $.ajax({
+                url: "{{route('admin-edit')}}",
+                data: obj,
+                method : 'GET',
+                success : function(result){
+                    form(result.data, result.role);
+                    //console.log(data);
+                }
+            }).fail(function(data){
+            console.log(data);
+            });
+        }
+
+        function form(data, role){
+            var $formSet = $('.form-card');
+            $formSet.data('id', data.id);
+            $formSet.find('.col-form-p-input#role option:selected.old-role').val(data.role).text(role.nama_role);
+            $formSet.find('.col-form-p-input.u-name input').val(data.username);
+            $formSet.find('.col-form-p-input.name input').val(data.nama);
+            $formSet.find('.col-form-p-input.email input').val(data.email);
+            $formSet.find('.col-form-p-input.noHp input').val(data.no_hp);
+
+            $('.container-popup-card-create').removeClass('close-hide').addClass('show');
+            $('.card-create-customer.user').removeClass('close-hide').addClass('show');
+
+        }
+
+
+
+           function postData(){
+            var obj = {};
+            var $formSet = $('.form-card');
+            var id = $formSet.data('id');
+            var role = $formSet.find('.col-form-p-input#role option:selected').attr('value');
+            var username = $formSet.find('.col-form-p-input.u-name input').val();
+            var name =$formSet.find('.col-form-p-input.name input').val();
+            var email = $formSet.find('.col-form-p-input.email input').val();
+            var no_hp =  $formSet.find('.col-form-p-input.noHp input').val();
+
+
+            obj['role'] = role;
+            obj['username'] = username;
+            obj['nama'] = name;
+            obj['email'] = email;
+            obj['no_hp'] = no_hp;
+
+            //console.log(obj['fid_group']);
+
+            obj["_token"] = "{{ csrf_token() }}";
+            if(id){
+                obj['id'] = id;
+            }
+            $.ajax({
+                url: "{{route('update-edit')}}",
+                data: obj,
+                method : 'POST',
+                success : function(result){
+                    console.log('success', result);
+                    //clearForm();
+                    $('.container-popup-card-create').removeClass('show').addClass('close-hide');
+                    $('.card-create-customer.user').removeClass('show').addClass('close-hide');
+                    window.location.reload();
+                }
+            }).fail(function(data){
+               console.log(data);
+            });
+           }
     })
 </script>
 @stop

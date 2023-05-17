@@ -48,7 +48,9 @@
 
             <div class="button-action-form">
                 <button type="submit"><div class="btn-save-form">Save</div></button>
-                <div class="btn-cencel-form">Cancel</div>
+                <a href="{{ url()->previous() }}">
+                    <div class="btn-cencel-form">Cancel</div>
+                </a>
             </div>
         </form>
     </div>

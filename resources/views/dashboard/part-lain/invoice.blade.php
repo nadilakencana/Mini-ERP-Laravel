@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Invoice</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
     <style>
         body{
@@ -168,13 +169,95 @@
             color: white;
             border-radius: 10px;
         }
+        .setting-print-inv {
+            {{--  display: flex;  --}}
+            align-items: center;
+        }
+        .setting-print-inv .setting-box {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+            width: 833px;
+        }
+        .setting-print-inv .setting-box .item-set-print {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .item-set-print .name-set {
+            display: flex;
+            gap: 10px;
+        }
+        .name-set input.input-name-set {
+            border: 1px solid grey;
+            border-radius: 10px;
+            width: 85px;
+            padding: 10px;
+        }
+        .name-set input.persen {
+            border: 1px solid grey;
+            border-radius: 10px;
+            width: 54px;
+        }
+        .item-set-print input.nominal {
+            border: 1px solid grey;
+            border-radius: 10px;
+            width: 113px;
+            padding: 10px;
+        }
+        .action-set {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .save-set {
+            padding: 13px;
+            background: #8fc38f;
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+        }
+        .hapus-set {
+            padding: 13px;
+            background: #e95c5c;
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 
 
 </head>
 
 <body>
-   <div class="button-save-pdf">Save PDF</div>
+    <div class="setting-print-inv">
+        <div class="name-head">Setting Print Invoice</div>
+        <div class="setting-box">
+            <div class="item-set-print">
+                <div class="name-set">
+                    <label for="">Name</label>
+                    <input type="text" class="input-name-set" placeholder="nama pembayaran">
+                    <input type="text" class="persen" placeholder="persent%"> %
+                </div> =
+                <input type="text" class="nominal">
+            </div>
+            <div class="item-set-print">
+               <label for="">PPN</label>
+               <input type="checkbox" name="" id="" class="ppn" data-idx="{{ $sales->fid_group }}">
+            </div>
+            <div class="action-set">
+                <div class="save-set">Add+</div>
+                <div class="hapus-set">Delete</div>
+                <div class="button-save-pdf">Save PDF</div>
+            </div>
+            <div class="item-set-print">
+                <label for="">Rekening Mandiri PT</label>
+                <input type="checkbox" name="" id="" class="Rek-mandiri">
+             </div>
+        </div>
+    </div>
+
    <div class="invoice">
         <div class="header-invoice">
             <div class="left-header-kode">-{{ $kodeGroup }}-</div>
@@ -244,7 +327,7 @@
                 @php
                     $grand_total = 0;
 
-                    if(!!$pembayaran -> fid_penjualan){
+                    if(isset($pembayaran->fid_penjualan)){
                         $PembayaranDp = $pembayaran->total;
                         $ppn = 11 / 100 ;
                         $ppnDp = $PembayaranDp * $ppn;
@@ -259,7 +342,7 @@
                 @endphp
                 <div class="sub-total">
                     <p>Nilai Penjualan</p>
-                    <p>Rp. <span style="float: right;">{{ number_format($sales->sub_total, 0,',','.') }}</span> </p>
+                    <p>Rp. <span class="subtot" style="float: right;">{{ number_format($sales->sub_total, 0,',','.') }}</span> </p>
                 </div>
                 {{--  @if(!! $sales->diskon_nominal)
                 <div class="sub-total">
@@ -273,34 +356,34 @@
                 </div>
                 @endif  --}}
 
-                @if(!! $pembayaran->fid_penjualan)
+                @if(isset($pembayaran->fid_penjualan))
                 <div class="sub-total">
-                    <p>Uang Muka</p>
-                    <p>Rp.<span style="float: right;">{{ number_format($pembayaran->total, 0,',','.') }}</span></p>
+                    <p class="name-pembayaran">Uang Muka <p class="persent-pembayaran"></p></p>
+                    <p>Rp.<span class="pembayaran" style="float: right;">{{ number_format($pembayaran->total, 0,',','.') }}</span></p>
                 </div>
                 <div class="sub-total">
                     <p>PPN</p>
-                    <p>Rp.<span style="float: right;">{{ number_format($ppnDp, 0,',','.') }}</span> </p>
+                    <p>Rp.<span class="ppn-pembayaran" style="float: right;">{{ number_format($ppnDp, 0,',','.') }}</span> </p>
                 </div>
                 <div class="line"></div>
                 <div class="sub-total" style="margin-top: 10px;">
                     <p> TOTAL</p>
-                    <p>Rp. <span style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
+                    <p>Rp. <span class="total" style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
                 </div>
                <div class="duobel-line"></div>
                 @else
                 <div class="sub-total">
-                    <p>Uang Muka</p>
-                    <p>Rp.<span style="float: right;">0</span></p>
+                    <p class="name-pembayaran">Uang Muka <span class="persent-pembayaran"></span></p>
+                    <p>Rp.<span class="pembayaran" style="float: right;">0</span></p>
                 </div>
                 <div class="sub-total">
                     <p>PPN</p>
-                    <p>Rp.<span style="float: right;">0</span> </p>
+                    <p>Rp.<span class="ppn-pembayaran" style="float: right;">0</span> </p>
                 </div>
                 <div class="line"></div>
                 <div class="sub-total" style="margin-top: 10px;">
-                    <p> TOTAL</p>
-                    <p>Rp. <span style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
+                    <p > TOTAL</p>
+                    <p>Rp. <span class="total-bayar" style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
                 </div>
                <div class="duobel-line"></div>
                 @endif
@@ -321,6 +404,7 @@
             </div>
             <div class="footer-note">
                 <p>Catatan :</p>
+                <div class="rekening">{{ $sales->groupToko->rekening_no_ppn }}</div>
                 <ul>
                     <li>- Sisa uang dilunasi dengan uang tunai.</li>
                     <li>- Barang-barang yang sudah dipesan tidak dapat ditukar.</li>
@@ -354,6 +438,92 @@
            html2pdf().set(opt).from(element).save();
        });
 
+       $(()=>{
+            $('.setting-print-inv .item-set-print .persen').on('input', function(){
+                var subtot = $('.sub-total span.subtot').text();
+
+                var subFormatNum = parseInt(subtot.replace(/\./g,''));
+                console.log(subFormatNum);
+                var target = $(this).val();
+                var presentens = parseFloat(target / 100);
+                var jumlah = subFormatNum * presentens;
+                $('.item-set-print input.nominal').val(jumlah);
+            });
+
+            $('.action-set .save-set').on('click', function(){
+                var namaPayment = $('input.input-name-set').val();
+                var persent = $('input.persen').val();
+                var nominalPembayaran = $('input.nominal').val();
+                var convert = parseInt(nominalPembayaran).toLocaleString('id-ID',{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                })
+                console.log(namaPayment, persent, convert);
+
+                $('.sub-total p.name-pembayaran').text(namaPayment);
+                $('.sub-total p.name-pembayaran .persent-pembayaran').text(persent);
+                $('.sub-total .pembayaran').text(convert);
+                $('.sub-total .total-bayar').text(convert);
+            })
+
+            $('.item-set-print .ppn').on('change', function(){
+                var idx = $(this).attr('data-idx');
+                var nominalPembayaran = $('input.nominal').val();
+                var ppn = parseInt(nominalPembayaran) * (parseFloat(11 / 100));
+                console.log(ppn, idx);
+                var convertPPN = parseInt(ppn).toLocaleString('id-ID',{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                var total = parseInt(nominalPembayaran) + ppn;
+                var convertTotal = parseInt(total).toLocaleString('id-ID',{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                $('.sub-total .ppn-pembayaran').text(convertPPN);
+                $('.sub-total .total-bayar').text(convertTotal);
+
+                getDataToko(idx);
+
+            })
+
+            $('.item-set-print .Rek-mandiri').on('change', function(){
+                addRekeningMandiri();
+            })
+
+            function getDataToko(id){
+                var obj ={};
+                obj["_token"] = "{{ csrf_token() }}";
+                obj['id'] = id;
+
+                $.ajax({
+                    url : "{{ route('getDataToko') }}",
+                    data: obj,
+                    method : 'GET',
+                    success : function(result){
+                        dataToko(result.data);
+                    }
+                }).fail(function(data){
+                    console.log(data);
+                });
+            }
+
+            function dataToko(data){
+                var $target = $('.footer-note');
+                $target.find('.rekening').text(data.rekening_ppn);
+                console.log(data.rekening_ppn);
+            }
+
+            function addRekeningMandiri(){
+                var $target = $('.footer-note');
+                $target.find('.rekening').append('</br>'+
+                ' Bank Mandiri 1550010546979 A/N PT. Griya Fortuna Internasional, Cabang Mutiara Kosambi'
+                );
+
+            }
+       })
+
    </script>
 </body>
 </html>
+

@@ -7,9 +7,9 @@ use  App\Models\Product;
 use  App\Models\Barang_Alias;
 use  App\Models\Barang_jenis;
 use  App\Models\Barang_Varian;
-
+use App\Models\GroupMember;
 use App\Models\GroupToko;
-
+use Illuminate\Support\Carbon;
 class ProductController extends Controller
 {
     public function __construct()
@@ -20,11 +20,13 @@ class ProductController extends Controller
     //product
     public function product(){
 
-        $product = Product::all();
+        $product = Product::where('approved', '1')->get();
+        $product_not_approved = Product::where('approved','0')->get();
         $variasi = Barang_Varian::all();
+        $jenis_barang = Barang_jenis::all();
         // $var = Barang_Varian::where('id', $variasi['id'])->first();
         // dd($var);
-        return view('dashboard.product.index-product', compact('product','variasi'));
+        return view('dashboard.product.index-product', compact('product','variasi','jenis_barang','product_not_approved'));
     }
 
     public function create_product(){
@@ -41,13 +43,16 @@ class ProductController extends Controller
             'kode' => 'required',
             'nama_barang' => 'required',
             'fid_jenis_barang' => 'required',
+            'harga' => 'required',
         ]);
 
         $barang = new Product();
         $barang->kode = $request->kode;
         $barang->nama_barang = $request->nama_barang;
         $barang->fid_jenis_barang = $request->fid_jenis_barang;
-        $barang->produk_sendiri = true;
+        $barang->harga = $request->harga;
+        $barang->produk_sendiri = $request->produk_sendiri;
+        $barang->approved = false;
         $barang->created_by = $user;
         $barang->updated_by= $user;
 
@@ -58,6 +63,46 @@ class ProductController extends Controller
         }else{
             return redirect()->back()->with('Faild', 'Gagal menambahkan data barang');
         }
+    }
+    public function CreateProductInSales(Request $request){
+        // dd($request);
+        $user = Auth()->user()->id;
+
+        $request->validate([
+            'kode' => 'required',
+            'nama_barang' => 'required',
+            'fid_jenis_barang' => 'required',
+            'harga' => 'required',
+        ]);
+
+        $barang = new Product();
+        $barang->kode = $request->kode;
+        $barang->nama_barang = $request->nama_barang;
+        $barang->fid_jenis_barang = $request->fid_jenis_barang;
+        $barang->harga = $request->harga;
+        $barang->produk_sendiri = $request->produk_sendiri;
+        $barang->approved = false;
+        $barang->created_by = $user;
+        $barang->updated_by= $user;
+
+        // dd($barang);
+
+        if($barang->save()){
+            return redirect()->back()->with('Success', 'Berhasil menambahkan data baru');
+        }else{
+            // return redirect()->back()->with('Faild', 'Gagal menambahkan data barang');
+        }
+    }
+
+    public function approvedProduct(Request $request,$id){
+        $user = Auth()->user()->id;
+
+        $product = Product::find($id);
+        $product->approved = true;
+        $product->user_approved = $user;
+        $product->tanggal_approved = Carbon::now()->toDateTimeString();
+        $product->save();
+        return response()->json(['success' => 1, 'data' => $product]);
     }
 
     public function edit_product($id){
@@ -75,6 +120,8 @@ class ProductController extends Controller
             'kode' => 'required',
             'nama_barang' => 'required',
             'fid_jenis_barang' => 'required',
+            'harga' => 'required',
+
         ]);
 
         $dec = decrypt($id);
@@ -82,15 +129,16 @@ class ProductController extends Controller
         $barang->kode = $request->kode;
         $barang->nama_barang = $request->nama_barang;
         $barang->fid_jenis_barang = $request->fid_jenis_barang;
+        $barang->harga = $request->harga;
         $barang->produk_sendiri = true;
         $barang->created_by = $user;
         $barang->updated_by= $user;
         // dd($barang);
 
         if($barang->save()){
-            return redirect()->route('product')->with('Success', 'Berhasil menambahkan data baru');
+            return redirect()->route('product')->with('Berhasil', 'mengubah data');
         }else{
-            return redirect()->back()->with('Faild', 'Gagal menambahkan data barang');
+             return redirect()->back()->with('Faild', 'Gagal menambahkan data barang');
         }
     }
 
@@ -106,7 +154,29 @@ class ProductController extends Controller
 
     //Variasi Barang
 
+    public function newVarian(Request $request){
+        $user = Auth()->user()->id;
+
+        $varians = $request->varian;
+        // dd($varians);
+        foreach($varians as $varian){
+            // dd($varian);
+            $brangVarian = New Barang_Varian();
+            $brangVarian-> fid_jenis_barang  =  $varian['fid_jenis_barang'];
+            $brangVarian-> nama_varian = $varian['nama_varian'];
+            $brangVarian-> created_by  = $user;
+            $brangVarian-> updated_by  = $user;
+
+            // dd($brangVarian);
+            $brangVarian->save();
+        }
+
+        return redirect()->back()->with('Success', 'Berhasil menambahkan Varian');
+
+    }
+
     public function update_Varian(Request $request){
+
         $user = Auth()->user()->id;
 
         if($request->id){
@@ -115,7 +185,7 @@ class ProductController extends Controller
             $Varian_barang = new Barang_Varian();
         }
 
-        $Varian_barang -> fid_barang = $request->fid_barang;
+        $Varian_barang -> fid_jenis_barang = $request->fid_jenis_barang;
         $Varian_barang -> nama_varian = $request->nama_varian ;
         $Varian_barang -> created_by = $user;
         $Varian_barang -> updated_by = $user;
@@ -128,8 +198,8 @@ class ProductController extends Controller
 
     public function edit_varian(Request $request){
         $Varian_barang = Barang_Varian::where('id', $request->id)->first();
-        $barang = Product::where('id', $Varian_barang->fid_barang)->first();
-        return response()->json(['success' => 1, 'message' => 'Role Berhasil Diambil', 'data' => $Varian_barang, 'barang' =>$barang]);
+        $barang_jenis = Barang_jenis::where('id', $Varian_barang->fid_jenis_barang)->first();
+        return response()->json(['success' => 1, 'message' => 'Varian Berhasil Diambil', 'data' => $Varian_barang, 'barangJenis' =>$barang_jenis]);
     }
 
     public function DeleteVarian($id){
@@ -145,7 +215,9 @@ class ProductController extends Controller
     // alias barang
     public function aliasProduct(){
 
-        $alias = Barang_Alias::all();
+        $admin = Auth()->user()->id;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $alias = Barang_Alias::where('fid_group', $memberToko->id)->get();
         $product = Product::all();
         $jenis_barang = Barang_jenis::all();
         $group = GroupToko::all();
@@ -165,6 +237,7 @@ class ProductController extends Controller
         $alias_barang -> fid_barang = $request->fid_barang;
         $alias_barang -> fid_group = $request->fid_group;
         $alias_barang -> alias = $request->alias;
+        $alias_barang -> harga = $request->harga;
         $alias_barang -> created_by = $user;
         $alias_barang -> updated_by = $user;
 

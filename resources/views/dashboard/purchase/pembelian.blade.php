@@ -15,7 +15,7 @@
         </a>
     </div>
     {{--  card-content  --}}
-    <div class="card-content-display">
+    <div class="card-content-display" style="height: 500px">
         <div class="header-display">
             <div class="search">
                 <div class="box-search" contenteditable>
@@ -36,12 +36,21 @@
                 </form>
 
             </div>
+            <div class="button-section-display">
+                <div class="date_search">
+                    <label for="">Bulan</label>
+                    <div class="tanggal month">
+                        <input  name="tanggal" class="datepicker" id="date">
+                    </div>
+                    <button type="submit" class="filter">Cari</button>
+                </div>
+
+            </div>
         </div>
         <div class="table-data">
-            @php $no=1; @endphp
+
             <table id="data-table" class="data">
                <tr class="header-table">
-                    <th class="header-row" >No</th>
                     <th class="header-row" style="width:200px">Kode Purchase</th>
                     <th class="header-row">Date Purchase</th>
                     <th class="header-row" style="width:211px">Suplier</th>
@@ -51,7 +60,7 @@
                </tr>
                @foreach ( $Pembelian as $purchase)
                     <tr class="body-table">
-                            <td class="body-row">{{ $no++ }}</td>
+
                             <td class="body-row">{{ $purchase->no_faktur }}</td>
                             <td class="body-row">{{ $purchase->tanggal }}</td>
                             <td class="body-row">{{ $purchase->suplier->nama_supplier }}</td>
@@ -84,10 +93,10 @@
 
             </table>
 
-            <div class="footer-table">
+            {{--  <div class="footer-table">
                 <div class="data-total">Showing 1-10 entries</div>
                 <div class="pagination"></div>
-            </div>
+            </div>  --}}
 
         </div>
     </div>
@@ -174,6 +183,50 @@
             $(this).find('.dropdown-print-action').slideToggle("fast");
 
         });
+        $(".datepicker").datepicker({
+            dateFormat: 'yy-mm',
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            onClose: function(dateText, inst) {
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+            }
+        });
+
+        $(".datepicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "center top",
+                at: "center bottom",
+                of: $(this)
+            });
+        });
+
+        $('.date_search button.filter').on('click', function(){
+            filtermonth();
+        });
+
+        function filtermonth(){
+            var month = $('.date_search .month input').val();
+            console.log(month);
+            var $tableRows = $('table tr.body-table');
+            $tableRows.each(function(){
+                // Ambil nilai pada kolom tanggal (misalnya, kolom ketiga)
+              const rowDate = $(this).find("td:nth-child(2)").text();
+              console.log(rowDate);
+              const monthNum = new Date(`${month}`).getMonth() + 1;
+                // Jika nilai tanggal pada baris sama dengan tanggal yang dicari, tampilkan baris
+                if (Number(rowDate.split('-')[1]) === Number(monthNum)) {
+                    $(this).show();
+                  } else {
+                    // Jika tidak, sembunyikan baris
+                    $(this).hide();
+                  }
+            })
+        }
+
      $('.pembayaran').on('click', function(e){
          e.stopPropagation();
          e.preventDefault();
@@ -225,6 +278,34 @@
          }).fail(function(data){
              console.log(data);
          });
+     }
+
+
+    let part = 1;
+    $(window).scroll(function() {
+        if($(window).scrollTop() == $(document).height() - $(window).height()) {
+            part++
+            getData(part);
+        }
+    });
+
+    function getData(part){
+
+        let URL = "{{ route('loadData') }}"+ '?page=' + part;
+        console.log(URL);
+        $.get(URL, function(result){
+            if(result.length > 0){
+                $(result).appendTo('.table-data .data');
+
+                part++;
+            }
+
+
+        }).fail(function(result){
+            console.log(result);
+
+        });
+
      }
 
 

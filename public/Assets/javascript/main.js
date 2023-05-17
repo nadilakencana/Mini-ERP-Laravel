@@ -40,7 +40,7 @@ function searchByDate() {
       // Ambil nilai pada kolom tanggal (misalnya, kolom ketiga)
     const rowDate = tableRows[i].querySelectorAll("td")[2].textContent;
       // Jika nilai tanggal pada baris sama dengan tanggal yang dicari, tampilkan baris
-      if (rowDate === searchDate) {
+      if (rowDate == searchDate) {
         tableRows[i].style.display = "";
       } else {
         // Jika tidak, sembunyikan baris

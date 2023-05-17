@@ -14,8 +14,11 @@
             </div>
         </a>
     </div>
+    @auth
+
+    @endauth
     {{--  card-content  --}}
-    <div class="card-content-display">
+    <div class="card-content-display" style="height: 500px">
         <div class="header-display">
             <div class="search">
                 <div class="box-search" contenteditable>
@@ -36,60 +39,69 @@
                 </form>
 
             </div>
+            <div class="button-section-display">
+                <div class="date_search">
+                    <label for="">Bulan</label>
+                    <div class="tanggal month">
+                        <input  name="tanggal" class="datepicker" id="date">
+                    </div>
+                    <button type="submit" class="filter">Cari</button>
+                </div>
+
+            </div>
         </div>
         <div class="table-data">
             @php $no=1; @endphp
             <table id="data-table" class="data">
                <tr class="header-table">
-                    <th class="header-row" >No</th>
-                    <th class="header-row" style="width:200px">No Fakture/Invoice</th>
+
+                    <th class="header-row" style="width:200px">No Faktur/Invoice</th>
                     <th class="header-row" style="width:116px">Tanggal</th>
                     <th class="header-row" style="width:177px">Customer</th>
                     <th class="header-row" style="width:202px">Total</th>
                     <th class="header-row">Status</th>
-                    <th class="header-row" style="width: 139px;">Action</th>
+                    <th class="header-row" style="width: 111px;">Action</th>
                </tr>
                @foreach ($sales as $penjualan )
                <tr class="body-table">
-                <td class="body-row">{{ $no++ }}</td>
-                <td class="body-row">{{ $penjualan->no_faktur }}</td>
-                <td class="body-row">{{ $penjualan->tanggal }}</td>
-                <td class="body-row">{{ $penjualan->customer->nama_customer }}</td>
-                <td class="body-row">Rp. {{number_format( $penjualan->grand_total, 2, ',','.')}} </td>
-                <td class="body-row"></td>
-                <td class="body-row">
-                    <div class="action-btn">
-                        <div class="btn-print">
-                            <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
-                            <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
-                            <div class="dropdown-print-action off">
-                                <ul class="action-list">
-                                    <li class="action-btn"> <a href="{{ route('invoice', encrypt($penjualan->id)) }}"> Invoice</a></li>
-                                    <li class="action-btn"> <a href="{{ route('sj', encrypt($penjualan->id)) }}">Surat Jalan</a></li>
+                    <td class="body-row">{{ $penjualan->no_faktur }}</td>
+                    <td class="body-row">{{ $penjualan->tanggal }}</td>
+                    <td class="body-row">{{ $penjualan->customer->nama_customer }}</td>
+                    <td class="body-row">Rp. {{number_format( $penjualan->grand_total, 2, ',','.')}} </td>
+                    <td class="body-row"></td>
+                    <td class="body-row">
+                        <div class="action-btn">
+                            <div class="btn-print">
+                                <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
+                                <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
+                                <div class="dropdown-print-action off">
+                                    <ul class="action-list">
+                                        <li class="action-btn"> <a href="{{ route('invoice', encrypt($penjualan->id)) }}"> Invoice</a></li>
+                                        <li class="action-btn"> <a href="{{ route('sj', encrypt($penjualan->id)) }}">Surat Jalan</a></li>
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="btn-edit pembayaran" data-id="{{ $penjualan->id }}">
-                            <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
+                            <div class="btn-edit pembayaran" data-id="{{ $penjualan->id }}">
+                                <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
+                            </div>
+
+                            <div class="btn-delete">
+                                <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
+                            </div>
+
                         </div>
 
-                        <div class="btn-delete">
-                            <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
-                        </div>
-
-                    </div>
-
-                </td>
-           </tr>
+                    </td>
+                </tr>
                @endforeach
 
             </table>
 
-            <div class="footer-table">
+            {{--  <div class="footer-table">
                 <div class="data-total">Showing 1-10 entries</div>
                 <div class="pagination"></div>
-            </div>
+            </div>  --}}
 
         </div>
     </div>
@@ -180,11 +192,54 @@
 @section('script')
 <script>
    $(()=>{
+
         $('.btn-print').on('click', function(){
             $(this).find('.dropdown-print-action').slideToggle("fast");
-
         });
 
+        $(".datepicker").datepicker({
+            dateFormat: 'yy-mm',
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            onClose: function(dateText, inst) {
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+            }
+        });
+
+        $(".datepicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "center top",
+                at: "center bottom",
+                of: $(this)
+            });
+        });
+
+        $('.date_search button.filter').on('click', function(){
+            filtermonth();
+        });
+
+        function filtermonth(){
+            var month = $('.date_search .month input').val();
+            console.log(month);
+            var $tableRows = $('table tr.body-table');
+            $tableRows.each(function(){
+                // Ambil nilai pada kolom tanggal (misalnya, kolom ketiga)
+              const rowDate = $(this).find("td:nth-child(2)").text();
+              console.log(rowDate);
+              const monthNum = new Date(`${month}`).getMonth() + 1;
+                // Jika nilai tanggal pada baris sama dengan tanggal yang dicari, tampilkan baris
+                if (Number(rowDate.split('-')[1]) === Number(monthNum)) {
+                    $(this).show();
+                  } else {
+                    // Jika tidak, sembunyikan baris
+                    $(this).hide();
+                  }
+            })
+        }
 
     $('.pembayaran').on('click', function(e){
         e.stopPropagation();
@@ -252,7 +307,32 @@
         });
     }
 
-     function kwitansi(id){
+
+    let part = 1;
+
+    $(window).scroll(function() {
+        if($(window).scrollTop() == $(document).height() - $(window).height()) {
+            part++
+            getData(part);
+        }
+    });
+
+    function getData(part){
+
+        let URL = "{{ route('dataGetSales') }}"+ '?page=' + part;
+        console.log(URL);
+        $.get(URL, function(result){
+            if(result.length > 0){
+                $(result).appendTo('.table-data .data');
+
+                part++;
+            }
+
+
+        }).fail(function(result){
+            console.log(result);
+
+        });
 
      }
 

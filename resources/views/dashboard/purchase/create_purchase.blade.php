@@ -22,11 +22,19 @@
             </div>
             <div class="alamat">
                 <label for="alamat">Alamat</label>
-                <textarea name="alamat" id="" cols="30" rows="7"></textarea>
+                <textarea name="alamat" id="" cols="25" rows="4"></textarea>
             </div>
         </div>
         <div class="part-head-right">
-
+            <div class="vendor-selection noFaktur-ref">
+                <label for="vendor">Referensi Penjualan</label>
+                <select name="no_faktur" id="" placeholder="Select Referensi" class="input-f noFaktur">
+                    <option value="" class="old-customer">--Pilih Refensi No Faktur--</option>
+                    @foreach ($sales as $so )
+                        <option value="{{ $so->id }}">{{ $so->no_faktur }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="Purchase-date tanggal">
                 <label for="date-purchase">PO Date</label>
                 <input type="date" name="tanggal" id="sales_date">
@@ -37,11 +45,11 @@
             </div>
             <div class="i-form-sales noFaktur">
                 <label for="nofaktur">No PO</label>
-                <input type="text" name="faktur" class="i-form nofaktur" value="{{  $getInvoice }}">
+                <input type="text" name="faktur" class="i-form nofaktur" value="{{  $getInvoice }}" disabled>
             </div>
             <div class="i-form-sales">
                 <label for="nofaktur">Admin</label>
-                <input type="text" class="i-form sales" value="{{ Auth()->user()->nama }}">
+                <input type="text" class="i-form sales" value="{{ Auth()->user()->nama }}" disabled>
             </div>
         </div>
     </div>
@@ -102,7 +110,7 @@
                 <div class="catatan">
                     <label for="catatan">Catatan</label>
                     <div class="catatan-pembayaran">
-                        <textarea name="keterangan" id="" cols="50" rows="10" class="keterangan-pembelian"></textarea>
+                        <textarea name="keterangan" id="" cols="40" rows="5" class="keterangan-pembelian"></textarea>
                         {{--  <div class="icon-pembayaran">
                             <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
                         </div>  --}}
@@ -149,7 +157,9 @@
 
          <div class="button-action-form">
             <div class="btn-save-form pembelian">Save</div>
-            <div class="btn-cencel-form">Cancel</div>
+            <a href="{{ url()->previous() }}">
+                <div class="btn-cencel-form">Cancel</div>
+            </a>
          </div>
     </div>
 
@@ -237,13 +247,6 @@
         <input type="hidden" name="productPembelian[0][total]" class="input-hide total"/>
 
 
-        {{--  pembayaran  --}}
-        {{--  <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
-        <input type="hidden" name="pembayaran" class="input-hide pembayaran"/>
-        <input type="hidden" name="total" class="input-hide total"/>
-        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>  --}}
-
-
 
     </form>
 </div>
@@ -266,7 +269,7 @@
 
         function addrow(idx){
             var $content_ = $('.table-form');
-            let $form = $('.submit-form form')
+            let $form = $('.submit-form form');
 
             $form.append(`<input type="hidden" name="productPembelian[${idx}][alias]" class="input-hide product"/>`);
             $form.append(`<input type="hidden" name="productPembelian[${idx}][variasi]" class="input-hide variasi"/>`);
@@ -306,9 +309,9 @@
                     `<div class="icon-delete" data-id="${idx}">`+
                         '<img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="" srcset="">'+
                     '</div>'+
-
                 '</td>'+
-                '</tr>' );
+                '</tr>'
+                );
         }
 
 
@@ -331,6 +334,7 @@
                 $content_.find(`.body-table[itemid="${idx}"]`).remove();
 			}
         });
+
 
 
 
@@ -494,10 +498,109 @@
             dataProductSales()
         });
 
+        $('.vendor-selection.noFaktur-ref .input-f.noFaktur').on('click', function(){
+            var idx = $(this).children("option:selected").val();
+            console.log(idx)
+
+            var $content_ = $('.table-form');
+            var $form = $('.submit-form form');
 
 
+               $form.find(`input[name="productPembelian[alias]"]`).remove();
+               $form.find(`input[name="productPembelian[variasi]"]`).remove();
+               $form.find(`input[name="productPembelian[keterangan]"]`).remove();
+               $form.find(`input[name="productPembelian[jumlah]"]`).remove();
+               $form.find(`input[name="productPembelian[harga_satuan]"]`).remove();
+               $form.find(`input[name="productPembelian[total]"]`).remove();
+
+                $content_.find(`.body-table`).remove();
+
+                getDetailPenjualan(idx);
+        });
+
+
+        function getDetailPenjualan(idx){
+            let URL = "{{ route('getDetailPenjualan') }}";
+            $.ajax({
+                url: URL,
+                data: {refId: idx},
+                method: 'GET',
+                success: function(result){
+                    $(result).appendTo('.form-table .table-form');
+                }
+
+            }).fail(function(result){
+                console.log(result);
+            });
+        }
+
+        /*function DetailPenjualan(){
+            var $content_ = $('.table-form');
+            let $form = $('.submit-form form')
+
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][alias]" class="input-hide product"/>`);
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][variasi]" class="input-hide variasi"/>`);
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][keterangan]" class="input-hide keterangan"/>`);
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][jumlah]" class="input-hide jumlah"/>`);
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][harga_satuan]" class="input-hide harga_satuan"/>`);
+            $form.append(`<input type="hidden" name="productPembelian[${idx}][total]" class="input-hide total"/>`);
+
+
+			$content_.append(
+                `<tr class="body-table" itemid="${idx}" >` +
+                `<td class="body-row input-row" data-row="${idx}">`+
+                    `<div class="part-input alias">`+
+                        `<input type="text" class="input-tbl product" data-id="${idx}">`+
+                        `<img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="" class="input-icon" data-id="${idx}">`+
+                    `</div>`+
+                '</td>'+
+                `<td class="body-row input-row variasi" data-row="${idx}">`+
+                    `<select name="productPembelian[${idx}][variasi]" data-id="${idx}" class="warna">`+`</select>`+
+                `</td>`+
+                `<td class="body-row input-row desc" data-row="${idx}">`+
+                    `<input type="text" name="productPembelian[${idx}][keterangan]" class="input-tbl dsc" data-id="${idx}">`+
+                '</td>'+
+                `<td class="body-row input-row qty" data-row="${idx}">`+
+                    `<input type="text" name="productPembelian[${idx}][jumlah]" class="input-tbl qty" data-id="${idx}">`+
+                '</td>'+
+                `<td class="body-row input-row harga_satuan" data-row="${idx}">`+
+                    `<input type="text" name="productPembelian[${idx}][harga_satuan]" class="input-tbl unit_price" data-id="${idx}">`+
+                '</td>'+
+                `<td class="body-row input-row amount" data-row="${idx}">`+
+                    `<input type="text" name="productPembelian[${idx}][total]" class="input-tbl amount" data-id="${idx}">`+
+                '</td>'+
+                `<td class="body-row action-btn" data-row="${idx}">`+
+                    `<div class="icon-plus" data-id="${idx}">`+
+                        '<img src="{{ asset('Assets/icon/🦆 icon _plus_.png') }}" alt="" srcset="">'+
+                    '</div>'+
+                    `<div class="icon-delete" data-id="${idx}">`+
+                        '<img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="" srcset="">'+
+                    '</div>'+
+
+                '</td>'+
+                '</tr>'
+                );
+        }*/
 
     });
+
+    //function getdataCustomer(id){
+    //    var obj = {};
+    //    obj["_token"] = "{{ csrf_token() }}";
+    //    obj['id'] = id;
+    //    $.ajax({
+    //        url: "{{route('getCustomer')}}",
+    //        data: obj,
+    //        method : 'GET',
+    //        success : function(result){
+    //            console.log("ini xidTb: ", result.data);
+    //            formAlamat(result.data);
+    //        }
+    //    }).fail(function(data){
+    //    console.log(data);
+    //    });
+    //}
+
 
     function dataProductSales(){
         var $formhead1 = $('.part-head-left');

@@ -1,10 +1,11 @@
 @extends('layoute.latoute')
 @section('content')
 {{--  card-content  --}}
-@include('dashboard.part-lain.popUp-SJ')
+{{--  @include('dashboard.part-lain.popUp-SJ')  --}}
 @include('dashboard.part-lain.popUp_Create_customer')
-@include('dashboard.part-lain.popUp_pembayaran')
-{{--  @include('dashboard.part-lain.popUp_product')  --}}
+@include('dashboard.part-lain.popup_createVariant')
+{{--  @include('dashboard.part-lain.popUp_pembayaran')  --}}
+@include('dashboard.part-lain.popUp_product')
 
 <div class="card-content-display">
     <div class="header-display">
@@ -41,30 +42,36 @@
             </div>
             <div class="alamat">
                 <label for="alamat">Alamat</label>
-                <textarea name="alamat" id="" cols="25" rows="7"></textarea>
+                <textarea name="alamat" id="" cols="25" rows="4"></textarea>
             </div>
         </div>
         <div class="part-head-right">
-
-                <div class="Purchase-date tanggal">
-                    <label for="date-purchase">Sales Date</label>
-                    <input type="date" name="tanggal" id="sales_date">
-                </div>
-
-                <div class="Purchase-date pengiriman">
-                    <label for="date-purchase">Tanggal Kirim</label>
-                    <input type="date" name="tanggal_kirim" id="sales_date">
-                </div>
-
-
+            <div class="Purchase-date tanggal">
+                <label for="date-purchase">Sales Date</label>
+                <input type="date" name="tanggal" id="sales_date">
+            </div>
+            <div class="Purchase-date pengiriman">
+                <label for="date-purchase">Tanggal Kirim</label>
+                <input type="date" name="tanggal_kirim" id="sales_date">
+            </div>
             <div class="i-form-sales noFaktur">
                 <label for="nofaktur">No Faktur</label>
-                <input type="text" name="no_faktur" class="i-form nofaktur" value="{{   $getInvoice  }}">
+                <input type="text" name="no_faktur" class="i-form nofaktur" value="{{   $getInvoice  }}" disabled>
             </div>
             <div class="i-form-sales seles">
                 <label for="nofaktur">Sales</label>
-                <input type="text"  class="i-form sales" value="{{ Auth()->user()->nama }}">
-                <input type="hidden" name="fid_user" class="i-form admin_id" value="{{ Auth()->user()->id }}">
+                <input type="text"  class="i-form sales" value="{{ Auth()->user()->nama }}" disabled>
+                <input type="hidden" name="fid_user" class="i-form admin_id" value="{{ Auth()->user()->id }}" disabled>
+            </div>
+            <div class="btn-act product">
+                <div class="new-create">
+                    New Product
+                </div>
+            </div>
+            <div class="btn-act varian">
+                <div class="new-create vr">
+                    New Varian/Jenis
+                </div>
             </div>
         </div>
     </div>
@@ -125,10 +132,10 @@
                 <div class="catatan">
                     <label for="catatan">Catatan</label>
                     <div class="catatan-pembayaran">
-                        <textarea class="keterangan-pembelian" name="keterangan" id="" cols="50" rows="10" value="" ></textarea>
-                        <div class="icon-pembayaran">
+                        <textarea class="keterangan-pembelian" name="keterangan" id="" cols="40" rows="5" value="" ></textarea>
+                        {{--  <div class="icon-pembayaran">
                             <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
-                        </div>
+                        </div>  --}}
                     </div>
 
                  </div>
@@ -149,7 +156,7 @@
 
                     </div>
                  </div>
-                 <div class="action-form-btn">
+                 {{--  <div class="action-form-btn">
                     <div class="p-fak-form">
                         Print Faktur
                     </div>
@@ -159,7 +166,7 @@
                     <div class="p-kw-form">
                         Kwitansi
                     </div>
-                 </div>
+                 </div>  --}}
             </div>
             <div class="f-form-r">
                 <div class="colum-total" style="margin-left: 200px;">
@@ -172,17 +179,17 @@
                     <p>=</p>
                     <input type="text" name="diskon_nominal" value="" class="f-hasil disc" placeholder="0">
                 </div>
-                <div class="colum-total" style="margin-left: 158px;">
-                    <p>Biaya Lain-lain</p>
-                    <p>=</p>
-                    <input type="text" name="biaya_lain_lain" value="" class="f-hasil lain-lain" placeholder="0">
-                </div>
+
                 <div class="colum-total" style="margin-left: 166px;">
                     <p>PPN %</p><input type="text" class="f-input jumlah_ppn" placeholder="0">
                     <p>=</p>
                     <input type="text" name="ppn" value="" class="f-hasil ppn" placeholder="0">
                 </div>
-
+                <div class="colum-total" style="margin-left: 158px;">
+                    <p>Biaya Lain-lain</p>
+                    <p>=</p>
+                    <input type="text" name="biaya_lain_lain" value="" class="f-hasil lain-lain" placeholder="0">
+                </div>
                 <div class="colum-total" style="margin-left: 183px;">
                     <p>Grand Total</p>
                     <p>=</p>
@@ -193,7 +200,9 @@
 
          <div class="button-action-form">
             <div class="btn-save-form sales">Save</div>
-            <div class="btn-cencel-form">Cancel</div>
+            <a href="{{ url()->previous() }}">
+                <div class="btn-cencel-form">Cancel</div>
+            </a>
          </div>
     </div>
 
@@ -201,7 +210,7 @@
 
 
 {{--  popup product   --}}
-<div class="container-popup-card-product close-hide">
+<div class="container-popup-card-product-alias close-hide">
     <div class="card-position ">
         <div class="card-create-customer alias-Product close-hide" style="width: 885px;">
             <div class="header-card-create">
@@ -282,10 +291,10 @@
 
 
         {{--  pembayaran  --}}
-        <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
+        {{--  <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
         <input type="hidden" name="pembayaran" class="input-hide pembayaran"/>
         <input type="hidden" name="total" class="input-hide total"/>
-        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>
+        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>  --}}
 
         {{--  //tb detail pengiriman  --}}
         <input type="hidden" name="tanggal_sj" class="input-hide tanggal_sj"/>
@@ -297,7 +306,13 @@
     </form>
 </div>
 
+<div class="submit-form-create" style="display:none;">
+    <form class="close-hide form-create" action="{{ route('multy-varian') }}" method="post">
+        @csrf
 
+    </form>
+
+</div>
 
 
 
@@ -306,6 +321,19 @@
 @section('script')
 <script>
     $(()=>{
+        $('#checkbox').on('click',function(){
+            var $elm = $(this);
+            $('#checkbox').prop('checked', true)
+            if($elm.prop('checked')){
+                $elm.val(1);
+           }else{
+               $elm.val(0);
+           }
+            console.log($(this).val());
+       });
+
+
+
         var $table = $('.body-table');
         var idxBarangSales = 0;
 
@@ -399,6 +427,7 @@
 
         });
 
+
         $('.close-doc').on('click', function(){
             $('.container-popup').removeClass('show').addClass('close-hide');
         });
@@ -417,6 +446,122 @@
             e.preventDefault();
         });
 
+
+        $('.select-c .input-f.customer').on('click', function(){
+            var idx = $(this).children("option:selected").val();
+            console.log(idx)
+
+            getdataCustomer(idx);
+        })
+
+        var lastTag = [];
+		var tagIdx = 0;
+
+        $('#input-tags').selectize({
+            items: [],
+            persist: false,
+            create: function (input) {
+              return {
+                  value: input,
+                  text: input,
+              };
+            },
+            onItemAdd: function(lastVal,elm){
+				//console.log('add');
+				var $tagElm = $(elm);
+				$tagElm.attr('idx', tagIdx);
+				tagIdx++;
+
+				addVarian(lastVal, $tagElm);
+			},
+			onItemRemove: function(lastVal,elm){
+				//console.log('remove');
+				var $tagElm = $(elm);
+				var tIdx = $tagElm.attr('idx');
+
+				removeVarian(lastVal,elm);
+			}
+          });
+
+        $('.btn-act.varian').on('click', function(e){
+
+            $('.container-popup-card-variasi').addClass('show').removeClass('close-hide');
+            $('.card-create-product.create').addClass('show').removeClass('close-hide');
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        $('.btn-act.product').on('click', function(e){
+
+            $('.container-popup-card-product').addClass('show').removeClass('close-hide');
+            $('.card-create-customer.product').addClass('show').removeClass('close-hide');
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        $('.close-create').on('click', function(){
+            $('.container-popup-card-variasi').removeClass('show').addClass('close-hide');
+            $('.card-create-product').removeClass('variasi-in');
+        });
+        $('.card-create-product.edit .btn-save-form').on('click', function(){
+
+            postData()
+        });
+
+        $('.card-create-product.create .btn-save-form').on('click', function(){
+
+            $('.submit-form-create form').submit();
+        });
+
+        function postData(){
+            var obj = {};
+            var $formSet = $('.form-card.edit');
+            var id = $formSet.data('id');
+            var masterBarang = $formSet.find('.col-form-p-input #barang option:selected').attr('value');
+            var Varian = $formSet.find('.col-form-p-input.varian input').val();
+
+            obj['fid_jenis_barang'] = masterBarang;
+            obj['nama_varian'] = Varian;
+            console.log(obj['nama_varian']);
+
+
+            obj["_token"] = "{{ csrf_token() }}";
+            if(id){
+                obj['id'] = id;
+            }
+            $.ajax({
+                url: "{{route('post-varian')}}",
+                data: obj,
+                method : 'POST',
+                success : function(result){
+                    console.log('success', result);
+                    clearForm();
+                    $('.container-popup-card-variasi ').removeClass('show').addClass('close-hide');
+                    $('.card-create-product variasi-in').removeClass('show').addClass('close-hide');
+                    window.location.reload();
+                }
+            }).fail(function(data){
+               console.log(data);
+            });
+           }
+
+           function removeVarian(lastVal, $elm){
+               var $form = $('.submit-form-create form');
+               var idx = $elm.attr('idx');
+
+               $form.find(`input[name="varian[${idx}][nama_varian]"]`).remove();
+               $form.find(`input[name="varian[${idx}][fid_jenis_barang]"]`).remove();
+
+           }
+
+           function addVarian(lastVal, $elm){
+               var idxBarang = $('.col-form-p-input #barang option:selected.item-barang').attr('value');
+               var $form = $('.submit-form-create form');
+               var idx = $elm.attr('idx');
+               $form.append(`<input name="varian[${idx}][nama_varian]" type="hidden" value="${lastVal}"/>`);
+               $form.append(`<input name="varian[${idx}][fid_jenis_barang]" type="hidden" value="${idxBarang}" />`);
+
+
+           }
         $('body').on('click','.input-icon', function(e){
             e.stopPropagation();
             e.preventDefault();
@@ -519,13 +664,13 @@
 
             var hasil_diskon = parseInt(subtotal) * dis;
             $('.colum-total input.disc').val(hasil_diskon).text(hasil_diskon);
-            var subtotal1 = (parseInt(subtotal) - parseInt( hasil_diskon)) + lainLain;
+            var subtotal1 = parseInt(subtotal) - parseInt( hasil_diskon);
 
             var hasil_ppn  = parseInt(subtotal1) * ppn;
             $('.colum-total input.ppn').val(hasil_ppn).text(hasil_ppn);
             var subtotal2 = parseInt(subtotal1) + parseInt( hasil_ppn);
 
-            var grand_total = parseInt(subtotal2);
+            var grand_total = parseInt(subtotal2) + lainLain;
 
 
 
@@ -582,12 +727,13 @@
         var ppn = $footerForm.find('.colum-total input.ppn').val();
         var lainLain = $footerForm.find('.colum-total input.lain-lain').val();
         var GrandTotal = $footerForm.find('.colum-total input.grand_total').val();
+
         //pembayaran
 
-        var tanggal_pembayaran = $formSet.find('input#date_pembayaran').val();
-        var jumlah =  $formSet.find('input.jumlah').val();
-        var pembayaran =  $formSet.find('.pembayaran option:selected').val();
-        var dsc = $formSet.find('textarea.dsc').val();
+       // var tanggal_pembayaran = $formSet.find('input#date_pembayaran').val();
+       // var jumlah =  $formSet.find('input.jumlah').val();
+       // var pembayaran =  $formSet.find('.pembayaran option:selected').val();
+       // var dsc = $formSet.find('textarea.dsc').val();
 
 
         //penjualan
@@ -612,10 +758,10 @@
 
 
         //pembayaran
-        $form.find(`input.tanggal_pembayaran[name="tanggal_pembayaran"]`).val(tanggal_pembayaran);
-        $form.find(`input.pembayaran[name="pembayaran"]`).val(pembayaran);
-        $form.find(`input.total[name="total"]`).val(jumlah);
-        $form.find(`input.deskripPembayaran[name="deskripPembayaran"]`).val(dsc);
+       // $form.find(`input.tanggal_pembayaran[name="tanggal_pembayaran"]`).val(tanggal_pembayaran);
+       // $form.find(`input.pembayaran[name="pembayaran"]`).val(pembayaran);
+       // $form.find(`input.total[name="total"]`).val(jumlah);
+    //$form.find(`input.deskripPembayaran[name="deskripPembayaran"]`).val(dsc);
 
         $row.each(function(){
             var $elm = $(this);
@@ -672,7 +818,7 @@
             method : 'POST',
             success : function(result){
                 console.log('success', result);
-                clearForm();
+                //clearForm();
                 $('.container-popup-card-create').removeClass('show').addClass('close-hide');
                 $('.card-create-customer.customer').removeClass('show').addClass('close-hide');
                 window.location.reload();
@@ -680,6 +826,31 @@
         }).fail(function(data){
            console.log(data);
         });
+    }
+
+    function getdataCustomer(id){
+        var obj = {};
+        obj["_token"] = "{{ csrf_token() }}";
+        obj['id'] = id;
+        $.ajax({
+            url: "{{route('getCustomer')}}",
+            data: obj,
+            method : 'GET',
+            success : function(result){
+                console.log("ini xidTb: ", result.data);
+                formAlamat(result.data);
+
+            }
+        }).fail(function(data){
+        console.log(data);
+        });
+    }
+
+    function formAlamat(data){
+        var $target = $('.head .part-head-left');
+        $target.find('.alamat textarea').val(data.alamat).text(data.alamat);
+
+        console.log($target);
     }
 
     function getProduct(id, idx){

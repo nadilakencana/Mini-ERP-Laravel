@@ -27,8 +27,21 @@ class salesController extends Controller
     }
 
     public function Sales(){
-        $sales = Penjualan::orderBy('updated_at', 'desc')->get();
+        $admin = Auth()->user()->id;
+        // $admin = Auth()->user()->id;
+        $perPage = 2; // jumlah item data yang akan diambil setiap kali panggil
+        // $offset = ($p) * $perPage;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $sales = Penjualan::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
+
         return view('dashboard.salse.index-sales', compact('sales'));
+    }
+    public function getDataSales(){
+        $admin = Auth()->user()->id;
+        $memberToko = GroupMember::where('fid_user', $admin)->first();
+        $sales = Penjualan::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
+
+        return view('dashboard.part-lain.data-sales', compact('sales'));
     }
 
     public function create_Sales(){
@@ -39,24 +52,28 @@ class salesController extends Controller
         $customer = Customer::all();
         $product = Product::all();
         $group = GroupToko::all();
+        $jenis_barang = Barang_jenis::all();
         $aliasProduct = Barang_Alias::where('fid_group',  $memberToko->fid_group)->get();
         $getRelation = $memberToko->group()->first();
         $kode = $getRelation->kode_invoice;
-        $date = Carbon::now()->Format('y/m/d');
-        $invoiceKode = $kode.'/'.$date.'/';
+        $date = Carbon::now(); //->Format('y/m/d');
+        $y = $date->format('y');
+        $m = $date->format('m');
+        $d = $date->format('d');
+        $invoiceKode = $kode.'/'.$y.'/'.$m.'/';
 
-        $lastFaktur = Penjualan::where('no_faktur', 'LIKE', '%'. $kode.'%')->OrderBy('no_faktur','ASC')->first();
+        $lastFaktur = Penjualan::where('no_faktur', 'LIKE', '%'.$invoiceKode.'%')->OrderBy('no_faktur','DESC')->first();
         // dd($lastFaktur);
         if($lastFaktur){
             $lastFakturs = $lastFaktur->no_faktur;
-            $lastFakturs = explode($invoiceKode, $lastFakturs);
+            $lastFakturs = explode('/', $lastFakturs);
 
-            $lastFakturs = sprintf("%04d", intval($lastFakturs) + 1);
-            $PrefixFaktur = $invoiceKode.$lastFakturs;
+            $lastFakturs = sprintf("%04d", intval($lastFakturs[count($lastFakturs)-1]) + 1);
+            $PrefixFaktur = $invoiceKode.$d.'/'.$lastFakturs;
             // dd($PrefixFaktur);
 
         }else{
-            $PrefixFaktur = $invoiceKode.'0001';
+            $PrefixFaktur = $invoiceKode.$d.'/'.'0001';
         }
 
         $getInvoice = $PrefixFaktur;
@@ -71,9 +88,11 @@ class salesController extends Controller
             'group',
             'aliasProduct',
             'getInvoice',
+            'jenis_barang',
 
         ));
     }
+
 
 
      public function PostCreateData(Request $request){
@@ -83,19 +102,23 @@ class salesController extends Controller
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $group = $memberToko->group()->first();
         $kodeGroup = $group->kode_invoice;
-        $date = Carbon::now()->Format('y/m/d');
-        $noSuratJalan = 'SJ/'.$kodeGroup.'/'.$date.'/';
+        $date = Carbon::now();
+       //->Format('y/m/d');
+        $y = $date->format('y');
+        $m = $date->format('m');
+        $d = $date->format('d');
+        $noSuratJalan = 'SJ/'.$kodeGroup.'/'.$y.'/'.$m.'/';
 
-        $lastNoSj = DetailPengiriman::where('no_surat_jalan', 'LIKE', '%'.$kodeGroup.'%')->OrderBy('no_surat_jalan', 'ASC')->first();
+        $lastNoSj = DetailPengiriman::where('no_surat_jalan', 'LIKE', '%'.$noSuratJalan .'%')->OrderBy('no_surat_jalan', 'DESC')->first();
 
         if($lastNoSj){
             $lastSuratJalan = $lastNoSj->no_surat_jalan;
-            $lastSuratJalan = explode($noSuratJalan, $lastNoSj);
+            $lastSuratJalan = explode('/',   $lastSuratJalan);
 
-            $lastSuratJalan = sprintf("%04d", intval($lastSuratJalan) + 1);
-            $prefixSuratJalan = $noSuratJalan.$lastSuratJalan;
+            $lastSuratJalan = sprintf("%04d", intval($lastSuratJalan[count($lastSuratJalan)-1]) + 1);
+            $prefixSuratJalan =  $noSuratJalan.$d.'/'.$lastSuratJalan;
         }else{
-            $prefixSuratJalan = $noSuratJalan.'0001';
+            $prefixSuratJalan = $noSuratJalan.$d.'/'.'0001';
 
         }
 
@@ -168,17 +191,17 @@ class salesController extends Controller
 
             $detailPengiriman->save();
 
-            $pembayaran = new DetailPembayaran();
-            $pembayaran->fid_penjualan =  $penjualan->id;
-            $pembayaran->tanggal = $request->tanggal_pembayaran;
-            $pembayaran->pembayaran = $request->pembayaran;
-            $pembayaran->total = $request->total;
-            $pembayaran->keterangan = $request->deskripPembayaran;
-            $pembayaran->diperiksa = $admin;
-            $pembayaran-> created_by = $admin;
-            $pembayaran-> updated_by = $admin;
+            // $pembayaran = new DetailPembayaran();
+            // $pembayaran->fid_penjualan =  $penjualan->id;
+            // $pembayaran->tanggal = $request->tanggal_pembayaran;
+            // $pembayaran->pembayaran = $request->pembayaran;
+            // $pembayaran->total = $request->total;
+            // $pembayaran->keterangan = $request->deskripPembayaran;
+            // $pembayaran->diperiksa = $admin;
+            // $pembayaran-> created_by = $admin;
+            // $pembayaran-> updated_by = $admin;
 
-            $pembayaran->save();
+            // $pembayaran->save();
 
 
 
@@ -193,10 +216,29 @@ class salesController extends Controller
      }
 
 
+     public function getAlamatCustomer(Request $request){
+        $customer = Customer::where('id', $request->id)->first();
+        return response()->json([
+            'success' => 1,
+            'message' => 'customer Berhasil Diambil',
+            'data' => $customer
+        ]);
+     }
+
+     public function getDataToko(Request $request){
+        $groupToko = GroupToko::where('id', $request->id)->first();
+
+        return response()->json([
+            'success' => 1,
+            'message' => 'Data Toko Berhasil Diambil',
+            'data' => $groupToko
+        ]);
+     }
 
      public function getVariasi(Request $request){
         $productAlias = $request->barang;
-        return Barang_Varian::where('fid_barang', $productAlias)->get()->pluck('id','nama_varian');
+        $barang = Product::where('id', $productAlias)->first();
+        return Barang_Varian::where('fid_jenis_barang', $barang->fid_jenis_barang)->get()->pluck('id','nama_varian');
      }
 
      public function getProduct(Request $request){
@@ -239,15 +281,16 @@ class salesController extends Controller
         $pembayaran-> updated_by = $admin;
 
 
-    if($pembayaran->save()){
-        //
-        return redirect()->route('sales')->with('Success', 'Berhasil menambahkan data baru');
+        if($pembayaran->save()){
+            //
+            return redirect()->route('sales')->with('Success', 'Berhasil menambahkan data baru');
 
-    }else{
-        return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
+        }else{
+            return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
+        }
+
     }
 
-    }
     public function edit_sales($id){
         $admin = Auth()->user()->id;
         $dec = decrypt($id);

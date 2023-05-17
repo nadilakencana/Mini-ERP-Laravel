@@ -21,7 +21,9 @@
 
                     <div class="button-action-form">
                         <div class="btn-save-form">Save</div>
-                        <div class="btn-cencel-form">Cancel</div>
+                        <a href="{{ url()->previous() }}">
+                            <div class="btn-cencel-form">Cancel</div>
+                        </a>
                     </div>
                 {{--  </form>  --}}
             </div>

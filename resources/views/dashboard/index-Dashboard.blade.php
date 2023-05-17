@@ -4,7 +4,7 @@
 <div class="content-dashboard">
     <div class="header-content">
         <p class="text-tittle">
-            Hai, Nadila Pilar Kencana
+            Hai,{{ Auth()->user()->nama }}
         </p>
     </div>
     <div class="card-content">

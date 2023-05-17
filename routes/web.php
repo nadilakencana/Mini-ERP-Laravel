@@ -12,6 +12,7 @@ use App\Http\Controllers\salesController;
 use App\Http\Controllers\PembelianController;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Supplier;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -43,7 +44,8 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/daftar-admin', [AuthController::class, 'Regist'])->name('regist');
     Route::get('/Dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
     Route::post('/logout',[AuthController::class,'Logout'])->name('logout');
-    Route::post('/edit_data-admin/{id}',[AuthController::class,'updateAdmin'])->name('admin-edit');
+    Route::post('/edit_data-admin',[AuthController::class,'updateAdmin'])->name('update-edit');
+    Route::get('/Update-data-admin',[AuthController::class,'EditUser'])->name('admin-edit');
 
     // purchasing
     Route::get('/pembelian',[PembelianController::class,'pembelian'])->name('purchase');
@@ -53,6 +55,8 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/post-data-pembayaran-pembelian',[PembelianController::class, 'postpembayaranPembelian'])->name('postpembayaranPembelian');
     Route::get('/surat-po/{id}', [PembelianController::class,'suratPO'])->name('suratpo');
     Route::get('/Surat-Po-PT/{id}', [PembelianController::class,'suratPO_PT'])->name('suratpo-PT');
+    Route::get('/load-data',[PembelianController::class,'getLoadData'])->name('loadData');
+    Route::get('/data-detail-penjualan', [PembelianController::class,'getDetailPenjualan'])->name('getDetailPenjualan');
 
     // sales
     Route::get('/sales',[salesController::class,'Sales'])->name('sales');
@@ -66,6 +70,10 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/invoice/{id}', [salesController::class, 'invoice'])->name('invoice');
     Route::get('/Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
     Route::get('/kwitansi/{id}', [salesController::class, 'Kwitansi'])->name('kwitansi');
+    Route::get('/get-data-customer', [salesController::class,'getAlamatCustomer'])->name('getCustomer');
+    Route::get('data-toko', [salesController::class, 'getDataToko'])->name('getDataToko');
+    Route::get('/data-sales', [salesController::class,'getDataSales'])->name('dataGetSales');
+
 
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');
@@ -74,6 +82,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/post-barang',[ProductController::class,'CreateProduct'])->name('post-barang');
     Route::post('/update-barang/{id}',[ProductController::class,'UpdateProduct'])->name('update-barang');
     Route::delete('/delete-barang/{id}',[ProductController::class,'DeleteProduct'])->name('delete-barang');
+    Route::post('/approved-product/{id}',[ProductController::class,'approvedProduct'])->name('approved');
 
     // Varian Product
     Route::post('/update-variaan', [ProductController::class, 'update_Varian'])->name('post-varian');
@@ -85,7 +94,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/update-data-alias',[ProductController::class,'update_data_alias'])->name('post-data-alias');
     Route::get('/edit-data-alias',[ProductController::class,'edit_alias'])->name('edit-data-alias');
     Route::delete('/delete-data-alias/{id}',[ProductController::class,'DeleteAlias'])->name('delete-data-alias');
-
+    Route::post('/create-varian',[ProductController::class,'newVarian'])->name('multy-varian');
 
     // jenis barang
     Route::get('/Jenis-product',[ProductController::class,'jenisProduct'])->name('jenisProduct');

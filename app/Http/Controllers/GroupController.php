@@ -34,6 +34,8 @@ class GroupController extends Controller
             'nama_toko' => 'required',
             'kode_invoice' => 'required',
             'alamat' => 'required',
+            'rekening_no_ppn' => 'required',
+            'rekening_ppn' => 'required',
             'no_telpon' => 'required|numeric',
             'logo_toko' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'shoppee_hook' => 'required',
@@ -44,6 +46,8 @@ class GroupController extends Controller
         $dt_Gp->nama_toko = $request->nama_toko;
         $dt_Gp->kode_invoice = $request->kode_invoice;
         $dt_Gp->alamat = $request->alamat;
+        $dt_Gp->rekening_no_ppn = $request->rekening_no_ppn;
+        $dt_Gp->rekening_ppn = $request->rekening_ppn;
         $dt_Gp->no_telpon = $request->no_telpon;
         $dt_Gp->shoppee_hook = $request->shoppee_hook;
         $dt_Gp->tokopedia_hook = $request->tokopedia_hook;
@@ -89,6 +93,8 @@ class GroupController extends Controller
             'nama_toko' => 'required',
             'kode_invoice' => 'required',
             'alamat' => 'required',
+            'rekening_no_ppn' => 'required',
+            'rekening_ppn' => 'required',
             'no_telpon' => 'required|numeric',
             'logo_toko' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'shoppee_hook' => 'required',
@@ -99,6 +105,8 @@ class GroupController extends Controller
         $dt_Gp->nama_toko = $request->nama_toko;
         $dt_Gp->kode_invoice = $request->kode_invoice;
         $dt_Gp->alamat = $request->alamat;
+        $dt_Gp->rekening_no_ppn = $request->rekening_no_ppn;
+        $dt_Gp->rekening_ppn = $request->rekening_ppn;
         $dt_Gp->no_telpon = $request->no_telpon;
         $dt_Gp->shoppee_hook = $request->shoppee_hook;
         $dt_Gp->tokopedia_hook = $request->tokopedia_hook;

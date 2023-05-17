@@ -196,11 +196,15 @@ span.notes {
 }
 .profile  .name-admin p {
     font-weight: 700;
-    font-size: 20px;
-    line-height: 39px;
+    font-size: 15px;
+    line-height: 28px;
 }
 .profile .name-admin span {
     color: #999999;
+    font-size: 14px;
+}
+.img-profile img {
+    width: 42px;
 }
 .dropdown-list-profile {
     /*display: flex;
@@ -581,7 +585,7 @@ img#icon-dw {
     background: #FFFFFF;
     box-shadow: 0px 7px 11px rgb(134 134 134 / 25%);
     border-radius: 14px;
-    margin-top: 30px;
+    margin-top: 18px;
     padding: 10px 3px;
     margin-right: 17px;
 }
@@ -834,17 +838,21 @@ img#icon-dw {
     position: relative;
     background: white;
     border-radius: 10px;
-    padding: 27px 29px;
+    padding: 16px 29px;
     margin-top: 20px;
+    height: auto;
+}
+label {
+    font-size: 14px;
 }
 .header-display {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
 }
 .header-display .text-tittle {
     color: #285C5B;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 600;
 }
 .box-search {
@@ -853,20 +861,24 @@ img#icon-dw {
     background: #FFFFFF;
     border: 1px solid #a8a6a6bf;
     border-radius: 10px;
-    padding: 10px;
+    padding: 9px;
     width: 260px;
-    height: 22px;
+    height: 15px;
     color: #BCBBBB;
 }
 .box-search p {
-    line-height: 24px;
+    line-height: 17px;
+    font-size: 13px;
 }
-form.date_search {
+.icon-search img {
+    width: 15px;
+}
+.date_search {
     display: flex;
     gap: 10px;
 }
 .date_search button {
-    padding: 10px;
+    padding: 7px;
     border-radius: 10px;
     color: white;
     background: #89c3b1;
@@ -874,7 +886,7 @@ form.date_search {
 }
 #date {
     border: 1px solid #6c6c6ca6;
-    height: 41px;
+    height: 30px;
     padding: 0px 10px;
     width: 168px;
     border-radius: 7px;
@@ -887,8 +899,8 @@ form.date_search {
 .header-display .icon-search {
     position: absolute;
     z-index: 1000;
-    margin-top: -32px;
-    margin-left: 244px;
+    margin-top: -25px;
+    margin-left: 250px;
     cursor: pointer;
 }
 .header-display .button-section-display .btn-import, .btn-export {
@@ -957,6 +969,9 @@ button {
     border: none;
 }
 /* table */
+table.data {
+    font-size: 12px;
+}
 tr.header-table {
     background: #439A97;
     color: white;
@@ -965,13 +980,13 @@ tr.header-table {
     font-weight: 500;
 }
 th.header-row {
-    padding: 10px;
+    padding: 7px;
     font-weight: 500;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
 }
 td.body-row {
-    padding: 10px;
+    padding: 3px;
     border: 1px solid #0606061f;
 }
 .part-input {
@@ -1012,6 +1027,7 @@ img.input-icon {
 .action-btn {
     display: flex;
     justify-content: space-evenly;
+    gap: 6px;
 }
 .footer-table {
     display: flex;
@@ -1023,6 +1039,7 @@ img.input-icon {
 .head {
     display: flex;
     justify-content: space-between;
+    /* height: 187px; */
 }
 .part-head-left {
     display: flex;
@@ -1040,12 +1057,13 @@ textarea{
 .alamat textarea {
     border-radius: 7px;
     border: 1px solid #4e4e4e85;
+    font-size: 14px;
 }
 .vendor-selection {
     display: flex;
     flex-direction: column;
-    gap: 17px;
-    margin-bottom: 25px;
+    gap: 9px;
+    margin-bottom: 12px;
 }
 .purchase-type-selection {
     display: flex;
@@ -1055,7 +1073,7 @@ textarea{
 .vendor-selection select,
 .purchase-type-selection select  {
     border-radius: 5px;
-    height: 39px;
+    height: 25px;
     width: 200px;
     border: 1px solid #00000042;
     padding: 0px 10px;
@@ -1066,31 +1084,37 @@ textarea{
 }
 .btn-customer {
     cursor: pointer;
-    padding: 10;
-    padding: 10px;
-    width: 35px;
-    height: 36px;
+    /*padding: 10px;
+    */width: 30px;
+    height: 26px;
+    text-align: center;
     box-sizing: border-box;
     background: white;
     border: 1px solid rgba(159, 159, 159, 0.31);
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 3px 4px 8px rgb(176 176 176 / 25%);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
 }
 .part-head-right {
     flex-wrap: wrap;
     display: flex;
-    gap: 20px;
+    gap: 6px;
     width: 405px;
+    height: 159px;
 }
 
 .part-head-right .Purchase-date {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
+    height: 56px;
 }
 #sales_date, #date_po {
     border: 1px solid #6c6c6ca6;
-    height: 41px;
+    height: 26px;
     padding: 0px 10px;
     width: 168px;
     border-radius: 7px;
@@ -1098,14 +1122,31 @@ textarea{
 .i-form-sales {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 5px;
+    height: 53px;
 }
 .i-form-sales .i-form {
     border: 1px solid #56565663;
-    height: 38px;
+    height: 28px;
     width: 171px;
     border-radius: 7px;
     padding: 0px 9px;
+}
+.part-head-right .btn-act {
+    display: block;
+    cursor: pointer;
+    width: 95px;
+    height: 36px;
+    padding: 0px 8px;
+    text-align: center;
+    border-radius: 10px;
+    background: linear-gradient(85.18deg, #487c70 -13.2%, #89b997 109.85%);
+}
+.part-head-right .btn-act .new-create {
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+    margin-top: 9px;
 }
 /* form table */
 .form-table {
@@ -1123,20 +1164,24 @@ td.body-row.input-row {
 .btn-print {
     display: flex;
     gap: 6px;
-    width: 40px;
+    width: 35px;
     box-sizing: border-box;
     border-radius: 7px;
     align-items: center;
     cursor: pointer;
 }
 .btn-print img.print {
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
 }
 .btn-print img.dropdown {
     width: 10px;
     height: 10px;
     object-fit: none;
+}
+.btn-edit.pembayaran img {
+    width: 20px;
+    height: 17px;
 }
 .dropdown-print-action {
     position: absolute;
@@ -1293,7 +1338,17 @@ td.body-row.action-btn {
     height: 28px;
     padding-left: 10px;
 }
-
+.btn-approved {
+    cursor: pointer;
+    width: 73px;
+    height: 20px;
+    text-align: center;
+    display: block;
+    background: #88c2b1;
+    border-radius: 5px;
+    padding: 4px;
+    color: white;
+}
 .col-form-p-input {
     display: flex;
     flex-direction: row;
@@ -1313,6 +1368,10 @@ td.body-row.action-btn {
 .col-form-p-input textarea.input-f {
     height: 114px;
     padding: 17px;
+}
+.col-form-p-input .input-f.checkbox {
+    height: 20px;
+    width: 91px;
 }
 
 .button-action-form {

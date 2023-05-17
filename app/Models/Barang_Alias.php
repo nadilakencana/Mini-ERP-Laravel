@@ -13,6 +13,10 @@ class Barang_Alias extends Model
         'fid_barang',
         'fid_group',
         'alias',
+        'harga',
+        'created_by',
+        'updated_by',
+
         ];
 
 
@@ -27,4 +31,5 @@ class Barang_Alias extends Model
     public function penjualan(){
         return $this->hasMany(DetailPenjualan::class,'fid_barang','id');
     }
+   
 }

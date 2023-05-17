@@ -32,7 +32,7 @@ class UserRoleController extends Controller
     }
 
     public function postData(Request $request){
-        // $user = Auth()->user()->nama;
+         $user = Auth()->user()->id;
         $role = User_Role::get();
         if($request->id){
             $role_update = User_Role::where('id', $request->id)->first();
@@ -42,8 +42,8 @@ class UserRoleController extends Controller
 
          $role_update->nama_role = $request->nama_role;
          $role_update->level = $request->level;
-         $role_update->created_by = 'Developer';
-         $role_update->updated_by = 'Developer';
+         $role_update->created_by = $user;
+         $role_update->updated_by = $user;
         //  dd($role_update);
          $role_update->save();
          return response()->json(['success' => 1, 'message' => 'role Berhasil Diupdate']);

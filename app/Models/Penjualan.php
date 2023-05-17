@@ -42,7 +42,11 @@ class Penjualan extends Model
         return $this->belongsTo(Customer::class,'fid_customer','id');
     }
 
-    public function penjualan(){
-        return $this->hasMany(Penjualan::class,'id_penjualan', 'id');
+    public function Detailpenjualan(){
+        return $this->hasMany(DetailPenjualan::class,'fid_penjualan', 'id');
+    }
+
+    public function groupToko(){
+        return $this->belongsTo(GroupToko::class, 'fid_group','id');
     }
 }

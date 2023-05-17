@@ -49,12 +49,50 @@
                     </span>
                 @enderror
             </div>
+            <div class="col-form-p-input">
+                <label for="nama-barang">Harga Barang</label>
+                <input type="text" class="input-f @error('harga') is-invalid @enderror" placeholder="Harga Barang" name="harga">
+                @error('harga')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="col-form-p-input" style="gap:10px">
+                <label for="nama-barang">Barang Sendiri</label>
+                <input type="checkbox" id="checkbox" class="input-f checkbox @error('produk_sendiri') is-invalid @enderror" name="produk_sendiri" value="0">
+                <span>YA</span>
+                @error('produk_sendiri')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
             <div class="button-action-form">
                 <button type="submit"><div class="btn-save-form">Save</div></button>
-                <div class="btn-cencel-form">Cancel</div>
+                <a href="{{ url()->previous() }}">
+                    <div class="btn-cencel-form">Cancel</div>
+                </a>
              </div>
         </form>
     </div>
 
 </div>
+@stop
+
+@section('script')
+<script>
+    $(()=>{
+        $('#checkbox').on('click',function(){
+            var $elm = $(this);
+            $('#checkbox').prop('checked', true)
+            if($elm.prop('checked')){
+                $elm.val(1);
+           }else{
+               $elm.val(0);
+           }
+            console.log($(this).val());
+       });
+    })
+</script>
 @stop

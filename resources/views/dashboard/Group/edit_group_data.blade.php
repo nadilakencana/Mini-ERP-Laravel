@@ -39,6 +39,20 @@
                  @enderror
             </div>
             <div class="col-form-p-input">
+                <label for="nama-barang">Rekening Non PPN</label>
+                <input type="text" name="rekening_no_ppn" class="input-f @error('rekening_no_ppn') is-invalid @enderror" placeholder="Nama Bank, Nama Pemilik, No Rekening" value="{{ $grp->rekening_no_ppn }}">
+                @error('rekening_no_ppn')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
+            <div class="col-form-p-input">
+                <label for="nama-barang">Rekening PPN</label>
+                <input type="text" name="rekening_ppn" class="input-f @error('rekening_ppn') is-invalid @enderror" placeholder="Nama Bank, Nama Pemilik, No Rekening" value="{{ $grp->rekening_ppn }}">
+                @error('rekening_ppn')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
+            <div class="col-form-p-input">
                 <label for="nama-barang">Logo Toko</label>
                 <input type="file" name="logo_toko" class="input-f @error('logo_toko') is-invalid @enderror" placeholder="logo" value="{{ $grp->logo_toko }}">
                 @error('logo_toko')
@@ -61,7 +75,9 @@
             </div>
             <div class="button-action-form">
                 <button type="submit"><div class="btn-save-form">Save</div></button>
-                <div class="btn-cencel-form">Cancel</div>
+                <a href="{{ url()->previous() }}">
+                    <div class="btn-cencel-form">Cancel</div>
+                </a>
             </div>
         </form>
     </div>

@@ -10,15 +10,15 @@ class Barang_Varian extends Model
     use HasFactory;
     protected $table = 'barang_varian';
     protected $fillable = [
-        'fid_barang',
+        'fid_jenis_barang',
         'nama_varian',
         ];
 
 
     public $timestamp = true;
 
-    public function barang(){
-        return $this->belongsTo(Product::class, 'fid_barang','id');
+    public function jenis_barang(){
+        return $this->belongsTo(Barang_jenis::class, 'fid_jenis_barang','id');
     }
     public function penjualan(){
         return $this->hasMany(DetailPenjualan::class,'fid_varian','id');

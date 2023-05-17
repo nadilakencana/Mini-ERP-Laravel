@@ -206,7 +206,7 @@ td.data-detail-delivery {
 }
 .header-card-create {
     display: flex;
-    margin-bottom: 39px;
+    margin-bottom: 10px;
     font-weight: 700;
     justify-content: space-between;
 }
@@ -218,7 +218,12 @@ td.data-detail-delivery {
 .header-card-create .close {
     cursor: pointer;
 }
-
+span.note {
+    margin-bottom: 19px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+}
 .card-create-customer.detail-data .card-detail-data {
     background: #b9b9b957;
     padding: 20px;
@@ -389,3 +394,7 @@ tr.body-table {
 /* end pop variasi */
 
 /* alert  */
+.selectize-control {
+    position: relative;
+    width: 100%;
+}

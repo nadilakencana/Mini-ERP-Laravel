@@ -47,7 +47,7 @@
 
             </div>
 
-            <div class="tbl-pembayaran">
+            {{--  <div class="tbl-pembayaran">
                 <table class="tbl">
                     <thead class="tbl-head">
                         <tr class="tr-tbl-payment">
@@ -70,7 +70,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>  --}}
         </div>
     </div>
 </div>
