@@ -46,7 +46,7 @@
                         @enderror
                     </div>
                     <div class="button-action-form">
-                        <div class="btn-save-form">Save</div>
+                        <div class="btn-save-form customer">Save</div>
                         <div class="btn-cencel-form">Cancel</div>
                     </div>
                 {{--  </form>  --}}
@@ -121,7 +121,7 @@
                         @enderror
                     </div>
                     <div class="button-action-form">
-                        <div class="btn-save-form">Save</div>
+                        <div class="btn-save-form detail-cus">Save</div>
                         <div class="btn-cencel-form">Cancel</div>
                     </div>
                 {{--  </form>  --}}

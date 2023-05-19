@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\ContactPersonSupplier;
+use App\Models\User_Log;
 class SuplierController extends Controller
 {
     //
@@ -28,6 +29,10 @@ class SuplierController extends Controller
     public function post_suplier(Request $request){
         // dd($request);
         $admin = Auth()->user()->id;
+        $activity = new User_Log();
+        $activity->fid_user =  $admin ;
+        $activity->log = "Menambahkan data Supplier ";
+
         $request->validate([
             'nama_supplier' => 'required',
             'alamat' => 'required',
@@ -48,6 +53,7 @@ class SuplierController extends Controller
         // dd($suplier);
         // $suplier->save();
         if($suplier->save()){
+            $activity->save();
             return redirect()->route('supplier')->with('success','data Supplier berhasil di tambahkan ');
         }else{
             return redirect()->back()->with('error','data Supplier gagal di tambahkan ');
@@ -63,6 +69,10 @@ class SuplierController extends Controller
     public function updateSuplier(Request $request, $id){
 
         $admin= Auth()->user()->id;
+
+        $activity = new User_Log();
+        $activity->fid_user =  $admin ;
+        $activity->log = "Mengubah data Supplier";
 
         $request->validate([
             'nama_supplier' => 'required',
@@ -83,6 +93,7 @@ class SuplierController extends Controller
         $suplier->updated_by = $admin;
 
         if($suplier->save()){
+            $activity->save();
             return redirect()->route('supplier')->with('success','data Supplier berhasil di tambahkan ');
         }else{
             return redirect()->back()->with('error','data Supplier gagal di tambahkan ');
@@ -104,7 +115,14 @@ class SuplierController extends Controller
 
         if($request->id){
             $suplierContact = ContactPersonSupplier::where('id', $request->id)->first();
+            $activity = new User_Log();
+            $activity->fid_user =  $admin ;
+            $activity->log = "Mengubah data Detail Supplier";
         }else{
+            $activity = new User_Log();
+            $activity->fid_user =  $admin ;
+            $activity->log = "Menambahkan data Detail Supplier";
+
             $suplierContact = new ContactPersonSupplier();
         }
          $suplierContact->fid_supplier = $request->fid_supplier;
@@ -118,6 +136,7 @@ class SuplierController extends Controller
 
         //  dd($suplierContact);
          $suplierContact->save();
+         $activity->save();
         return response()->json([
             'success' => 1,
             'message' => 'jeis barang Berhasil Diupdate',
@@ -138,8 +157,15 @@ class SuplierController extends Controller
     }
 
     public function delete_data_contact($id){
+        $admin= Auth()->user()->id;
+
+        $activity = new User_Log();
+        $activity->fid_user =  $admin ;
+        $activity->log = "Menghapus data Supplier";
+
         $contact = ContactPersonSupplier::where('id', $id)->first();
         $contact -> delete();
+        $activity->save();
         return redirect()->back();
     }
 }

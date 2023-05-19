@@ -130,7 +130,31 @@
     })
 
 
+    $('.col-form-p-input.barang #barang').on('click', function(){
+        getMasterBarang();
+    });
 
+    function getMasterBarang(){
+        $.ajax({
+            url: '{{ route('masterBarang') }}',
+            method: 'GET',
+            type: 'json',
+            success: function(e){
+                var $elm = $(`.col-form-p-input.barang #barang`);
+               //let idx = $elm.attr('data-id');
+                $elm.html('');
+
+                $elm.append("<option value='0'>  --pilih Master Barang-- </option>");
+
+                $.each(e, function(key,value){
+                    $elm.append("<option value="+value+">"+key+"</option>");
+                });
+            },
+            done: function(){
+
+            }
+        });
+    }
 
  function setform(id){
     var obj ={};

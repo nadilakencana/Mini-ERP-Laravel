@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
 use App\Models\ContactPersonSupplier;
 use App\Models\DetailPenjualan;
 use App\Models\Penjualan;
-
+use App\Models\User_Log;
 class PembelianController extends Controller
 {
     //
@@ -114,6 +114,9 @@ class PembelianController extends Controller
         $admin = Auth()->user()->id;
         $memberToko = GroupMember::where('fid_user', $admin)->first();
 
+        $activity = new User_Log();
+        $activity->fid_user = $admin;
+        $activity->log = "Membuat Purchase Order".$request->log;
 
         $pembelian = new Pembelian();
         $pembelian->no_faktur = $request->faktur;
@@ -139,6 +142,7 @@ class PembelianController extends Controller
 
         // dd($pembelian);
         if($pembelian->save()){
+            $activity->save();
 
             if($request->has('productPembelian')){
                 $product = $request->productPembelian;
@@ -200,7 +204,10 @@ class PembelianController extends Controller
     public function postpembayaranPembelian(Request $request){
 
         $admin = Auth()->user()->id;
+        $activity = new User_Log();
 
+        $activity->fid_user = $admin;
+        $activity->log = "Membuat Pembayaran Purchase Order".$request->log;
          // $sales = Penjualan::where('id', $request->id)->first();
 
         $pembayaran = new DetailPembayaranPembelian();
@@ -216,6 +223,7 @@ class PembelianController extends Controller
         // dd($pembayaran);
         if($pembayaran->save()){
             //
+            $activity->save();
             return redirect()->route('purchase')->with('Success', 'Berhasil menambahkan data baru');
 
         }else{

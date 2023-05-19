@@ -73,6 +73,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/get-data-customer', [salesController::class,'getAlamatCustomer'])->name('getCustomer');
     Route::get('data-toko', [salesController::class, 'getDataToko'])->name('getDataToko');
     Route::get('/data-sales', [salesController::class,'getDataSales'])->name('dataGetSales');
+    Route::get('/data-master-barang',[ProductController::class,'getMasterBarang'])->name('masterBarang');
 
 
     // product
@@ -80,6 +81,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/creat-product',[ProductController::class,'create_product'])->name('create-product');
     Route::get('/edit-product/{id}',[ProductController::class,'edit_product'])->name('edit-product');
     Route::post('/post-barang',[ProductController::class,'CreateProduct'])->name('post-barang');
+    Route::post('/post-barang-in-sales',[ProductController::class,'CreateProductInSales'])->name('post-barang-inSales');
     Route::post('/update-barang/{id}',[ProductController::class,'UpdateProduct'])->name('update-barang');
     Route::delete('/delete-barang/{id}',[ProductController::class,'DeleteProduct'])->name('delete-barang');
     Route::post('/approved-product/{id}',[ProductController::class,'approvedProduct'])->name('approved');

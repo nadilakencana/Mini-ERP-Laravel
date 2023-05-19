@@ -333,6 +333,20 @@
        });
 
 
+        $('#checkbox.alias').on('click',function(){
+            var $elm = $(this);
+            $('#checkbox.alias').prop('checked', true);
+                if($elm.prop('checked')){
+                    $('button.btn-save-form').on('click', function(){
+                        $('.card-create-customer.product').addClass('close-hide').removeClass('show');
+                        $('.card-create-customer.alias-product').removeClass('close-hide').addClass('show');
+                    });
+
+                }
+            //console.log($(this).val());
+       });
+
+
 
         var $table = $('.body-table');
         var idxBarangSales = 0;
@@ -345,7 +359,7 @@
 
         });
 
-        $('.btn-save-form').on('click', function(){
+        $('.btn-save-form.customer').on('click', function(){
 
             postData()
         });
@@ -504,7 +518,7 @@
         });
         $('.card-create-product.edit .btn-save-form').on('click', function(){
 
-            postData()
+            postDataVarian()
         });
 
         $('.card-create-product.create .btn-save-form').on('click', function(){
@@ -512,7 +526,7 @@
             $('.submit-form-create form').submit();
         });
 
-        function postData(){
+        function postDataVarian(){
             var obj = {};
             var $formSet = $('.form-card.edit');
             var id = $formSet.data('id');
@@ -559,9 +573,8 @@
                var idx = $elm.attr('idx');
                $form.append(`<input name="varian[${idx}][nama_varian]" type="hidden" value="${lastVal}"/>`);
                $form.append(`<input name="varian[${idx}][fid_jenis_barang]" type="hidden" value="${idxBarang}" />`);
-
-
            }
+
         $('body').on('click','.input-icon', function(e){
             e.stopPropagation();
             e.preventDefault();
@@ -671,12 +684,7 @@
             var subtotal2 = parseInt(subtotal1) + parseInt( hasil_ppn);
 
             var grand_total = parseInt(subtotal2) + lainLain;
-
-
-
-                {{--  var total = (parseFloat(parseInt(subtotal) - (parseInt(subtotal) * dis)) * ppn) + lainLain ;  --}}
-
-                $('.colum-total input.grand_total').val(grand_total).text(grand_total);
+            $('.colum-total input.grand_total').val(grand_total).text(grand_total);
 
             console.log('total', parseFloat(grand_total), subtotal);
         });
@@ -696,9 +704,6 @@
            // PostDatasales();
             dataProductSales()
         });
-
-
-
 
     });
 
@@ -728,14 +733,6 @@
         var lainLain = $footerForm.find('.colum-total input.lain-lain').val();
         var GrandTotal = $footerForm.find('.colum-total input.grand_total').val();
 
-        //pembayaran
-
-       // var tanggal_pembayaran = $formSet.find('input#date_pembayaran').val();
-       // var jumlah =  $formSet.find('input.jumlah').val();
-       // var pembayaran =  $formSet.find('.pembayaran option:selected').val();
-       // var dsc = $formSet.find('textarea.dsc').val();
-
-
         //penjualan
         $form.find(`input.no_faktur[name="no_faktur"]`).val(faktur);
         $form.find(`input.customer[name="fid_customer"]`).val(customer);
@@ -755,13 +752,6 @@
         $form.find(`input.tipe[name="tipe"]`).val(jenisPengiriaman);
         $form.find(`input.alamat[name="alamat"]`).val(alamat);
         $form.find(`input.keterangan[name="keterangan"]`).val(catatan);
-
-
-        //pembayaran
-       // $form.find(`input.tanggal_pembayaran[name="tanggal_pembayaran"]`).val(tanggal_pembayaran);
-       // $form.find(`input.pembayaran[name="pembayaran"]`).val(pembayaran);
-       // $form.find(`input.total[name="total"]`).val(jumlah);
-    //$form.find(`input.deskripPembayaran[name="deskripPembayaran"]`).val(dsc);
 
         $row.each(function(){
             var $elm = $(this);
@@ -791,7 +781,143 @@
 
     }
 
+    //master product
 
+    $('.master-barang').on('click', function(){
+        postDataMasterBarang();
+    })
+
+    function clearFormMaster(){
+        var $formSet = $('.form-card');
+        $formSet.removeData('id');
+        $formSet.find('.col-form-p-input.kode input').val('');
+        $formSet.find('.col-form-p-input.nama-barang input').val('');
+        $formSet.find('.col-form-p-input .jenis ').removeData('fid_jenis_barang');
+        $formSet.find('.col-form-p-input.harga input').val('');
+        $formSet.find('.col-form-p-input.product-sendiri input').val('');
+    }
+
+    function postDataMasterBarang(){
+        var obj = {};
+        var $formSet = $('.form-card');
+        var id = $formSet.data('id');
+        var kode = $formSet.find('.col-form-p-input.kode input').val();
+        var nama = $formSet.find('.col-form-p-input.nama-barang input').val();
+        var jenis = $formSet.find('.col-form-p-input .jenis option:selected').attr('value');
+        var harga = $formSet.find('.col-form-p-input.harga_barang input').val();
+        var asal_product = $formSet.find('.col-form-p-input.product-sendiri input').val();
+
+        obj['kode'] = kode;
+        obj['nama_barang'] = nama;
+        obj['fid_jenis_barang'] = jenis;
+        obj['harga'] = harga;
+        obj['product_sendiri'] = asal_product;
+
+        //console.log(obj['fid_group']);
+
+        obj["_token"] = "{{ csrf_token() }}";
+        if(id){
+            obj['id'] = id;
+        }
+        $.ajax({
+            url: "{{route('post-barang-inSales')}}",
+            data: obj,
+            method : 'POST',
+            success : function(result){
+                console.log('success', result);
+                clearFormMaster();
+                $('#checkbox.alias').prop('checked', true);
+                if($('#checkbox.alias').prop('checked')){
+                        $('.card-create-customer.product').addClass('close-hide').removeClass('show');
+                        $('.card-create-customer.alias-product').removeClass('close-hide').addClass('show');
+                }else{
+                    $('.container-popup-card-product').removeClass('show').addClass('close-hide');
+                    $('.card-create-customer.product').removeClass('show').addClass('close-hide');
+                }
+                //window.location.reload();
+            }
+        }).fail(function(data){
+           console.log(data);
+        });
+    }
+
+    //alias
+    $('.btn-save-form.alias').on('click', function(){
+
+        postDataAlias();
+    });
+
+    $('.col-form-p-input.barang #barang').on('click', function(){
+        getMasterBarang();
+    });
+
+    function getMasterBarang(){
+        $.ajax({
+            url: '{{ route('masterBarang') }}',
+            method: 'GET',
+            type: 'json',
+            success: function(e){
+                var $elm = $(`.col-form-p-input.barang #barang`);
+               //let idx = $elm.attr('data-id');
+                $elm.html('');
+
+                $elm.append("<option value='0'>  --pilih Master Barang-- </option>");
+
+                $.each(e, function(key,value){
+                    $elm.append("<option value="+value+">"+key+"</option>");
+                });
+            },
+            done: function(){
+
+            }
+        });
+    }
+    function clearFormAlias(){
+        var $formSet = $('.form-card');
+        $formSet.removeData('id');
+        $formSet.find('.col-form-p-input #barang ').removeData('fid_barang');
+        $formSet.find('.col-form-p-input #group').removeData('fid_group');
+        $formSet.find('.col-form-p-input.alias input').val('');
+        $formSet.find('.col-form-p-input.harga input').val('');
+    }
+
+    function postDataAlias(){
+        var obj = {};
+        var $formSet = $('.form-card');
+        var id = $formSet.data('id');
+        var masterBarang = $formSet.find('.col-form-p-input #barang option:selected').attr('value');
+        var masterGroup = $formSet.find('.col-form-p-input #group option:selected').attr('value');
+        var alias = $formSet.find('.col-form-p-input.alias input').val();
+        var harga = $formSet.find('.col-form-p-input.harga input').val();
+
+        obj['fid_barang'] = masterBarang;
+        obj['fid_group'] = masterGroup;
+        obj['alias'] = alias;
+        obj['harga'] = harga;
+
+        console.log(obj['fid_group']);
+
+        obj["_token"] = "{{ csrf_token() }}";
+        if(id){
+            obj['id'] = id;
+        }
+        $.ajax({
+            url: "{{route('post-data-alias')}}",
+            data: obj,
+            method : 'POST',
+            success : function(result){
+                console.log('success', result);
+                clearFormAlias();
+                $('.container-popup-card-product').removeClass('show').addClass('close-hide');
+                $('.card-create-customer.alias-product').removeClass('show').addClass('close-hide');
+                window.location.reload();
+            }
+        }).fail(function(data){
+           console.log(data);
+        });
+    }
+
+    //customer
     function postData(){
         var obj = {};
         var $formSet = $('.form-card');
@@ -856,8 +982,6 @@
     function getProduct(id, idx){
         var obj ={};
         var $form = $('.form-table');
-        //var $table = $form.find('.body-table .body-row .product');
-        //var idx = $table.attr('data-id');
         console.log('data-id get alias:', idx);
 
         obj["_token"] = "{{ csrf_token() }}";
@@ -887,8 +1011,6 @@
             success: function(e){
                 var $elm = $(`.warna[data-id="${idx}"]`);
                //let idx = $elm.attr('data-id');
-
-
                 $elm.html('');
 
                 $elm.append("<option value='0'> -- Pilih Varian -- </option>");

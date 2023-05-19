@@ -15,6 +15,7 @@ use App\Models\DetailPengiriman;
 use App\Models\GroupToko;
 use App\Models\GroupMember;
 use Illuminate\Support\Carbon;
+use App\Models\User_Log;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use PDF;
 
@@ -28,9 +29,7 @@ class salesController extends Controller
 
     public function Sales(){
         $admin = Auth()->user()->id;
-        // $admin = Auth()->user()->id;
         $perPage = 2; // jumlah item data yang akan diambil setiap kali panggil
-        // $offset = ($p) * $perPage;
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $sales = Penjualan::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
 
@@ -47,6 +46,7 @@ class salesController extends Controller
     public function create_Sales(){
 
         $admin = Auth()->user()->id;
+
 
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $customer = Customer::all();
@@ -79,9 +79,6 @@ class salesController extends Controller
         $getInvoice = $PrefixFaktur;
 
         // dd($getInvoice);
-
-
-
         return view('dashboard.salse.createSales', compact(
             'customer',
             'product',
@@ -98,6 +95,11 @@ class salesController extends Controller
      public function PostCreateData(Request $request){
         // dd($request);
         $admin = Auth()->user()->id;
+
+
+        $activity = new User_Log();
+        $activity->fid_user =  $admin ;
+        $activity->log = "Membuat Sales Order ";
 
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $group = $memberToko->group()->first();
@@ -148,7 +150,7 @@ class salesController extends Controller
         //  dd( $penjualan);
 
         if($penjualan->save()){
-
+            $activity->save();
             if($request->has('productSales')){
                 // dd($request->has('productSales'));
                 $products = $request->productSales;
@@ -191,26 +193,11 @@ class salesController extends Controller
 
             $detailPengiriman->save();
 
-            // $pembayaran = new DetailPembayaran();
-            // $pembayaran->fid_penjualan =  $penjualan->id;
-            // $pembayaran->tanggal = $request->tanggal_pembayaran;
-            // $pembayaran->pembayaran = $request->pembayaran;
-            // $pembayaran->total = $request->total;
-            // $pembayaran->keterangan = $request->deskripPembayaran;
-            // $pembayaran->diperiksa = $admin;
-            // $pembayaran-> created_by = $admin;
-            // $pembayaran-> updated_by = $admin;
-
-            // $pembayaran->save();
-
-
-
             return redirect()->route('sales')->with('Success', 'Berhasil menambahkan data baru');
 
         }else{
             return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
         }
-
 
 
      }
@@ -267,6 +254,9 @@ class salesController extends Controller
     public function postpembayaran(Request $request){
         $admin = Auth()->user()->id;
 
+        $activity = new User_Log();
+        $activity->fid_user =  $admin ;
+        $activity->log = "Membuat pembayaran Sales Order ";
          // $sales = Penjualan::where('id', $request->id)->first();
 
         $pembayaran = new DetailPembayaran();
@@ -282,7 +272,7 @@ class salesController extends Controller
 
 
         if($pembayaran->save()){
-            //
+            $activity->save();
             return redirect()->route('sales')->with('Success', 'Berhasil menambahkan data baru');
 
         }else{

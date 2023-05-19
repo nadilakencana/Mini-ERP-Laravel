@@ -7,6 +7,7 @@ use App\Models\User_Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User_log;
 
 class UserRoleController extends Controller
 {
@@ -33,10 +34,21 @@ class UserRoleController extends Controller
 
     public function postData(Request $request){
          $user = Auth()->user()->id;
+
         $role = User_Role::get();
+
+        $activity = new User_Log();
+        $activity->fid_user =  $user ;
         if($request->id){
+
+            $activity->log = "Mengubah data User Role";
+
             $role_update = User_Role::where('id', $request->id)->first();
+
         }else{
+
+            $activity->log = "Menambah data User Role";
+
             $role_update =new User_Role();
         }
 
@@ -46,6 +58,7 @@ class UserRoleController extends Controller
          $role_update->updated_by = $user;
         //  dd($role_update);
          $role_update->save();
+         $activity->save();
          return response()->json(['success' => 1, 'message' => 'role Berhasil Diupdate']);
 
 
@@ -58,10 +71,14 @@ class UserRoleController extends Controller
     }
 
     public function DeleteData($id){
+        $user = Auth()->user()->id;
+        $activity = new User_Log();
+        $activity->fid_user =  $user ;
+        $activity->log = "Menghapus data User Role";
 
         $role = User_Role::where('id', $id)->first();
         $role->delete();
-
+        $activity->save();
         return redirect()->back();
 
     }

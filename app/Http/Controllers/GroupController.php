@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\GroupMember;
 use App\Models\GroupToko;
 use App\Models\User;
+use App\Models\User_Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +30,11 @@ class GroupController extends Controller
 
     public function postDataGroup(Request $request){
         $admin= Auth()->user()->id;
+        $activity = new User_Log();
+
+
+        $activity->fid_user = $admin;
+        $activity->log = "Menambahkan data Group Toko".$request->log;
 
         $request->validate([
             'nama_toko' => 'required',
@@ -79,6 +85,7 @@ class GroupController extends Controller
 
         // dd($dt_Gp);
         if($dt_Gp->save()){
+            $activity->save();
             return redirect()->route('dataGroup')->with('Success', 'Berhasil menambahkan data baru');
         }else{
             return redirect()->back()->with('Faild', 'Gagal menambahkan data baru');
@@ -88,7 +95,11 @@ class GroupController extends Controller
     public function updateData(Request $request,$id){
 
         $admin= Auth()->user()->id;
+        $activity = new User_Log();
 
+
+        $activity->fid_user = $admin;
+        $activity->log = "Mengubah data Group Toko".$request->log;
         $request->validate([
             'nama_toko' => 'required',
             'kode_invoice' => 'required',
@@ -140,6 +151,7 @@ class GroupController extends Controller
         // dd($dt_Gp);
 
         if($dt_Gp->save()){
+            $activity->save();
             return redirect()->route('dataGroup')->with('Success', 'Berhasil menambahkan data baru');
         }else{
             return redirect()->back()->with('Faild', 'Gagal menambahkan data baru');
@@ -148,11 +160,14 @@ class GroupController extends Controller
 
     public function DeleteData($id){
         $admin= Auth()->user()->id;
+        $activity = new User_Log();
+        $activity->fid_user = $admin;
+        $activity->log = "Menghapus data Group Toko";
 
         $toko = GroupToko::where('id', $id)->first();
 
         $toko->delete();
-
+        $activity->save();
         return redirect()->back();
 
     }
@@ -172,6 +187,10 @@ class GroupController extends Controller
 
     public function create_member(Request $request){
         $admin = Auth()->user()->id;
+        $activity = new User_Log();
+
+        $activity->fid_user = $admin;
+        $activity->log = "Menambahkan data Member Toko".$request->log;
 
         $request->validate([
             'fid_user'  => 'required',
@@ -185,6 +204,7 @@ class GroupController extends Controller
         $member->updated_by = $admin ;
 
         if($member->save()){
+            $activity->save();
             return redirect()->route('dataGroupMember')->with('Success', 'Berhasil menambahkan data baru');
 
         }else{
@@ -202,6 +222,9 @@ class GroupController extends Controller
     }
     public function edit_member(Request $request, $id){
         $admin = Auth()->user()->id;
+        $activity = new User_Log();
+        $activity->fid_user = $admin;
+        $activity->log = "Mengubah data Group Member".$request->log;
 
         $request->validate([
             'fid_user'  => 'required',
@@ -216,6 +239,7 @@ class GroupController extends Controller
         $member->updated_by = $admin ;
 
         if($member->save()){
+            $activity->save();
             return redirect()->route('dataGroupMember')->with('Success', 'Berhasil menambahkan data baru');
 
         }else{
@@ -225,12 +249,17 @@ class GroupController extends Controller
 
     public function DeleteDataMember($id){
         $admin= Auth()->user()->id;
+        $activity = new User_Log();
+        $activity->fid_user = $admin;
+        $activity->log = "Menghapus data Customer";
+
         if($admin){
             $member = GroupMember::where('fid_user',$admin)->first();
 
         }
         $member = GroupMember::where('id', $id)->first();
         $member->delete();
+        $activity->save();
 
         return redirect()->back();
 
