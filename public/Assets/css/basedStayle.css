@@ -252,9 +252,9 @@ span.notes {
 .sidebar{
     position: fixed;
     background-color: #FFFFFF;
-    width: 281px;
+    width: 254px;
     height: -webkit-fill-available;
-    padding: 24px;
+    padding: 19px;
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
@@ -310,13 +310,13 @@ span.notes {
     width: 70%;
     background-color: #ECF5F5;
     flex-grow: 1;
-    padding: 28px;
+    padding: 19px;
     margin-left: 78px;
     transition: all 0.8s linear;
 }
 
 .sidebar:not(.hide)~.main-content{
-    margin-left: 270px;
+    margin-left: 245px;
 }
 .sidebar .header {
     display: flex;
@@ -332,7 +332,7 @@ span.notes {
 .sub-menu {
     display: flex;
     flex-direction: column;
-    margin-left: 89px;
+    margin-left: 89px;;
 }
 .sub-menu.off {
     display: none;
@@ -356,7 +356,7 @@ img#icon-dw {
     color: #ffffff;
     flex-direction: row;
     align-items: center;
-    padding: 20px 35px;
+    padding: 11px 23px;
     border-radius: 14px;
     -webkit-border-radius: 14px;
     -moz-border-radius: 14px;
@@ -377,7 +377,7 @@ img#icon-dw {
     -o-transition: all ease-in 0.5s;
 }
 .sidebar .main-sidebar .list-item.dashboard{
-    margin-top: 38px;
+    margin-top: 30px;
 }
 .sidebar .main-sidebar .list-item .icon{
     margin-right: 12px;
@@ -1123,7 +1123,7 @@ textarea{
     display: flex;
     flex-direction: column;
     gap: 5px;
-    height: 53px;
+    height: 55px;
 }
 .i-form-sales .i-form {
     border: 1px solid #56565663;
@@ -1183,6 +1183,23 @@ td.body-row.input-row {
     width: 20px;
     height: 17px;
 }
+.btn-edit img {
+    width: 19px;
+}
+.status-proses {
+    color: #af0000;
+    background: #f7cf09;
+    padding: 5px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.status-Lunas {
+    color: #efefef;
+    background: #4ab71d;
+    padding: 5px;
+    border-radius: 4px;
+    font-weight: 600;
+}
 .dropdown-print-action {
     position: absolute;
     z-index: 10000;
@@ -1192,7 +1209,7 @@ td.body-row.input-row {
     box-shadow: 0px 7px 11px rgb(134 134 134 / 25%);
     border-radius: 10px;
     display: flex;
-    margin-top: 143px;
+    margin-top: 94px;
 }
 .dropdown-print-action.off {
     display: none;
@@ -1301,6 +1318,11 @@ td.body-row.action-btn {
 }
 .p-kw-form{
     background: #89B997;
+}
+
+.p-kw-form a{
+    color: white;
+    text-decoration: none;
 }
 .p-fak-form, .p-sj-form, .p-kw-form {
     padding: 10px 11px;

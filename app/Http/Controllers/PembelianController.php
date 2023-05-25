@@ -52,11 +52,7 @@ class PembelianController extends Controller
 
         foreach($DetailPenjualan as $k => $DetailPenjualan){
             $k < count($DetailPenjualan->toArray()) - 1;
-			// if(  $k < count($DetailPenjualan->toArray()) - 1){
-			// 	$varianString = $varianString.$varian->variasi.', ';
-			// }else{
-			// 	$varianString = $varianString.$varian->variasi;
-			// }
+			
 
 		}
 

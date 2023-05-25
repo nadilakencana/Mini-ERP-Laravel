@@ -2,15 +2,14 @@
 <tr class="body-table" itemid="{{ $k }}">
     <td class="body-row input-row" data-row="{{ $k }}">
         <div class="part-input alias">
-            <input type="text" class="input-tbl product" data-id="{{ $k }}" value="{{ $DetailPenjualan->product->alias }}">
+            <input type="text" class="input-tbl product" data-id="{{ $k }}" value="{{ $DetailPenjualan->AliasBarang->alias }}">
             <img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="" class="input-icon" data-id="{{ $k }}">
         </div>
      </td>
      <td class="body-row input-row variasi" data-row="{{$k}}">
         <select name= "productPembelian[{{ $k }}][variasi]" data-id="{{ $k }}" class="warna">
-            {{--  <option value="Hitam" data-id="" class="item-warna">Hitam</option>
-            <option value="Putih" data-id="" class="item-warna">Putih</option>
-            <option value="Cream" data-id="" class="item-warna">Cream</option>  --}}
+            <option value="{{ $DetailPenjualan->fid_varian }}" selected>{{ $DetailPenjualan->variasi->nama_varian }}</option>
+
         </select>
     </td>
      <td class="body-row input-row desc" data-row="{{$k}}">

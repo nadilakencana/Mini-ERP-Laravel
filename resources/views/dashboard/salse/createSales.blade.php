@@ -210,9 +210,9 @@
 
 
 {{--  popup product   --}}
-<div class="container-popup-card-product-alias close-hide">
+<div class="container-popup-card-product alias close-hide">
     <div class="card-position ">
-        <div class="card-create-customer alias-Product close-hide" style="width: 885px;">
+        <div class="card-create-customer alias-Product-so close-hide" style="width: 885px;">
             <div class="header-card-create">
                 <p class="text-tittle">
                   Alias Product
@@ -289,19 +289,22 @@
         <input type="hidden" name="productSales[0][harga_satuan]" class="input-hide harga_satuan"/>
         <input type="hidden" name="productSales[0][total]" class="input-hide total"/>
 
-
-        {{--  pembayaran  --}}
-        {{--  <input type="hidden" name="tanggal_pembayaran" class="input-hide tanggal_pembayaran"/>
-        <input type="hidden" name="pembayaran" class="input-hide pembayaran"/>
-        <input type="hidden" name="total" class="input-hide total"/>
-        <input type="hidden" name="deskripPembayaran" class="input-hide deskripPembayaran"/>  --}}
-
         {{--  //tb detail pengiriman  --}}
         <input type="hidden" name="tanggal_sj" class="input-hide tanggal_sj"/>
         <input type="hidden" name="tanggal_kirim" class="input-hide tanggal_kirim"/>
         <input type="hidden" name="tipe" class="input-hide tipe"/>
         <input type="hidden" name="alamat" class="input-hide alamat"/>
         <input type="hidden" name="keterangan" class="input-hide keterangan"/>
+        <input type="hidden" name="customer" class="input-hide customer-delivery"/>
+        <input type="hidden" name="pengiriman" class="input-hide delivery"/>
+        //<input type="hidden" name="jenis_surat_jalan" class="input-hide jenis-surat-delivery"/>
+
+        {{--  list pengiriman  --}}
+        <input type="hidden" name="itemPengiriman[0][alias]" class="input-hide product-delivery"/>
+        <input type="hidden" name="itemPengiriman[0][variasi]" class="input-hide variasi-delivery"/>
+        <input type="hidden" name="itemPengiriman[0][keterangan]" class="input-hide keterangan-delivery"/>
+        <input type="hidden" name="itemPengiriman[0][jumlah]" class="input-hide qty-delivery"/>
+
 
     </form>
 </div>
@@ -375,6 +378,10 @@
             $form.append(`<input type="hidden" name="productSales[${idx}][harga_satuan]" class="input-hide harga_satuan"/>`);
             $form.append(`<input type="hidden" name="productSales[${idx}][total]" class="input-hide total"/>`);
 
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][alias]" class="input-hide product-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][variasi]" class="input-hide variasi-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][keterangan]" class="input-hide keterangan-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][jumlah]" class="input-hide qty-delivery"/>`);
 
 			$content_.append(
                 `<tr class="body-table" itemid="${idx}" >` +
@@ -427,6 +434,11 @@
                $form.find(`input[name="productSales[${idx}][jumlah]"]`).remove();
                $form.find(`input[name="productSales[${idx}][harga_satuan]"]`).remove();
                $form.find(`input[name="productSales[${idx}][total]"]`).remove();
+
+               $form.find(`input[name="itemPengiriman[${idx}][alias]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][variasi]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][keterangan]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][jumlah]"]`).remove();
 
                 $content_.find(`.body-table[itemid="${idx}"]`).remove();
 			}
@@ -580,12 +592,12 @@
             e.preventDefault();
             var $elm = $(this);
             var xid = $elm.attr('data-id');
-            var $product = $('.card-create-customer.alias-Product');
+            var $product = $('.card-create-customer.alias-Product-so');
             var $tbl = $('.tbl-product');
             $tbl.attr('data-xid', xid);
             console.log('xid click alias:', xid);
 
-            $('.container-popup-card-product').removeClass('close-hide').addClass('show');
+            $('.container-popup-card-product.alias').removeClass('close-hide').addClass('show');
             $product.removeClass('close-hide').addClass('show').attr('data-xid', xid);
             e.stopPropagation();
             e.preventDefault();
@@ -718,6 +730,7 @@
 
 
         var customer = $formhead1.find('.vendor-selection .input-f.customer option:selected').val();
+        var nama_customer = $formhead1.find('.vendor-selection .input-f.customer option:selected').text();
         var alamat = $formhead1.find('.alamat textarea').val();
         var tanggal = $formhead2.find('.Purchase-date.tanggal input').val();
         var tanggalKirim = $formhead2.find('.Purchase-date.pengiriman input').val();
@@ -752,6 +765,9 @@
         $form.find(`input.tipe[name="tipe"]`).val(jenisPengiriaman);
         $form.find(`input.alamat[name="alamat"]`).val(alamat);
         $form.find(`input.keterangan[name="keterangan"]`).val(catatan);
+        $form.find(`input.customer-delivery[name="customer"]`).val(nama_customer);
+        $form.find(`input.delivery[name="pengiriman"]`).val(jenisPengiriaman);
+        //$form.find(`input.jenis-surat-delivery[name="jenis_surat_jalan"]`).val(catatan);
 
         $row.each(function(){
             var $elm = $(this);
@@ -770,6 +786,11 @@
             $form.find(`input[name="productSales[${idx}][jumlah]"]`).val(jumlah);
             $form.find(`input[name="productSales[${idx}][harga_satuan]"]`).val(hargaSatuan);
             $form.find(`input[name="productSales[${idx}][total]"]`).val(total);
+
+            $form.find(`input[name="itemPengiriman[${idx}][alias]"]`).val();
+            $form.find(`input[name="itemPengiriman[${idx}][jumlah]"]`).val(jumlah);
+            $form.find(`input[name="itemPengiriman[${idx}][variasi]"]`).val(variasi);
+            $form.find(`input[name="itemPengiriman[${idx}][keterangan]"]`).val(desc);
 
             console.log(variasi, desc, jumlah, hargaSatuan, total);
             //console.log($form.find(`input[name="productSales[${idx}][total]"]`).val(total));
@@ -1034,6 +1055,7 @@
             $form.data('id', data.id);
             $form.find(`.body-row.input-row .part-input  input.product[data-id="${idx}"]`).val(data.alias);
             $form2.find(`input[name="productSales[${idx}][alias]"]`).val(data.id);
+            $form2.find(`input[name="itemPengiriman[${idx}][alias]"]`).val(data.id);
         }
     }
 

@@ -1,6 +1,6 @@
 <div class="container-popup-card-product close-hide">
     <div class="card-position ">
-        <div class="card-create-customer alias-Product close-hide" style="width: 885px;">
+        {{--  <div class="card-create-customer alias-Product close-hide" style="width: 885px;">
             <div class="header-card-create">
                 <p class="text-tittle">
                   Alias Product
@@ -15,10 +15,7 @@
                     <p>Search</p>
                 </div>
 
-                {{--  <div class="button-create" style="margin-right: 0;">
-                    <img src="{{ asset('Assets/icon/🦆 icon _plus_-1.png') }}" alt="" srcset="">
-                    <p>New Product</p>
-                </div>  --}}
+
            </div>
            <div class="tbl-product">
                 <div class="table-data">
@@ -48,7 +45,7 @@
                     Ok
                 </div>
             </div>
-        </div>
+        </div>  --}}
         {{--  form create   --}}
         <div class="card-create-customer alias-product close-hide">
             <div class="header-card-create">

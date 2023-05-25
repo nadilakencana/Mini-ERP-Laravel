@@ -117,6 +117,7 @@
         $('.card-create-customer.jenis-product').removeClass('close-hide').addClass('show');
         e.stopPropagation();
         e.preventDefault();
+        getMasterBarang();
     })
 
     $('.close').on('click', function(){
@@ -130,9 +131,9 @@
     })
 
 
-    $('.col-form-p-input.barang #barang').on('click', function(){
-        getMasterBarang();
-    });
+    //$('.col-form-p-input.barang #barang').on('click', function(){
+    //    getMasterBarang();
+    //});
 
     function getMasterBarang(){
         $.ajax({

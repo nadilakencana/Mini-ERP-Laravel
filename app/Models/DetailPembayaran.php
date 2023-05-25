@@ -12,9 +12,10 @@ class DetailPembayaran extends Model
     protected $fillable = [
         'fid_penjualan',
         'tanggal',
-        'pembayaran',
+        'type_pembayaran',
         'total',
         'total_ppn',
+        'total_bayar',
         'keterangan',
         'dipriksa',
         'created_by',

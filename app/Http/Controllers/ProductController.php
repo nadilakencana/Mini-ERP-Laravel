@@ -266,7 +266,7 @@ class ProductController extends Controller
         $admin = Auth()->user()->id;
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $alias = Barang_Alias::where('fid_group', $memberToko->id)->get();
-        $product = Product::where('approved','1')->get();
+        $product = Product::where('approved',1)->get();
         $jenis_barang = Barang_jenis::all();
         $group = GroupToko::all();
         return view('dashboard.product.aliasProduct', compact('alias', 'product','jenis_barang','group'));

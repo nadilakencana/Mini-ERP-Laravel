@@ -308,7 +308,7 @@
                         <td>{{ $product->jenis->nama_jenis }}</td>
                         <td>
                             <div class="detail-barang">
-                                <p class="kode"> {{ $product->alias->nama_alias }}</p>
+                                <p class="kode"> {{ $product->alias->alias }}</p>
                                 <p class="desc">Ket: {{ $product->keterangan }}
                                 </p>
                             </div>

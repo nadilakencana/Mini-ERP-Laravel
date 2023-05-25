@@ -10,6 +10,7 @@ use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\salesController;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\SuratJalanController;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -74,7 +75,13 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('data-toko', [salesController::class, 'getDataToko'])->name('getDataToko');
     Route::get('/data-sales', [salesController::class,'getDataSales'])->name('dataGetSales');
     Route::get('/data-master-barang',[ProductController::class,'getMasterBarang'])->name('masterBarang');
+    Route::get('/edit-Sales-Order/{id}',[salesController::class,'EditSales'])->name('EditSo');
+    Route::post('/update-data-so/{id}', [salesController::class,'PostEdit'])->name('updateSo');
+    Route::post('/Approval-Edit-Sales-order/{id}',[salesController::class,'approvedEdit'])->name('approvalEdit');
 
+    //surat jalan
+
+    Route::get('/Surat-Jalan/{id}', [SuratJalanController::class,'listSuratJalan'])->name('ListSuratJalan');
 
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');
