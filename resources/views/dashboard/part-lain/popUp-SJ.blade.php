@@ -51,7 +51,7 @@
                 <div class="detail-isi">
                     <div class="d-detail-sj">
                         <p class="txt-d-sj">Kode Toko</p>
-                        <p class="txt-data-d-sj">GFB</p>
+                        <p class="txt-data-d-sj">{{ $kode }}</p>
                     </div>
                     <div class="d-detail-sj">
                         <p class="txt-d-sj">Nomer SJ</p>
@@ -79,9 +79,9 @@
                 </div>
             </div>
         </div>
-        <div class="btn-action">
+        {{--  <div class="btn-action">
             <div class="btn-close-pop">Close</div>
             <div class="btn-print-pop">Print</div>
-        </div>
+        </div>  --}}
     </div>
 </div>

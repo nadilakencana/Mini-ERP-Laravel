@@ -69,7 +69,7 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::post('/post-pembayaran',[salesController::class,'postpembayaran'])->name('postPembayaran');
     Route::get('/get-data-pembayaran',[salesController::class,'getPembayaran'])->name('pembayaran');
     Route::get('/invoice/{id}', [salesController::class, 'invoice'])->name('invoice');
-    Route::get('/Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
+
     Route::get('/kwitansi/{id}', [salesController::class, 'Kwitansi'])->name('kwitansi');
     Route::get('/get-data-customer', [salesController::class,'getAlamatCustomer'])->name('getCustomer');
     Route::get('data-toko', [salesController::class, 'getDataToko'])->name('getDataToko');
@@ -82,7 +82,9 @@ Route::group(['middleware' => ['logincek']], function(){
     //surat jalan
 
     Route::get('/Surat-Jalan/{id}', [SuratJalanController::class,'listSuratJalan'])->name('ListSuratJalan');
-
+    Route::get('/Dropshiper/{id}',[SuratJalanController::class,'DropshiperSj'])->name('DropshipSj');
+    Route::get('/postData-Surat-Jalan', [SuratJalanController::class, 'postdropshiperSJ'])->name('postData-SuratJalan');
+    Route::get('/print-Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');
     Route::get('/creat-product',[ProductController::class,'create_product'])->name('create-product');

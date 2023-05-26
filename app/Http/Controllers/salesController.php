@@ -522,16 +522,19 @@ class salesController extends Controller
     }
 
     public function suratJalan($id){
+
         $dec = decrypt($id);
-        $sales = Penjualan::findOrFail($dec);
+        // $sales = ::findOrFail($dec);
         $admin = Auth()->user()->id;
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $group = $memberToko->group()->first();
-        $kodeGroup = $group->kode_invoice;
-        $detail = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
-        $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
-        $sj = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
-        return view('dashboard.part-lain.suratJalan', compact('sales','kodeGroup','detail','barang','sj'));
+        $kodeGroup = $group->logo_toko;
+        $sj = DetailPengiriman::findOrFail($dec);
+        $detail = List_Item_Pengiriman::where('fid_surat_jalan', $sj->id)->get();
+        // $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
+
+
+        return view('dashboard.part-lain.suratJalan', compact('kodeGroup','detail','sj'));
     }
 
     public function Kwitansi($id){

@@ -290,9 +290,6 @@
         <input type="hidden" name="ppn" class="input-hide ppn"/>
         <input type="hidden" name="grand_total" class="input-hide grand_total"/>
 
-
-
-
         {{--  //tb detail pengiriman  --}}
         <input type="hidden" name="tanggal_sj" class="input-hide tanggal_sj"/>
         <input type="hidden" name="tanggal_kirim" class="input-hide tanggal_kirim"/>

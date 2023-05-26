@@ -7,7 +7,7 @@
         <p class="text-tittle">
             Surat Jalan
         </p>
-        <a href="{{ route('create-sales') }}">
+        <a href="{{ route('DropshipSj',encrypt($idx->id)) }}">
             <div class="button-create" idx="{{ $idx->id }}">
                     <img src="{{ asset('Assets/icon/🦆 icon _plus_-1.png') }}" alt="" srcset="">
                     <p>Dropshiper</p>
@@ -75,9 +75,12 @@
                             <div class="btn-detail">
                                 Detail
                             </div>
-                            <div class="btn-print">
-                                <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
-                            </div>
+                            <a href="{{ route('sj', encrypt($Delivery->id)) }}">
+                                <div class="btn-print">
+                                    <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
+                                </div>
+                            </a>
+
                         </div>
 
                     </td>

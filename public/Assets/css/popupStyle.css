@@ -113,7 +113,7 @@ td.data-detail-delivery {
 .admin {
     display: flex;
     align-self: flex-end;
-    margin-top: 127px;
+    margin-top: 32px;
     font-size: 25px;
     letter-spacing: 1px;
 }
@@ -176,7 +176,7 @@ td.data-detail-delivery {
     display: flex;
     justify-content: space-between;
     gap: 177px;
-    margin-bottom: 37px;
+    margin-bottom: 14px;
     font-size: 17px;
 }
 /* end popup */

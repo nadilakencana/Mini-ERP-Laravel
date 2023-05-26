@@ -42,8 +42,12 @@
             width: 300px;
         }
         .left-header-kode {
-            font-weight: 900;
             margin-top: 29px;
+            width: 200px;
+            height: 200px;
+        }
+        .left-header-kode img {
+           width: 100%;
         }
         p.titel {
             font-weight: bold;
@@ -176,7 +180,9 @@
    <div class="button-save-pdf">Save PDF</div>
    <div class="invoice">
         <div class="header-invoice">
-            <div class="left-header-kode">-{{ $kodeGroup }}-</div>
+            <div class="left-header-kode">
+                <img src="{{ $kodeGroup }}" alt="">
+            </div>
             <p class="titel">SURAT JALAN</p>
             <div class="right-detail-pengiriman">
                 <div class="tanggal">
@@ -184,8 +190,12 @@
                     <p class="tgl">:{{Carbon\Carbon::parse($sj->tanggal_sj)->format('d M Y')}}</p>
                 </div>
                 <div class="no-faktur">
-                    <p>Nomer Faktur </p>
+                    <p>Nomer Surat Jalan </p>
                     <p class="faktur" style="width: 200px;">:  {{  $sj->no_surat_jalan	 }}</p>
+                </div>
+                <div class="no-faktur">
+                    <p>Nomer Faktur </p>
+                    <p class="faktur" style="width: 200px;">:  {{  $sj->SO->no_faktur	 }}</p>
                 </div>
 
                 <div class="alamat">
@@ -195,11 +205,11 @@
                     </p>
                     <div class="penerima">
                         <p class="name">Penerima  </p>
-                        <p class="penerima-nama">: {{ $sales->customer->nama_customer }}</p>
+                        <p class="penerima-nama">: {{  $sj->customer	 }}</p>
                     </div>
                     <div class="hp">
                         <p class="nohp">HP </p>
-                        <p class="telphon">: {{ $sales->customer->no_hp }}</p>
+                        <p class="telphon">:{{  $sj->SO->customer->no_hp	 }} </p>
                     </div>
 
                 </div>
@@ -210,24 +220,24 @@
                 <thead>
                     <th>No</th>
                     <th style="width: 100px" >Tipe</th>
-                    <th style="width: 290px;">Kode Barang</th>
+                    <th style="width: 290px;">Nama Barang</th>
                     <th style="width: 150px;">Warna</th>
                     <th>Qty</th>
                 </thead>
                 <tbody>
                     @php $no=1; @endphp
-                    @foreach ($barang as $product )
+                    @foreach ($detail as $product )
                     <tr>
                         <td style="text-align: center;">{{ $no }}</td>
-                        <td>{{ $product->jenis->nama_jenis }}</td>
+                        <td>{{ $product->jenisBarang->nama_jenis }}</td>
                         <td>
                             <div class="detail-barang">
-                                <p class="kode"> {{ $product->alias->alias }}</p>
+                                <p class="kode"> {{ $product->AliasBarang->alias }}</p>
                                 <p class="desc">Ket: {{ $product->keterangan }}
                                 </p>
                             </div>
                         </td>
-                        <td>{{ $product->variasi->nama_varian }}</td>
+                        <td>{{ $product->Varian->nama_varian }}</td>
                         <td>{{ $product->jumlah }}</td>
 
                     </tr>
