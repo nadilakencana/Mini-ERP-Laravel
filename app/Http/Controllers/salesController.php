@@ -54,8 +54,18 @@ class salesController extends Controller
     }
     public function getDataSales(){
         $admin = Auth()->user()->id;
+        $user = User::where('id', $admin)->with('role_admin')->whereHas('role_admin', function ($query) {
+            $query->where('nama_role', 'Marketing');
+        })
+        ->first();
         $memberToko = GroupMember::where('fid_user', $admin)->first();
-        $sales = Penjualan::where('fid_group', $memberToko->fid_group)->orderBy('updated_at', 'desc')->paginate(2);
+        if($user){
+            $sales = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '1')->where('batal', '0')->orderBy('updated_at', 'desc')->paginate(5);
+
+        }else{
+            $sales = Penjualan::where('approval', '1')->where('batal', '0')->orderBy('updated_at', 'desc')->paginate(5);
+        }
+
 
         return view('dashboard.part-lain.data-sales', compact('sales'));
     }
