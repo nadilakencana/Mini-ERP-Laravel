@@ -264,7 +264,7 @@
                         @foreach ($barang as $br)
                         <tr>
                             <td>{{$no++ }}</td>
-                            <td>{{ $br->alias->alias }}</td>
+                            <td>{{ $br->AliasBarang->alias }}</td>
                             <td>{{ $br->variasi->nama_varian }}</td>
                             <td>{{ $br->jumlah }}</td>
                             <td style="text-align: end;" class="price-unit">{{ number_format($br->harga_satuan , 0,',','.') }}</td>

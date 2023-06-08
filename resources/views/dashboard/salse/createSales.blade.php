@@ -382,6 +382,7 @@
             $form.append(`<input type="hidden" name="itemPengiriman[${idx}][variasi]" class="input-hide variasi-delivery"/>`);
             $form.append(`<input type="hidden" name="itemPengiriman[${idx}][keterangan]" class="input-hide keterangan-delivery"/>`);
             $form.append(`<input type="hidden" name="itemPengiriman[${idx}][jumlah]" class="input-hide qty-delivery"/>`);
+            
 
 			$content_.append(
                 `<tr class="body-table" itemid="${idx}" >` +

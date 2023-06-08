@@ -43,9 +43,13 @@
             width: 300px;
         }
         .left-header-kode {
-            font-weight: 900;
             margin-top: 29px;
+            width: 200px;
+            height: 200px;
         }
+        .left-header-kode img {
+            width: 100%;
+         }
         p.titel {
             font-weight: bold;
             align-self: center;
@@ -218,12 +222,29 @@
             color: white;
             cursor: pointer;
         }
+        input.ppn {
+            width: 42px;
+            border-radius: 6px;
+            height: 31px;
+            border: 1px solid;
+            padding: 4px;
+        }
+        input.ppn-nominal {
+            width: 103px;
+            border-radius: 6px;
+            height: 31px;
+            border: 1px solid;
+            padding: 4px;
+        }
         .hapus-set {
             padding: 13px;
             background: #e95c5c;
             border-radius: 14px;
             color: white;
             cursor: pointer;
+        }
+        .sub-total p.persent-pembayaran {
+            width: 33px;
         }
     </style>
 
@@ -244,7 +265,8 @@
             </div>
             <div class="item-set-print">
                <label for="">PPN</label>
-               <input type="checkbox" name="" id="" class="ppn" data-idx="{{ $sales->fid_group }}">
+               <input type="text" name="" id="" class="ppn" data-idx="{{ $sales->fid_group }}" placeholder="ppn">
+               <input type="text" name="" id="" class="ppn-nominal">
             </div>
             <div class="action-set">
                 <div class="save-set">Add+</div>
@@ -260,7 +282,9 @@
 
    <div class="invoice">
         <div class="header-invoice">
-            <div class="left-header-kode">-{{ $kodeGroup }}-</div>
+            <div class="left-header-kode">
+                <img src="{{ $kodeGroup }}" alt="">
+            </div>
             <p class="titel">FAKTUR</p>
             <div class="right-detail-pengiriman">
                 <div class="tanggal">
@@ -308,7 +332,7 @@
                         <td>{{ $product->jenis->nama_jenis }}</td>
                         <td>
                             <div class="detail-barang">
-                                <p class="kode"> {{ $product->alias->alias }}</p>
+                                <p class="kode"> {{ $product->AliasBarang->alias }}</p>
                                 <p class="desc">Ket: {{ $product->keterangan }}
                                 </p>
                             </div>
@@ -340,53 +364,84 @@
                         $total = $subtotal;
                     }
                 @endphp
-                <div class="sub-total">
-                    <p>Nilai Penjualan</p>
-                    <p>Rp. <span class="subtot" style="float: right;">{{ number_format($sales->sub_total, 0,',','.') }}</span> </p>
-                </div>
-                {{--  @if(!! $sales->diskon_nominal)
-                <div class="sub-total">
-                    <p>Discount</p>
-                    <p>Rp. <span style="float: right;">{{ number_format($sales->diskon_nominal, 0,',','.') }}</span> </p>
-                </div>
-                @else
-                <div class="sub-total">
-                    <p>Discount</p>
-                    <p>Rp. <span style="float: right;">0</span> </p>
-                </div>
-                @endif  --}}
 
-                @if(isset($pembayaran->fid_penjualan))
-                <div class="sub-total">
-                    <p class="name-pembayaran">Uang Muka <p class="persent-pembayaran"></p></p>
-                    <p>Rp.<span class="pembayaran" style="float: right;">{{ number_format($pembayaran->total, 0,',','.') }}</span></p>
-                </div>
-                <div class="sub-total">
-                    <p>PPN</p>
-                    <p>Rp.<span class="ppn-pembayaran" style="float: right;">{{ number_format($ppnDp, 0,',','.') }}</span> </p>
-                </div>
-                <div class="line"></div>
-                <div class="sub-total" style="margin-top: 10px;">
-                    <p> TOTAL</p>
-                    <p>Rp. <span class="total" style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
-                </div>
-               <div class="duobel-line"></div>
+                @if($sales -> status == 'Lunas')
+                    <div class="sub-total">
+                        <p>Nilai Penjualan</p>
+                        <p>Rp. <span class="subtot" style="float: right;">{{ number_format($sales->sub_total, 0,',','.') }}</span> </p>
+                    </div>
+                    <div class="sub-total">
+                        <p>PPN</p>
+                        <p>Rp.<span class="ppn-pembayaran" style="float: right;">{{ number_format($sales->ppn, 0,',','.') }}</span> </p>
+                    </div>
+                    <div class="duobel-line"></div>
+                    <div class="sub-total" style="font-weight: bold;">
+                        <p>Grand Total</p>
+                        <p>Rp.<span class="ppn-pembayaran" style="float: right;">{{ number_format($sales->grand_total, 0,',','.') }}</span> </p>
+                    </div>
                 @else
-                <div class="sub-total">
-                    <p class="name-pembayaran">Uang Muka <span class="persent-pembayaran"></span></p>
-                    <p>Rp.<span class="pembayaran" style="float: right;">0</span></p>
-                </div>
-                <div class="sub-total">
-                    <p>PPN</p>
-                    <p>Rp.<span class="ppn-pembayaran" style="float: right;">0</span> </p>
-                </div>
-                <div class="line"></div>
-                <div class="sub-total" style="margin-top: 10px;">
-                    <p > TOTAL</p>
-                    <p>Rp. <span class="total-bayar" style="float: right;">{{ number_format($total , 0,',','.') }}</span> </p>
-                </div>
-               <div class="duobel-line"></div>
+                    <div class="sub-total">
+                        <p>Nilai Penjualan</p>
+                        <p>Rp. <span class="subtot" style="float: right;">{{ number_format($sales->sub_total, 0,',','.') }}</span> </p>
+                    </div>
+                    <div class="sub-total">
+                        <p>PPN</p>
+                        <p>Rp.<span class="ppn-pembayaran" style="float: right;">{{ number_format($sales->ppn, 0,',','.') }}</span> </p>
+                    </div>
+
+                    @if(isset($pembayaran->fid_penjualan))
+
+
+                        <div class="sub-total">
+                            <p class="name-pembayaran">Uang Muka </p>
+                            <p>Rp.<span class="pembayaran" style="float: right;">{{ number_format($pembayaran->total_bayar, 0,',','.') }}</span></p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="sub-total" style="margin-top: 10px; font-weight: bold;">
+                            <p> Sudah dibayar </p>
+                            <p>Rp. <span class="total" style="float: right;">{{ number_format($Total_Bayar , 0,',','.') }}</span> </p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="sub-total">
+                            <p class="name-pembayaran termin" style="width: 66px;">Termin</p><p class="persent-pembayaran"></p>
+                            <p>Rp.<span class="pembayaran-termin" style="float: right;"></span></p>
+                        </div>
+                        <div class="sub-total">
+                            <p class="name-pembayaran">PPN Termin</p>
+                            <p>Rp.<span class="pembayaran ppn-term" style="float: right;"></span></p>
+                        </div>
+                        <div class="duobel-line"></div>
+                        <div class="sub-total" style="font-weight: bold;">
+                            <p class="name-pembayaran">Total Tagihan</p>
+                            <p>Rp.<span class="pembayaran total-trm" style="float: right;"></span></p>
+                        </div>
+                    @else
+                        <div class="sub-total">
+                            <p class="name-pembayaran">Uang Muka</p>
+                            <p>Rp.<span class="pembayaran" style="float: right;">0</span></p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="sub-total" style="margin-top: 10px; font-weight: bold;">
+                            <p> Sudah dibayar </p>
+                            <p>Rp. <span class="total" style="float: right;">0</span> </p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="sub-total">
+                            <p class="name-pembayaran termin" style="width: 66px;">Termin</p><p class="persent-pembayaran"></p>
+                            <p>Rp.<span class="pembayaran-termin" style="float: right;"></span></p>
+                        </div>
+                        <div class="sub-total">
+                            <p class="name-pembayaran">PPN Termin</p>
+                            <p>Rp.<span class="pembayaran ppn-term" style="float: right;"></span></p>
+                        </div>
+                        <div class="duobel-line"></div>
+                        <div class="sub-total" style="font-weight: bold;">
+                            <p class="name-pembayaran">Total Tagihan</p>
+                            <p>Rp.<span class="pembayaran total-trm" style="float: right;"></span></p>
+                        </div>
+                    @endif
                 @endif
+
 
             </div>
         </div>
@@ -439,15 +494,19 @@
        });
 
        $(()=>{
-            $('.setting-print-inv .item-set-print .persen').on('input', function(){
+            $('.setting-print-inv .item-set-print .persen, .ppn').on('input', function(){
                 var subtot = $('.sub-total span.subtot').text();
 
                 var subFormatNum = parseInt(subtot.replace(/\./g,''));
                 console.log(subFormatNum);
-                var target = $(this).val();
+                var target = $('.item-set-print .persen').val();
                 var presentens = parseFloat(target / 100);
                 var jumlah = subFormatNum * presentens;
                 $('.item-set-print input.nominal').val(jumlah);
+
+                var ppn = parseFloat($('.item-set-print .ppn').val() / 100);
+                var hasil_ppn  = parseInt(jumlah) * ppn;
+                $('.item-set-print input.ppn-nominal').val(hasil_ppn);
             });
 
             $('.action-set .save-set').on('click', function(){
@@ -458,15 +517,27 @@
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 })
+
+                var ppn  = $('input.ppn-nominal').val();
+                var convertPPN = parseInt(ppn).toLocaleString('id-ID',{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                })
+                var total_bayar =parseInt(nominalPembayaran) + parseInt(ppn);
+                var Convenrt_total = parseInt(total_bayar).toLocaleString('id-ID',{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                })
                 console.log(namaPayment, persent, convert);
 
-                $('.sub-total p.name-pembayaran').text(namaPayment);
-                $('.sub-total p.name-pembayaran .persent-pembayaran').text(persent);
-                $('.sub-total .pembayaran').text(convert);
-                $('.sub-total .total-bayar').text(convert);
+                $('.sub-total p.name-pembayaran.termin').text(namaPayment);
+                $('.sub-total  .persent-pembayaran').text(persent + '%');
+                $('.sub-total .pembayaran-termin').text(convert);
+                $('.sub-total .pembayaran.ppn-term').text(convertPPN);
+                $('.sub-total .total-trm').text(Convenrt_total);
             })
 
-            $('.item-set-print .ppn').on('change', function(){
+            /*$('.item-set-print .ppn').on('change', function(){
                 var idx = $(this).attr('data-idx');
                 var nominalPembayaran = $('input.nominal').val();
                 var ppn = parseInt(nominalPembayaran) * (parseFloat(11 / 100));
@@ -485,7 +556,7 @@
 
                 getDataToko(idx);
 
-            })
+            })*/
 
             $('.item-set-print .Rek-mandiri').on('change', function(){
                 addRekeningMandiri();

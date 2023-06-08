@@ -12,8 +12,10 @@ class DetailPembayaranPembelian extends Model
     protected $fillable = [
         'fid_pembelian',
         'tanggal',
-        'pembayaran',
+        'type_pembayaran',
         'total',
+        'total_ppn',
+        'total_bayar',
         'keterangan',
         'diperiksa',
         'created_by',

@@ -308,6 +308,14 @@
         <input type="hidden" name="productSales[{{ $k }}][total]" class="input-hide total" value="{{$detailPenjualan->total}}"/>
 
          @endforeach
+
+         @foreach ( $detailPengiriman as $a => $item )
+         <input type="hidden" name="itemPengiriman[{{ $a }}][id]" class="input-hide id_delivery" value="{{ $item->id }}"/>
+         <input type="hidden" name="itemPengiriman[{{ $a }}][alias]" class="input-hide product-delivery" value="{{ $item->fid_barang }}"/>
+         <input type="hidden" name="itemPengiriman[{{ $a }}][variasi]" class="input-hide variasi-delivery" value="{{ $item->fid_varian}}"/>
+         <input type="hidden" name="itemPengiriman[{{ $a }}][keterangan]" class="input-hide keterangan-delivery" value="{{ $item->keterangan }}"/>
+         <input type="hidden" name="itemPengiriman[{{ $a }}][jumlah]" class="input-hide qty-delivery" value="{{ $item->jumlah }}"/>
+         @endforeach
     </form>
 </div>
 
@@ -383,6 +391,10 @@
             $form.append(`<input type="hidden" name="productSales[${idx}][harga_satuan]" class="input-hide harga_satuan"/>`);
             $form.append(`<input type="hidden" name="productSales[${idx}][total]" class="input-hide total"/>`);
 
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][alias]" class="input-hide product-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][variasi]" class="input-hide variasi-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][keterangan]" class="input-hide keterangan-delivery"/>`);
+            $form.append(`<input type="hidden" name="itemPengiriman[${idx}][jumlah]" class="input-hide qty-delivery"/>`);
 
 			$content_.append(
                 `<tr class="body-table" itemid="${idx}" >` +
@@ -435,6 +447,11 @@
                $form.find(`input[name="productSales[${idx}][jumlah]"]`).remove();
                $form.find(`input[name="productSales[${idx}][harga_satuan]"]`).remove();
                $form.find(`input[name="productSales[${idx}][total]"]`).remove();
+
+               $form.find(`input[name="itemPengiriman[${idx}][alias]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][variasi]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][keterangan]"]`).remove();
+               $form.find(`input[name="itemPengiriman[${idx}][jumlah]"]`).remove();
 
                 $content_.find(`.body-table[itemid="${idx}"]`).remove();
 			}
@@ -779,6 +796,11 @@
             $form.find(`input[name="productSales[${idx}][harga_satuan]"]`).val(hargaSatuan);
             $form.find(`input[name="productSales[${idx}][total]"]`).val(total);
 
+            $form.find(`input[name="itemPengiriman[${idx}][alias]"]`).val();
+            $form.find(`input[name="itemPengiriman[${idx}][jumlah]"]`).val(jumlah);
+            $form.find(`input[name="itemPengiriman[${idx}][variasi]"]`).val(variasi);
+            $form.find(`input[name="itemPengiriman[${idx}][keterangan]"]`).val(desc);
+            
             console.log(variasi, desc, jumlah, hargaSatuan, total);
             //console.log($form.find(`input[name="productSales[${idx}][total]"]`).val(total));
 
@@ -1042,6 +1064,7 @@
             $form.data('id', data.id);
             $form.find(`.body-row.input-row .part-input  input.product[data-id="${idx}"]`).val(data.alias);
             $form2.find(`input[name="productSales[${idx}][alias]"]`).val(data.id);
+            $form2.find(`input[name="itemPengiriman[${idx}][alias]"]`).val(data.id);
         }
     }
 

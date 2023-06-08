@@ -399,3 +399,56 @@ tr.body-table {
     position: relative;
     width: 100%;
 }
+
+/* pop up cencel / hapus */
+.container-popup-cencelPO {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 39px;
+    height: 100%;
+    background: #00000038;
+    overflow: scroll;
+}
+.container-popup-cencelPO .position-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 138px;
+}
+.container-popup-cencelPO .position-card .card-form {
+    background: white;
+    padding: 20px 27px;
+    box-sizing: border-box;
+    width: 414px;
+    border-radius: 10px;
+}
+.input-req-cencel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.input-req-cencel textarea.pembatalan {
+    border: 1px solid #8080809e;
+    border-radius: 10px;
+}
+.action-send {
+    /* cursor: pointer; */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.action-send .btn-send, .btn-cencel{
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 5px;
+    color: white;
+}
+.btn-send{
+    background: #2e59b9;
+}
+.btn-cencel {
+    background: #b92e2e;
+}

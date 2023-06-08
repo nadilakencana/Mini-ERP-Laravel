@@ -1059,6 +1059,24 @@ textarea{
     border: 1px solid #4e4e4e85;
     font-size: 14px;
 }
+
+.part-head-left .file_lembar_kerja {
+    background: linear-gradient(90deg, #80BFB0 0%, #AAD3B6 100%);
+    width: 150px;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.input-hide.file{
+ display: none;
+}
+.part-head-left .file-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .vendor-selection {
     display: flex;
     flex-direction: column;
@@ -1105,7 +1123,9 @@ textarea{
     width: 405px;
     height: 159px;
 }
-
+.part-head-left .Purchase-date{
+ margin-top: 10px;
+}
 .part-head-right .Purchase-date {
     display: flex;
     flex-direction: column;

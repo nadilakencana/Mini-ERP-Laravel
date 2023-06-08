@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use App\Models\User_Log;
 use App\Models\User;
 use App\Models\List_Item_Pengiriman;
+use App\Models\Status_log_SJ;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use PDF;
 
@@ -142,5 +143,32 @@ class SuratJalanController extends Controller
             return redirect()->back()->with('Faild', 'Gagal Menabahkan data baru');
         }
 
+    }
+
+    public function postStatus(Request $request){
+
+        $admin = Auth()->user()->id;
+        $surat_jalan = DetailPengiriman::where('id',  $request->id)->first();
+
+        $status_print = Status_log_SJ::where('fid_surat_jalan', $surat_jalan->id)->latest()->first();
+        //dd($status_print->cetak_ke + 1);
+        $status = new Status_log_SJ();
+        $status->fid_surat_jalan = $surat_jalan->id;
+        $status->tanggal_cetak = Carbon::now()->format('d-m-y');
+        $status->user_cetak= $admin;
+        if($status_print == null){
+            $status->cetak_ke = 1;
+        }else{
+            $status->cetak_ke = $status_print->cetak_ke + 1;
+        }
+
+        $status->status = 'Sudah Di Print';
+        //dd($status);
+        $status->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'berhasil',
+        ]);
     }
 }

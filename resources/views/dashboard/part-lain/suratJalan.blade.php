@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Surat Jalan</title>
-    {{--  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>  --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
     <style>
 
@@ -177,7 +177,7 @@
 </head>
 
 <body>
-   <div class="button-save-pdf">Save PDF</div>
+   <div class="button-save-pdf" idx={{ $sj->id }}>Save PDF</div>
    <div class="invoice">
         <div class="header-invoice">
             <div class="left-header-kode">
@@ -291,10 +291,27 @@
            }
 
            };
-
+           var idx = $(this).attr('idx');
            // New Promise-based usage:
            html2pdf().set(opt).from(element).save();
+           postStatus(idx)
        });
+
+       function postStatus(id){
+            $.ajax({
+                url: '{{ route('post-status-sj') }}',
+                data:{id: id,
+                    _token : "{{ csrf_token() }}"},
+                method: 'POST',
+                type: 'json',
+                success: function(data){
+                    console.log(data);
+                    window.location.reload();
+                },
+            }).fail(function(data){
+                console.log(data);
+            });
+       }
 
    </script>
 </body>

@@ -58,6 +58,11 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/Surat-Po-PT/{id}', [PembelianController::class,'suratPO_PT'])->name('suratpo-PT');
     Route::get('/load-data',[PembelianController::class,'getLoadData'])->name('loadData');
     Route::get('/data-detail-penjualan', [PembelianController::class,'getDetailPenjualan'])->name('getDetailPenjualan');
+    Route::get('/Edit-data-Purchase/{id}', [PembelianController::class, 'EditPO'])->name('EditPO');
+    Route::post('/Post-Edit-PO/{id}', [PembelianController::class, 'PostEdit'])->name('PostEditDataPO');
+    Route::get('data-form',[PembelianController::class, 'getDetailPenjualanRefPO'])->name('form-data-PO');
+    Route::post('Aproved-Edit-PO/{id}',[PembelianController::class,'approvedEditPO'])->name('approve-Po');
+    Route::post('/request-cencel/{id}', [PembelianController::class,'requestCencelPO'])->name('cencel-PO');
 
     // sales
     Route::get('/sales',[salesController::class,'Sales'])->name('sales');
@@ -78,13 +83,14 @@ Route::group(['middleware' => ['logincek']], function(){
     Route::get('/edit-Sales-Order/{id}',[salesController::class,'EditSales'])->name('EditSo');
     Route::post('/update-data-so/{id}', [salesController::class,'PostEdit'])->name('updateSo');
     Route::post('/Approval-Edit-Sales-order/{id}',[salesController::class,'approvedEdit'])->name('approvalEdit');
-
+    Route::post('/request-cencel-SO/{id}', [salesController::class,'requestCencelSO'])->name('cencel-SO');
     //surat jalan
 
     Route::get('/Surat-Jalan/{id}', [SuratJalanController::class,'listSuratJalan'])->name('ListSuratJalan');
     Route::get('/Dropshiper/{id}',[SuratJalanController::class,'DropshiperSj'])->name('DropshipSj');
     Route::get('/postData-Surat-Jalan', [SuratJalanController::class, 'postdropshiperSJ'])->name('postData-SuratJalan');
     Route::get('/print-Surat-Jalan/{id}', [salesController::class, 'suratJalan'])->name('sj');
+    Route::post('/update-status',[SuratJalanController::class, 'postStatus'])->name('post-status-sj');
     // product
     Route::get('/product',[ProductController::class, 'product'])->name('product');
     Route::get('/creat-product',[ProductController::class,'create_product'])->name('create-product');

@@ -3,107 +3,297 @@
 
 
 <div class="content-dashboard">
-    <div class="header-content">
-        <p class="text-tittle">
-            Purchase
-        </p>
-        <a href="{{ route('crete-data-purchase') }}">
-            <div class="button-create">
-                    <img src="{{ asset('Assets/icon/🦆 icon _plus_-1.png') }}" alt="" srcset="">
-                    <p>New Purchase</p>
-            </div>
-        </a>
+    <div class="navigation-tab">
+        <div class="nav-tab active" target-panel="panel1" order="1">Purchase Order</div>
+        <div class="nav-tab" target-panel="panel2" order="2">Approved PO</div>
+        <div class="nav-tab" target-panel="panel3" order="3">PO Cencel</div>
     </div>
-    {{--  card-content  --}}
-    <div class="card-content-display" style="height: 500px">
-        <div class="header-display">
-            <div class="search">
-                <div class="box-search" contenteditable>
-                    <p>Search</p>
+    <div class="panel active" data-panel="panel1" panel-order="1">
+        <div class="header-content">
+            <p class="text-tittle">
+                Purchase
+            </p>
+            <a href="{{ route('crete-data-purchase') }}">
+                <div class="button-create">
+                        <img src="{{ asset('Assets/icon/🦆 icon _plus_-1.png') }}" alt="" srcset="">
+                        <p>New Purchase</p>
                 </div>
-                <div class="icon-search" id="first" onclick="search()">
-                    <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
-                </div>
-            </div>
-
-            <div class="button-section-display">
-
-                <form class="date_search">
-                    <div class="tanggal">
-                        <input type="date" name="tanggal" id="date">
-                    </div>
-                    <button type="submit">Cari</button>
-                </form>
-
-            </div>
-            <div class="button-section-display">
-                <div class="date_search">
-                    <label for="">Bulan</label>
-                    <div class="tanggal month">
-                        <input  name="tanggal" class="datepicker" id="date">
-                    </div>
-                    <button type="submit" class="filter">Cari</button>
-                </div>
-
-            </div>
+            </a>
         </div>
-        <div class="table-data">
+        {{--  card-content  --}}
+        <div class="card-content-display" style="height: 500px">
+            <div class="header-display">
+                <div class="search">
+                    <div class="box-search" contenteditable>
+                        <p>Search</p>
+                    </div>
+                    <div class="icon-search" id="first" onclick="search()">
+                        <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
+                    </div>
+                </div>
 
-            <table id="data-table" class="data">
-               <tr class="header-table">
-                    <th class="header-row" style="width:200px">Kode Purchase</th>
-                    <th class="header-row">Date Purchase</th>
-                    <th class="header-row" style="width:211px">Suplier</th>
-                    <th class="header-row" style="width:234px">Total</th>
-                    <th class="header-row" style="width: 139px;">Action</th>
+                <div class="button-section-display">
 
-               </tr>
-               @foreach ( $Pembelian as $purchase)
-                    <tr class="body-table">
+                    <form class="date_search">
+                        <div class="tanggal">
+                            <input type="date" name="tanggal" id="date">
+                        </div>
+                        <button type="submit">Cari</button>
+                    </form>
 
-                            <td class="body-row">{{ $purchase->no_faktur }}</td>
-                            <td class="body-row">{{ $purchase->tanggal }}</td>
-                            <td class="body-row">{{ $purchase->suplier->nama_supplier }}</td>
-                            <td class="body-row">Rp. {{number_format( $purchase->grand_total, 2, ',','.')}}</td>
+                </div>
+                <div class="button-section-display">
+                    <div class="date_search">
+                        <label for="">Bulan</label>
+                        <div class="tanggal month">
+                            <input  name="tanggal" class="datepicker" id="date">
+                        </div>
+                        <button type="submit" class="filter">Cari</button>
+                    </div>
 
-                            <td class="body-row">
-                                <div class="action-btn">
-                                    <div class="btn-print">
-                                        <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
-                                        <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
-                                        <div class="dropdown-print-action off" style="margin-top: 81px;">
-                                            <ul class="action-list">
-                                                <li class="action-btn"><a href="{{ route('suratpo',  encrypt($purchase->id)) }}">Surat PO</a></li>
-                                                <li class="action-btn"><a href="{{ route('suratpo-PT',  encrypt($purchase->id)) }}">Surat PO PT</a></li>
-                                            </ul>
+                </div>
+            </div>
+            <div class="table-data">
+
+                <table id="data-table" class="data">
+                   <tr class="header-table">
+                        <th class="header-row" style="width:200px">Kode Purchase</th>
+                        <th class="header-row">Date Purchase</th>
+                        <th class="header-row" style="width:211px">Suplier</th>
+                        <th class="header-row" style="width:234px">Total</th>
+                        <th class="header-row" >Status</th>
+                        <th class="header-row" style="width: 139px;">Action</th>
+
+                   </tr>
+                   @foreach ( $Pembelian as $purchase)
+                        <tr class="body-table">
+
+                                <td class="body-row">{{ $purchase->no_faktur }}</td>
+                                <td class="body-row">{{ $purchase->tanggal }}</td>
+                                <td class="body-row">{{ $purchase->suplier->nama_supplier }}</td>
+                                <td class="body-row">Rp. {{number_format( $purchase->grand_total, 2, ',','.')}}</td>
+                                <td class="body-row">
+                                    @if ($purchase ->status == 'Lunas')
+                                    <div class="status-Lunas">{{ $purchase->status }}</div>
+                                    @else
+                                    <div class="status-proses">{{ $purchase->status }}</div>
+                                    @endif
+                                </td>
+                                <td class="body-row">
+                                    <div class="action-btn">
+                                        <a href="{{ route('EditPO', encrypt($purchase->id) ) }}">
+                                            <div class="btn-edit">
+                                                <img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="">
+                                            </div>
+                                        </a>
+                                        <div class="btn-print">
+                                            <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
+                                            <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
+                                            <div class="dropdown-print-action off" style="margin-top: 81px;">
+                                                <ul class="action-list">
+                                                    <li class="action-btn"><a href="{{ route('suratpo',  encrypt($purchase->id)) }}">Surat PO</a></li>
+                                                    <li class="action-btn"><a href="{{ route('suratpo-PT',  encrypt($purchase->id)) }}">Surat PO PT</a></li>
+                                                </ul>
+                                            </div>
                                         </div>
+                                        <div class="btn-edit pembayaran" data-id="{{ $purchase->id }}">
+                                            <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
+                                        </div>
+                                        <div class="btn-delete" data-id="{{ $purchase->id }}">
+                                            <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
+                                        </div>
+
                                     </div>
-                                    <div class="btn-edit pembayaran" data-id="{{ $purchase->id }}">
-                                        <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
-                                    </div>
-                                    <div class="btn-delete">
-                                        <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
-                                    </div>
 
-                                </div>
+                                </td>
+                        </tr>
+                   @endforeach
 
-                            </td>
-                    </tr>
-               @endforeach
+                </table>
 
-            </table>
+                {{--  <div class="footer-table">
+                    <div class="data-total">Showing 1-10 entries</div>
+                    <div class="pagination"></div>
+                </div>  --}}
 
-            {{--  <div class="footer-table">
-                <div class="data-total">Showing 1-10 entries</div>
-                <div class="pagination"></div>
-            </div>  --}}
-
+            </div>
         </div>
     </div>
+    <div class="panel" data-panel="panel2" panel-order="2">
+        <div class="header-content">
+            <p class="text-tittle">
+                Approved Purchase Order
+            </p>
+
+        </div>
+        @auth
+
+        @endauth
+        {{--  card-content  --}}
+        <div class="card-content-display" style="height: 500px">
+            <div class="header-display">
+                <div class="search">
+                    <div class="box-search" contenteditable>
+                        <p>Search</p>
+                    </div>
+                    <div class="icon-search" id="first" onclick="search()">
+                        <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
+                    </div>
+                </div>
+
+                <div class="button-section-display">
+
+                    <form class="date_search">
+                        <div class="tanggal">
+                            <input type="date" name="tanggal" id="date">
+                        </div>
+                        <button type="submit">Cari</button>
+                    </form>
+
+                </div>
+                <div class="button-section-display">
+                    <div class="date_search">
+                        <label for="">Bulan</label>
+                        <div class="tanggal month">
+                            <input  name="tanggal" class="datepicker" id="date">
+                        </div>
+                        <button type="submit" class="filter">Cari</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="table-data">
+                @php $no=1; @endphp
+                <table id="data-table" class="data">
+                   <tr class="header-table">
+
+                        <th class="header-row" style="width:200px">No Faktur/Invoice</th>
+                        <th class="header-row" style="width:116px">Tanggal</th>
+                        <th class="header-row" style="width:150px">Supplier</th>
+                        <th class="header-row" style="width:114px">Total</th>
+                        <th class="header-row">Status</th>
+                        <th class="header-row">Keterangan</th>
+                        <th class="header-row" style="width: 111px;">Action</th>
+                   </tr>
+                   @foreach ($aprovPO as $pembelian )
+                   <tr class="body-table" @if($pembelian->batal == 1) style="background: #ff4e4e; color: white;" @endif>
+                        <td class="body-row">{{ $pembelian->no_faktur }}</td>
+                        <td class="body-row">{{ $pembelian->tanggal }}</td>
+                        <td class="body-row">{{ $pembelian->suplier->nama_supplier }}</td>
+                        <td class="body-row">Rp. {{number_format( $pembelian->grand_total, 2, ',','.')}} </td>
+                        <td class="body-row">
+                            @if ($pembelian ->status == 'Lunas')
+                            <div class="status-Lunas">{{ $pembelian->status }}</div>
+                            @else
+                            <div class="status-proses">{{ $pembelian->status }}</div>
+                            @endif
+                        </td>
+                        <td class="body-row">
+                           {{ $pembelian->alasan_pembatalan }}
+                        </td>
+                        <td class="body-row">
+                            <div class="action-btn">
+
+                                @if (Auth()->user()->role_admin->nama_role == 'Marketing')
+                                {{--  <div class="btn-delete">
+                                    <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
+                                </div>  --}}
+                                @else
+                                <div class="btn-approved" idx="{{ $pembelian->id }}">
+                                    Approved
+                                </div>
+                                {{--  <div class="btn-delete">
+                                    <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
+                                </div>  --}}
+                                @endif
+                            </div>
+
+                        </td>
+                    </tr>
+                   @endforeach
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel" data-panel="panel3" panel-order="3">
+        <div class="header-content">
+            <p class="text-tittle">
+                Purcahse Order Cenceled
+            </p>
+
+        </div>
+        @auth
+
+        @endauth
+        {{--  card-content  --}}
+        <div class="card-content-display" style="height: 500px">
+            <div class="header-display">
+                <div class="search">
+                    <div class="box-search" contenteditable>
+                        <p>Search</p>
+                    </div>
+                    <div class="icon-search" id="first" onclick="search()">
+                        <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
+                    </div>
+                </div>
+
+                <div class="button-section-display">
+
+                    <form class="date_search">
+                        <div class="tanggal">
+                            <input type="date" name="tanggal" id="date">
+                        </div>
+                        <button type="submit">Cari</button>
+                    </form>
+
+                </div>
+                <div class="button-section-display">
+                    <div class="date_search">
+                        <label for="">Bulan</label>
+                        <div class="tanggal month">
+                            <input  name="tanggal" class="datepicker" id="date">
+                        </div>
+                        <button type="submit" class="filter">Cari</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="table-data">
+                @php $no=1; @endphp
+                <table id="data-table" class="data">
+                   <tr class="header-table">
+
+                        <th class="header-row" style="width:200px">No Faktur/Invoice</th>
+                        <th class="header-row" style="width:116px">Tanggal</th>
+                        <th class="header-row" style="width:177px">Supplier</th>
+                        <th class="header-row" style="width:202px">Total</th>
+                        <th class="header-row">Keterangan</th>
+                   </tr>
+                   @foreach ($POCencel as $pembelian )
+                   <tr class="body-table" style="color: red; font-weight:bold">
+                        <td class="body-row">{{ $pembelian->no_faktur }}</td>
+                        <td class="body-row">{{ $pembelian->tanggal }}</td>
+                        <td class="body-row">{{ $pembelian->suplier->nama_supplier }}</td>
+                        <td class="body-row">Rp. {{number_format( $pembelian->grand_total, 2, ',','.')}} </td>
+                        <td class="body-row">
+                            {{ $pembelian->alasan_pembatalan }}
+                        </td>
+
+                    </tr>
+                   @endforeach
+
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+{{--  pembayaran  --}}
 <div class="container-popup-cd-pembayaran close-hide">
     <div class="card-position">
-        <div class="card-create-customer " style="width: 653px;">
+        <div class="card-create-customer " style="width: 832px;">
             <div class="header-card-create">
                 <p class="text-tittle">
                    Pembayaran
@@ -115,25 +305,33 @@
                 <form action="{{ route('postpembayaranPembelian') }}" method="post">
                     @csrf
                     <div class="row-form">
-                        {{--  <form action="">  --}}
-                            <div class="Purchase-date">
-                                <label for="date-purchase">Tanggal</label>
-                                <input type="date" name="tanggal" id="date_pembayaran">
-                                {{--  <input id="txtId" type="hidden" class="form-control txt">  --}}
-                            </div>
-                        {{--  </form>  --}}
-                        <div class="i-form-sales">
-                            <label for="nofaktur">RP</label>
-                            <input type="text" name="total" class="i-form jumlah" placeholder="0">
+                        <div class="Purchase-date">
+                            <label for="date-purchase">Tanggal</label>
+                            <input type="date" name="tanggal" id="date_pembayaran">
                         </div>
                         <div class="vendor-selection">
                             <label for="vendor">Pembayaran</label>
-                            <select name="pembayaran" id="" placeholder="Select pembayaran" class="pembayaran-methode">
+                            <select name="type_pembayaran" id="" placeholder="Select pembayaran" class="pembayaran-methode">
                                 <option class="metode_pb" value="">--Metode Pembayaran--</option>
                                 <option class="metode_pb" value="Trasfer">Tarnsfer</option>
                                 <option class="metode_pb" value="Cash">Cash</option>
                                 <option class="metode_pb" value="Debit">Debit</option>
                             </select>
+                        </div>
+                        <div class="i-form-sales">
+                            <label for="nofaktur">RP</label>
+                            <input type="text" name="total" class="i-form jumlah" placeholder="0" style="width:86px;">
+                        </div>
+                        <div class="i-form-sales ppn" >
+                            <div class="i-form-sales row-ppn" style="flex-direction: row;">
+                                <label for="nofaktur">PPN</label>
+                                <input type="text" name="ppn" id="" class=" i-form ppn" style="width: 10px; height: 20px;">
+                            </div>
+                            <input type="text" name="total_ppn" class="i-form jumlah_ppn" placeholder="0" style="width: 105px; height: 65px;" >
+                        </div>
+                        <div class="i-form-sales">
+                            <label for="nofaktur">Total Bayar</label>
+                            <input type="text" name="total_bayar" class="i-form totalBayar" placeholder="0" style="width:86px;">
                         </div>
                     </div>
                     <div class="row-form">
@@ -160,9 +358,11 @@
                             <th class="th-tbl-payment">No</th>
                             <th class="th-tbl-payment">Tanggal</th>
                             <th class="th-tbl-payment">Pembayaran</th>
-                            <th class="th-tbl-payment">Total</th>
+                            <th class="th-tbl-payment">Total Bayar</th>
+                            {{--  <th class="th-tbl-payment">PPN</th>  --}}
                             <th class="th-tbl-payment" style="width: 157px;">Keterangan</th>
                             <th class="th-tbl-payment">Diperiksa</th>
+                            <th class="th-tbl-payment">Action</th>
                         </tr>
                     </thead>
                     <tbody class="tbl-body-payment">
@@ -173,12 +373,41 @@
         </div>
     </div>
 </div>
+
+{{--  request Cencel PO  --}}
+<div class="container-popup-cencelPO close-hide">
+    <div class="position-card">
+        <div class="card-form">
+            <div class="input-req-cencel">
+                <label for="">Alasan Pembatalan</label>
+                <textarea name="alasan_pembatalan" class="pembatalan" cols="30" rows="10"></textarea>
+            </div>
+            <div class="action-send">
+                <div class="btn-send" idx="">
+                    Kirim permintaan
+                </div>
+                <div class="btn-cencel">
+                    Cencel
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 @stop
 
 @section('script')
 <script>
     $(()=>{
+        $('.nav-tab').on('click', function(e) {
+            var target = $(this).attr('target-panel');
+            $('.nav-tab').removeClass('active');
+            $(this).addClass('active');
 
+            $('.panel').hide();
+            console.log();
+            $(`.panel[data-panel="${target}"]`).show();
+        })
         $('.btn-print').on('click', function(){
             $(this).find('.dropdown-print-action').slideToggle("fast");
 
@@ -227,6 +456,46 @@
             })
         }
 
+        $('.btn-delete').on('click', function(e){
+            var idx = $(this).attr('data-id');
+            $('.container-popup-cencelPO .btn-send').attr('idx', idx);
+            $('.container-popup-cencelPO').removeClass('close-hide').addClass('show');
+        });
+
+        $('.btn-cencel').on('click', function(e){
+            $('.container-popup-cencelPO').removeClass('show').addClass('close-hide');
+        });
+
+        $('.action-send .btn-send').on('click', function(e){
+            var id = $(this).attr('idx');
+            requestCencel(id);
+        })
+        function requestCencel(idx){
+            obj = {};
+            var pesan = $('.input-req-cencel textarea.pembatalan').val();
+            var URL = "{{ route('cencel-PO','') }}";
+            baseURL = URL + '/' + idx;
+
+            obj['alasan_pembatalan'] = pesan;
+            obj["_token"] = "{{ csrf_token() }}";
+
+            $.ajax({
+                url: baseURL,
+                method: 'post',
+                type: 'JSON',
+                data:obj,
+                success: function(data){
+                    console.log(data);
+                    alert('Tunggu Aproval Supervisor');
+                    window.location.reload();
+                },
+
+
+            }).fail(function(data){
+                console.log(data);
+            })
+        }
+
      $('.pembayaran').on('click', function(e){
          e.stopPropagation();
          e.preventDefault();
@@ -238,6 +507,20 @@
 
      });
 
+     $('.i-form-sales input.ppn').on('input', function(){
+        var $elm = $(this);
+
+            const ppn = parseFloat($elm.val() / 100);
+            const Bayar = $('input[name="total"]').val();
+            const hasil = parseInt(Bayar) * parseFloat(ppn);
+            var total_ppn = $('.i-form-sales.ppn input.jumlah_ppn').val(hasil).text(hasil);
+            var total_bayar = parseInt(Bayar) + parseFloat(hasil);
+
+            $('.i-form-sales input.totalBayar').val(total_bayar).text(total_bayar);
+
+             console.log(total_ppn);
+
+    })
      $('.btn-tambah-pyment').on('click', function(){
          var idx = $(this).attr('data-id');
          console.log(idx);
@@ -264,13 +547,15 @@
 
                  $.each(result.data, function(index , item){
                      $elm.append("<tr class='tbl-tr-body'>"+
-                         "<td class='tbl-td-body-payment'>"+ no +"</td>"+
-                         "<td class='tbl-td-body-payment'>"+item.tanggal+"</td>"+
-                         "<td class='tbl-td-body-payment'>"+item.pembayaran+"</td>"+
-                         "<td class='tbl-td-body-payment'>"+item.total+"</td>"+
-                         "<td class='tbl-td-body-payment'>"+item.keterangan+"</td>"+
-                         "<td class='tbl-td-body-payment'>"+"</td>"+
-                     "</tr>"
+                        "<td class='tbl-td-body-payment'>"+ no +"</td>"+
+                        "<td class='tbl-td-body-payment'>"+item.tanggal+"</td>"+
+                        "<td class='tbl-td-body-payment'>"+item.type_pembayaran+"</td>"+
+                        "<td class='tbl-td-body-payment'>"+parseInt(item.total_bayar).toLocaleString("id-ID", { style: "currency", currency: "IDR" })+"</td>"+
+                        //"<td class='tbl-td-body-payment'>"+item.total_ppn+"</td>"+
+                        "<td class='tbl-td-body-payment'>"+item.keterangan+"</td>"+
+                        "<td class='tbl-td-body-payment'>"+"<p>{{ Auth()->user()->nama }}</p>"+"</td>"+
+                        `<td class="tbl-td-body-payment"><div class="p-kw-form"><a href="{{route('kwitansi', '')}}/${item.id}">Kwitansi</a></div></td>`
+                        +"</tr>"
                      );
                      no++;
                   });
@@ -310,5 +595,34 @@
 
 
     });
+
+    $('.btn-approved').on('click', function(){
+        var idx = $(this).attr('idx');
+        approved(idx)
+    });
+    function approved(id){
+
+        var url ="{{ route('approve-Po','') }}";
+        baseURL = url + '/' + id;
+        $.ajax({
+            url:baseURL,
+            method: 'POST',
+            type: 'json',
+            //_token : "{{ csrf_token() }}",
+            data:{
+            //    data:data,
+              _token : "{{ csrf_token() }}"
+            },
+            success: function(data){
+                console.log(data);
+                window.location.reload();
+            },
+
+        }).fail(function(data){
+
+        console.log(data);
+
+         });
+    }
  </script>
 @stop

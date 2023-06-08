@@ -1,43 +1,6 @@
 <div class="container-popup-card-create close-hide">
     <div class="card-position">
-        {{--  form create customer  --}}
-        {{--  <div class="card-create-customer customer close-hide">
-            <div class="header-card-create">
-                <p class="text-tittle">
-                    New Customer
-                </p>
-                <p class="close"> X </p>
-            </div>
-            <div class="form-card">
-                <form action="">
-                    <div class="col-form-p-input">
-                        <label for="kode-barang">Nama Customer</label>
-                        <input type="text" class="input-f" placeholder="Nama Customer">
-                    </div>
-                    <div class="col-form-p-input">
-                        <label for="description">Alamat</label>
-                        <textarea name="" id="" cols="30" rows="10" class="input-f"></textarea>
-                    </div>
-                    <div class="col-form-p-input">
-                        <label for="nama-barang">No Telephone</label>
-                        <input type="text" class="input-f" placeholder="No Telephone">
-                    </div>
-                    <div class="col-form-p-input">
-                        <label for="nama-barang">Email</label>
-                        <input type="text" class="input-f" placeholder="Email">
-                    </div>
-                    <div class="col-form-p-input">
-                        <label for="nama-barang">NPWP</label>
-                        <input type="text" class="input-f" placeholder="Npwp">
-                    </div>
-                    <div class="button-action-form">
-                        <div class="btn-save-form">Save</div>
-                        <div class="btn-cencel-form">Cencel</div>
-                    </div>
-                </form>
-            </div>
-        </div>  --}}
-
+     
         {{--  form create contact detail customer  --}}
         <div class="card-create-customer cp-supplier close-hide">
             <div class="header-card-create">

@@ -6,6 +6,7 @@
     <div class="navigation-tab">
         <div class="nav-tab active" target-panel="panel1" order="1">Sales Order</div>
         <div class="nav-tab" target-panel="panel2" order="2">Approved SO</div>
+        <div class="nav-tab" target-panel="panel3" order="3">SO Cencel</div>
     </div>
     <div class="panel active" data-panel="panel1" panel-order="1">
         <div class="header-content">
@@ -101,7 +102,7 @@
                                     <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
                                 </div>
 
-                                <div class="btn-delete">
+                                <div class="btn-delete" data-id="{{ $penjualan->id }}">
                                     <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
                                 </div>
 
@@ -120,12 +121,98 @@
             <p class="text-tittle">
                 Approved Sales Order
             </p>
-            {{--  <a href="{{ route('create-sales') }}">
-                <div class="button-create">
-                        <img src="{{ asset('Assets/icon/🦆 icon _plus_-1.png') }}" alt="" srcset="">
-                        <p>New Sales</p>
+
+        </div>
+        @auth
+
+        @endauth
+        {{--  card-content  --}}
+        <div class="card-content-display" style="height: 500px">
+            <div class="header-display">
+                <div class="search">
+                    <div class="box-search" contenteditable>
+                        <p>Search</p>
+                    </div>
+                    <div class="icon-search" id="first" onclick="search()">
+                        <img src="{{ asset('Assets/icon/🦆 icon _search_.png') }}" alt="" srcset="">
+                    </div>
                 </div>
-            </a>  --}}
+
+                <div class="button-section-display">
+
+                    <form class="date_search">
+                        <div class="tanggal">
+                            <input type="date" name="tanggal" id="date">
+                        </div>
+                        <button type="submit">Cari</button>
+                    </form>
+
+                </div>
+                <div class="button-section-display">
+                    <div class="date_search">
+                        <label for="">Bulan</label>
+                        <div class="tanggal month">
+                            <input  name="tanggal" class="datepicker" id="date">
+                        </div>
+                        <button type="submit" class="filter">Cari</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="table-data">
+                @php $no=1; @endphp
+                <table id="data-table" class="data">
+                   <tr class="header-table">
+
+                        <th class="header-row" style="width:200px">No Faktur/Invoice</th>
+                        <th class="header-row" style="width:116px">Tanggal</th>
+                        <th class="header-row" style="width:150px">Customer</th>
+                        <th class="header-row" style="width:114px">Total</th>
+                        <th class="header-row">Status</th>
+                        <th class="header-row">Keterangan</th>
+                        <th class="header-row" style="width: 111px;">Action</th>
+                   </tr>
+                   @foreach ($aprovSO as $penjualan )
+                   <tr class="body-table"  @if($penjualan->batal == 1) style="background: #ff4e4e; color: white;" @endif>
+                        <td class="body-row">{{ $penjualan->no_faktur }}</td>
+                        <td class="body-row">{{ $penjualan->tanggal }}</td>
+                        <td class="body-row">{{ $penjualan->customer->nama_customer }}</td>
+                        <td class="body-row">Rp. {{number_format( $penjualan->grand_total, 2, ',','.')}} </td>
+                        <td class="body-row">
+                            @if ($penjualan ->status == 'Lunas')
+                            <div class="status-Lunas">{{ $penjualan->status }}</div>
+                            @else
+                            <div class="status-proses">{{ $penjualan->status }}</div>
+                            @endif
+                        </td>
+                        <td class="body-row">{{ $penjualan->alasan_pembatalan }}</td>
+                        <td class="body-row">
+                            <div class="action-btn">
+
+                                @if (Auth()->user()->role_admin->nama_role == 'Marketing')
+
+                                @else
+                                <div class="btn-approved" idx="{{ $penjualan->id }}">
+                                    Approved
+                                </div>
+
+                                @endif
+                            </div>
+
+                        </td>
+                    </tr>
+                   @endforeach
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel" data-panel="panel3" panel-order="3">
+        <div class="header-content">
+            <p class="text-tittle">
+                Sales Order Cenceled
+            </p>
+
         </div>
         @auth
 
@@ -172,59 +259,18 @@
                         <th class="header-row" style="width:116px">Tanggal</th>
                         <th class="header-row" style="width:177px">Customer</th>
                         <th class="header-row" style="width:202px">Total</th>
-                        <th class="header-row">Status</th>
-                        <th class="header-row" style="width: 111px;">Action</th>
+                        <th class="header-row">Keterangan</th>
                    </tr>
-                   @foreach ($aprovSO as $penjualan )
-                   <tr class="body-table">
+                   @foreach ($SOCencel as $penjualan )
+                   <tr class="body-table" style="color: red; font-weight:bold">
                         <td class="body-row">{{ $penjualan->no_faktur }}</td>
                         <td class="body-row">{{ $penjualan->tanggal }}</td>
                         <td class="body-row">{{ $penjualan->customer->nama_customer }}</td>
                         <td class="body-row">Rp. {{number_format( $penjualan->grand_total, 2, ',','.')}} </td>
                         <td class="body-row">
-                            @if ($penjualan ->status == 'Lunas')
-                            <div class="status-Lunas">{{ $penjualan->status }}</div>
-                            @else
-                            <div class="status-proses">{{ $penjualan->status }}</div>
-                            @endif
+                            {{ $penjualan->alasan_pembatalan }}
                         </td>
-                        <td class="body-row">
-                            <div class="action-btn">
-                                {{--  <a href="{{ route('EditSo', encrypt($penjualan->id) ) }}">
-                                    <div class="btn-edit">
-                                        <img src="{{ asset('Assets/icon/icon _pencil_.png') }}" alt="">
-                                    </div>
-                                </a>
 
-                                <div class="btn-print">
-                                    <img src="{{ asset('Assets/icon/icon_print_.png') }}" alt="" class="print">
-                                    <img src="{{ asset('Assets/icon/icon _chevron down.png') }}" alt="" class="dropdown">
-                                    <div class="dropdown-print-action off">
-                                        <ul class="action-list">
-                                            <li class="action-btn"> <a href="{{ route('invoice', encrypt($penjualan->id)) }}"> Invoice</a></li>
-                                            <li class="action-btn"> <a href="{{ route('sj', encrypt($penjualan->id)) }}">Surat Jalan</a></li>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="btn-edit pembayaran" data-id="{{ $penjualan->id }}">
-                                    <img src="{{ asset('Assets/icon/icon _money_.png') }}" alt="" srcset="">
-                                </div>  --}}
-                                @if (Auth()->user()->role_admin->nama_role == 'Marketing')
-                                <div class="btn-delete">
-                                    <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
-                                </div>
-                                @else
-                                <div class="btn-approved" idx="{{ $penjualan->id }}">
-                                    Approved
-                                </div>
-                                <div class="btn-delete">
-                                    <img src="{{ asset('Assets/icon/icon _trash_.png') }}" alt="">
-                                </div>
-                                @endif
-                            </div>
-
-                        </td>
                     </tr>
                    @endforeach
 
@@ -317,7 +363,26 @@
         </div>
     </div>
 </div>
+{{--  request Cencel PO  --}}
+<div class="container-popup-cencelPO close-hide">
+    <div class="position-card">
+        <div class="card-form">
+            <div class="input-req-cencel">
+                <label for="">Alasan Pembatalan</label>
+                <textarea name="alasan_pembatalan" class="pembatalan" cols="30" rows="10"></textarea>
+            </div>
+            <div class="action-send">
+                <div class="btn-send" idx="">
+                    Kirim permintaan
+                </div>
+                <div class="btn-cencel">
+                    Cencel
+                </div>
+            </div>
+        </div>
+    </div>
 
+</div>
 @stop
 
 @section('script')
@@ -380,6 +445,47 @@
                     // Jika tidak, sembunyikan baris
                     $(this).hide();
                   }
+            })
+        }
+
+
+        $('.btn-delete').on('click', function(e){
+            var idx = $(this).attr('data-id');
+            $('.container-popup-cencelPO .btn-send').attr('idx', idx);
+            $('.container-popup-cencelPO').removeClass('close-hide').addClass('show');
+        });
+
+        $('.btn-cencel').on('click', function(e){
+            $('.container-popup-cencelPO').removeClass('show').addClass('close-hide');
+        });
+
+        $('.action-send .btn-send').on('click', function(e){
+            var id = $(this).attr('idx');
+            requestCencel(id);
+        })
+        function requestCencel(idx){
+            obj = {};
+            var pesan = $('.input-req-cencel textarea.pembatalan').val();
+            var URL = "{{ route('cencel-SO','') }}";
+            baseURL = URL + '/' + idx;
+
+            obj['alasan_pembatalan'] = pesan;
+            obj["_token"] = "{{ csrf_token() }}";
+
+            $.ajax({
+                url: baseURL,
+                method: 'post',
+                type: 'JSON',
+                data:obj,
+                success: function(data){
+                    console.log(data);
+                    alert('Tunggu Aproval Supervisor');
+                    window.location.reload();
+                },
+
+
+            }).fail(function(data){
+                console.log(data);
             })
         }
 

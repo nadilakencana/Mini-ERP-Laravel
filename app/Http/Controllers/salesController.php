@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\List_Item_Pengiriman;
 use PhpOffice\PhpSpreadsheet\Calculation\TextData\Format;
 use PDF;
+use PhpParser\Node\Expr\List_;
 
 class salesController extends Controller
 {
@@ -40,13 +41,16 @@ class salesController extends Controller
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         // $aprovSO = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '0')->orderBy('updated_at', 'desc')->paginate(2);
         if($user){
-            $sales = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '1')->orderBy('updated_at', 'desc')->paginate(2);
-            $aprovSO = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '0')->orderBy('updated_at', 'desc')->paginate(2);
+            $sales = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '1')->where('batal', '0')->orderBy('updated_at', 'desc')->paginate(10);
+            $aprovSO = Penjualan::where('fid_group', $memberToko->fid_group)->where('approval', '0')->orderBy('updated_at', 'desc')->paginate(10);
+            $SOCencel = Penjualan::where('fid_group', $memberToko->fid_group)->where('batal', '1')->where('approval', '1')->orderBy('updated_at', 'desc')->paginate(10);
+
         }else{
-            $sales = Penjualan::where('approval', '1')->orderBy('updated_at', 'desc')->paginate(2);
-            $aprovSO = Penjualan::where('approval', '0')->orderBy('updated_at', 'desc')->paginate(2);
+            $sales = Penjualan::where('approval', '1')->where('batal', '0')->orderBy('updated_at', 'desc')->paginate(10);
+            $aprovSO = Penjualan::where('approval', '0')->orderBy('updated_at', 'desc')->paginate(10);
+            $SOCencel = Penjualan::where('batal', '1')->where('approval', '1')->orderBy('updated_at', 'desc')->paginate(10);
         }
-        return view('dashboard.salse.index-sales', compact('sales','aprovSO'));
+        return view('dashboard.salse.index-sales', compact('sales','aprovSO','SOCencel'));
     }
     public function getDataSales(){
         $admin = Auth()->user()->id;
@@ -253,6 +257,8 @@ class salesController extends Controller
         $dec = decrypt($id);
         $Penjualan = Penjualan::findOrFail($dec);
         $detailPenjualan = DetailPenjualan::where('fid_penjualan', $Penjualan->id)->get();
+        $pengiriman = DetailPengiriman::where('fid_penjualan',$Penjualan->id)->first();
+        $detailPengiriman = List_Item_Pengiriman::where('fid_surat_jalan', $pengiriman->id)->get();
         // dd($detailPenjualan);
         // $variasiBarang = Barang_Varian::where('fid_jenis_barang', $detailPenjualan->fid_jenis_barang)->get();
 
@@ -269,7 +275,7 @@ class salesController extends Controller
         return view('dashboard.salse.editSales', compact(
             'Penjualan',
             'detailPenjualan',
-            // 'variasiBarang',
+            'detailPengiriman',
             'customer',
             'product',
             'group',
@@ -307,11 +313,11 @@ class salesController extends Controller
         $penjualan-> biaya_lain_lain = $request->biaya_lain_lain;
         $penjualan-> ppn = $request->ppn;
         $penjualan-> grand_total = $request->grand_total;
-        $penjualan-> status = "Proses";
         $penjualan-> alasan_pembatalan = 0;
         $penjualan-> batal = 0;
         $penjualan-> approval = 0;
         $penjualan-> fid_user_approval = 0;
+        $penjualan->alasan_pembatalan = 'SO Di Edit';
         $penjualan-> created_by = $admin;
         $penjualan-> updated_by = $admin;
         //  dd( $penjualan);
@@ -332,7 +338,7 @@ class salesController extends Controller
                         $penjualanDetail = DetailPenjualan::where('id', $productSales['id'])->first();
                         $penjualanDetail-> fid_penjualan =  $penjualan->id;
                         $penjualanDetail-> fid_jenis_barang = $barang->fid_jenis_barang;
-                        $penjualanDetail-> fid_barang = $barang->id;
+                        $penjualanDetail-> fid_barang = $alias->id;
                         $penjualanDetail-> fid_varian =  $productSales['variasi'];
                         $penjualanDetail-> jumlah=  $productSales['jumlah'];
                         $penjualanDetail-> harga_satuan =  $productSales['harga_satuan'];
@@ -347,7 +353,7 @@ class salesController extends Controller
                         $penjualanDetail = new DetailPenjualan();
                         $penjualanDetail-> fid_penjualan =  $penjualan->id;
                         $penjualanDetail-> fid_jenis_barang = $barang->fid_jenis_barang;
-                        $penjualanDetail-> fid_barang = $barang->id;
+                        $penjualanDetail-> fid_barang = $alias->id;
                         $penjualanDetail-> fid_varian =  $productSales['variasi'];
                         $penjualanDetail-> jumlah=  $productSales['jumlah'];
                         $penjualanDetail-> harga_satuan =  $productSales['harga_satuan'];
@@ -375,7 +381,40 @@ class salesController extends Controller
             $detailPengiriman-> created_by = $admin;
             $detailPengiriman-> updated_by = $admin;
 
-            $detailPengiriman->save();
+            if($detailPengiriman->save()){
+                $listpengiriman = $request->input('itemPengiriman');
+                foreach($listpengiriman as $itemPengiriman){
+                 $alias = Barang_Alias::where('id',  $itemPengiriman['alias'])->first();
+                 $barang = $alias->barang()->first();
+
+                    if(array_key_exists('id', $itemPengiriman)){
+                        $listItem = List_Item_Pengiriman::where('id', $itemPengiriman['id'])->first();
+                        $listItem->fid_surat_jalan = $detailPengiriman->id;
+                        $listItem->fid_jenis_barang = $barang->fid_jenis_barang;
+                        $listItem->fid_barang =   $alias->id; //alias barang
+                        $listItem->fid_varian = $itemPengiriman['variasi'];
+                        $listItem->jumlah = $itemPengiriman['jumlah'];
+                        $listItem->keterangan = $itemPengiriman['keterangan'];
+                        $listItem->created_by = $admin;
+                        $listItem->updated_by = $admin;
+
+                        $listItem->save();
+                    }else{
+                        $listItem = new List_Item_Pengiriman();
+                        $listItem->fid_surat_jalan = $detailPengiriman->id;
+                        $listItem->fid_jenis_barang = $barang->fid_jenis_barang;
+                        $listItem->fid_barang =   $alias->id; //alias barang
+                        $listItem->fid_varian = $itemPengiriman['variasi'];
+                        $listItem->jumlah = $itemPengiriman['jumlah'];
+                        $listItem->keterangan = $itemPengiriman['keterangan'];
+                        $listItem->created_by = $admin;
+                        $listItem->updated_by = $admin;
+
+                        $listItem->save();
+                    }
+
+             }
+         }
 
             return redirect()->route('sales')->with('Success', 'Berhasil Edit data');
 
@@ -401,6 +440,25 @@ class salesController extends Controller
         $activity->save();
         return response()->json(['success' => 1, 'data' => $Sales]);
     }
+
+    public function requestCencelSO(Request $request, $id){
+        $user = Auth()->user()->id;
+
+        $activity = new User_Log();
+        $activity->fid_user = $user;
+        $activity->log = "Melakukan Pembatalan Sales Order".$request->log;
+
+        $Sales = Penjualan::find($id);
+        $Sales->batal = true;
+        $Sales->approval= false;
+        $Sales->alasan_pembatalan = $request->alasan_pembatalan;
+
+        $Sales->save();
+        $activity->save();
+
+        return response()->json(['success' => 1, 'data' => $Sales]);
+    }
+
      public function getAlamatCustomer(Request $request){
         $customer = Customer::where('id', $request->id)->first();
         return response()->json([
@@ -495,30 +553,18 @@ class salesController extends Controller
 
     }
 
-    public function edit_sales($id){
-        $admin = Auth()->user()->id;
-        $dec = decrypt($id);
-        $sales = Penjualan::findOrFail($dec);
-        $memberToko = GroupMember::where('fid_user', $admin)->first();
-        $customer = Customer::all();
-        $product = Product::all();
-        $group = GroupToko::all();
-        $aliasProduct = Barang_Alias::where('fid_group',  $memberToko->fid_group)->get();
-
-        return view('dashboard.salse.editSales', compact('sales','memberToko','customer','product','group','aliasProduct'));
-    }
-
     public function invoice($id){
         $dec = decrypt($id);
         $sales = Penjualan::findOrFail($dec);
         $admin = Auth()->user()->id;
         $memberToko = GroupMember::where('fid_user', $admin)->first();
         $group = $memberToko->group()->first();
-        $kodeGroup = $group->kode_invoice;
+        $kodeGroup = $group->logo_toko;
         $detail = DetailPengiriman::where('fid_penjualan',$sales->id)->first();
         $barang = DetailPenjualan::where('fid_penjualan', $sales->id)->get();
         $pembayaran = DetailPembayaran::where('fid_penjualan', $sales->id)->first();
-        return view('dashboard.part-lain.invoice', compact('sales','kodeGroup','detail','barang','pembayaran'));
+        $Total_Bayar = DetailPembayaran::where('fid_penjualan', $sales->id)->sum('total_bayar');
+        return view('dashboard.part-lain.invoice', compact('sales','kodeGroup','detail','barang','pembayaran','Total_Bayar'));
     }
 
     public function suratJalan($id){
